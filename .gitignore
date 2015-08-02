@@ -1,0 +1,5 @@
+packages/
+SexyHttp.Tests/obj/
+SexyHttp.Tests/bin/
+SexyHttp.Net45/bin/
+SexyHttp.Net45/obj/

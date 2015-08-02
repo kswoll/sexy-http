@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>474c5e95-e5e0-4648-839f-52593d20515c</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>SexyHttp</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\HttpHeaderArgumentHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GetAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Http.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpApi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpApiClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpApiEndpoint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpApiRequest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpApiResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpBody.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpHeader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IHttpArgumentHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IHttpHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IHttpHeadersProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IHttpResponseHandler.cs" />
+  </ItemGroup>
+</Project>
