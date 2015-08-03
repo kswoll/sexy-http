@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\HttpHeaderArgumentHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\PathArgumentResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DeleteAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GetAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Http.cs" />
@@ -22,18 +23,21 @@
     <Compile Include="$(MSBuildThisFileDirectory)HttpHeader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpMethodAttributes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpMethodException.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)HttpPath.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)HttpPathDescriptor.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)HttpPathParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpHeadersProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpMethodAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)HttpPathPart.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpResponseHandler.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)LiteralHttpPathPart.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PostAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PutAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)VariableHttpPathPart.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Urls\HttpUrlParseException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Urls\HttpUrlPath.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Urls\HttpUrlParser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Urls\HttpUrl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Urls\HttpUrlDescriptor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Urls\HttpUrlPart.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Urls\HttpUrlQuery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Urls\LiteralHttpUrlPart.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Urls\VariableHttpPathPart.cs" />
   </ItemGroup>
 </Project>

@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace SexyHttp
+namespace SexyHttp.Urls
 {
-    public class LiteralHttpPathPart : HttpPathPart
+    public class LiteralHttpUrlPart : HttpUrlPart
     {
         public string Value { get; }
 
-        public LiteralHttpPathPart(string value)
+        public LiteralHttpUrlPart(string value)
         {
             Value = value;
         }

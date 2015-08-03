@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Http;
 using NUnit.Framework;
+using SexyHttp.ArgumentHandlers;
 
 namespace SexyHttp.Tests
 {
@@ -17,7 +18,7 @@ namespace SexyHttp.Tests
             var endpoint = new HttpApiEndpoint("path/to/api", HttpMethod.Get, new Dictionary<string, IHttpArgumentHandler>(), responseHandler);
             await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object>());
 
-            Assert.AreEqual("http://localhost/path/to/api", httpHandler.Request.BaseUrl + "/" + httpHandler.Request.Path);
+            Assert.AreEqual("http://localhost/path/to/api", httpHandler.Request.Url.ToString());
         }
 
         [Test]

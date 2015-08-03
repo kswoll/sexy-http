@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using SexyHttp.Urls;
 
 namespace SexyHttp.Tests
 {
@@ -8,26 +9,26 @@ namespace SexyHttp.Tests
         [Test]
         public void Literal()
         {
-            var path = new HttpPathDescriptor("foo").CreatePath();
-            Assert.AreEqual("foo", path.ToString());
+            var path = new HttpUrlDescriptor("foo").CreateUrl("http://localhost");
+            Assert.AreEqual("http://localhost/foo", path.ToString());
         }
 
         [Test]
         public void Variable()
         {
             var variable = new VariableHttpPathPart("key");
-            var path = new HttpPathDescriptor(variable).CreatePath();
-            path[variable] = "foo";
-            Assert.AreEqual("foo", path.ToString());
+            var url = new HttpUrlDescriptor(variable).CreateUrl("http://localhost");
+            url.Path["key"] = "foo";
+            Assert.AreEqual("http://localhost/foo", url.ToString());
         }
 
         [Test]
         public void Mix()
         {
             var variable = new VariableHttpPathPart("key");
-            var path = new HttpPathDescriptor("path/", variable, "/api").CreatePath();
-            path[variable] = "to";
-            Assert.AreEqual("path/to/api", path.ToString());
+            var url = new HttpUrlDescriptor("path/", variable, "/api").CreateUrl("http://localhost");
+            url.Path["key"] = "to";
+            Assert.AreEqual("http://localhost/path/to/api", url.ToString());
         }
     }
 }

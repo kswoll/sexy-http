@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using SexyHttp.Urls;
 
 namespace SexyHttp.Tests
 {
@@ -8,28 +9,26 @@ namespace SexyHttp.Tests
         [Test]
         public void Literal()
         {
-            var path = HttpPathParser.Parse("path/to/api").CreatePath();
-            Assert.AreEqual("path/to/api", path.ToString());
+            var path = HttpUrlParser.Parse("path/to/api").CreateUrl("http://localhost");
+            Assert.AreEqual("http://localhost/path/to/api", path.ToString());
         }
 
         [Test]
         public void Variable()
         {
-            var descriptor = HttpPathParser.Parse("{key}");
-            var variable = descriptor.Parts[0];
-            var path = descriptor.CreatePath();
-            path[variable] = "to";
-            Assert.AreEqual("to", path.ToString());
+            var descriptor = HttpUrlParser.Parse("{key}");
+            var url = descriptor.CreateUrl("http://localhost");
+            url.Path["key"] = "to";
+            Assert.AreEqual("http://localhost/to", url.ToString());
         }
 
         [Test]
         public void FullPath()
         {
-            var descriptor = HttpPathParser.Parse("path/{key}/api");
-            var variable = descriptor.Parts[1];
-            var path = descriptor.CreatePath();
-            path[variable] = "to";
-            Assert.AreEqual("path/to/api", path.ToString());
+            var descriptor = HttpUrlParser.Parse("path/{key}/api");
+            var url = descriptor.CreateUrl("http://localhost");
+            url.Path["key"] = "to";
+            Assert.AreEqual("http://localhost/path/to/api", url.ToString());
         }
     }
 }

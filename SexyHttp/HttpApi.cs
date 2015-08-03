@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using SexyHttp.Urls;
 
 namespace SexyHttp
 {
@@ -29,11 +30,14 @@ namespace SexyHttp
         protected HttpApiEndpoint CreateEndpoint(MethodInfo method, IHttpMethodAttribute httpMethod)
         {
             var argumentHandlers = new Dictionary<string, IHttpArgumentHandler>();
-            var path = HttpPathParser.Parse(httpMethod.Path);
-            var pathParameters = new HashSet<string>(path.Parts.OfType<VariableHttpPathPart>().Select(x => x.Key));
+            var path = HttpUrlParser.Parse(httpMethod.Path);
+            var pathParameters = new HashSet<string>(path.PathParts.OfType<VariableHttpPathPart>().Select(x => x.Key));
             foreach (var parameter in method.GetParameters())
             {
-                
+                if (pathParameters.Contains(parameter.Name))
+                {
+                    
+                }
             }
 
             var endpoint = new HttpApiEndpoint(path, httpMethod.Method, argumentHandlers, null);

@@ -1,0 +1,67 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace SexyHttp.Urls
+{
+    public static class HttpUrlParser
+    {
+        public static HttpUrlDescriptor Parse(string url)
+        {
+            var queryIndex = url.IndexOf('?');
+            var pathSection = url;
+            if (queryIndex != -1)
+            {
+                pathSection = url.Substring(0, queryIndex);
+            }
+            var pathParts = ParseChunk(pathSection).ToList();
+            var queryParts = new List<KeyValuePair<string, HttpUrlPart>>();
+
+            if (queryIndex != -1)
+            {
+                var querySection = url.Substring(queryIndex + 1);
+                var queryPairs = querySection.Split('&').Select(x => x.Split('=')).Select(y => new { Key = y[0], Value = y[1] });
+                foreach (var pair in queryPairs)
+                {
+                    var queryUrlParts = ParseChunk(pair.Value).ToList();
+                    if (queryUrlParts.Count != 1)
+                        throw new HttpUrlParseException($"Query string values must be simple.  Either name=value (for a literal) or name={{argument}} (for an argument reference).  Invalid key is \"{pair.Key}\" in url \"{url}\"");
+
+                    var queryPart = new KeyValuePair<string, HttpUrlPart>(pair.Key, queryUrlParts.Single());
+                    queryParts.Add(queryPart);
+                }
+            }
+
+            return new HttpUrlDescriptor(pathParts, queryParts);
+        }
+
+        private static IEnumerable<HttpUrlPart> ParseChunk(string chunk)
+        {
+            var lastIndex = 0;
+            do
+            {
+                var openingBraceIndex = chunk.IndexOf('{', lastIndex);
+                if (openingBraceIndex != -1)
+                {
+                    var literal = chunk.Substring(lastIndex, openingBraceIndex - lastIndex);
+                    if (literal.Length > 0)
+                        yield return literal;
+
+                    var closingBraceIndex = chunk.IndexOf('}', openingBraceIndex + 1);
+                    var startIndex = openingBraceIndex + 1;
+                    var key = chunk.Substring(startIndex, closingBraceIndex - startIndex);
+                    yield return new VariableHttpPathPart(key);
+                    lastIndex = closingBraceIndex + 1;
+                }
+                else
+                {
+                    var literal = chunk.Substring(lastIndex);
+                    if (literal.Length > 0)
+                        yield return literal;
+                    lastIndex = chunk.Length;
+                }
+            }
+            while (lastIndex < chunk.Length);
+            
+        }
+    }
+}

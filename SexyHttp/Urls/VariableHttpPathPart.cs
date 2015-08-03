@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace SexyHttp
+﻿namespace SexyHttp.Urls
 {
-    public class VariableHttpPathPart : HttpPathPart
+    public class VariableHttpPathPart : HttpUrlPart
     {
         public string Key { get; }
 

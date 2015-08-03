@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace SexyHttp
+namespace SexyHttp.ArgumentHandlers
 {
     public class HttpHeaderArgumentHandler : IHttpArgumentHandler
     {
