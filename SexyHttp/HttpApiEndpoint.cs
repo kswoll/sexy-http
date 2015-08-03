@@ -13,7 +13,7 @@ namespace SexyHttp
         private readonly IHttpResponseHandler responseHandler;
 
         public HttpApiEndpoint(
-            string path, 
+            HttpPath path, 
             HttpMethod method,
             IDictionary<string, IHttpArgumentHandler> argumentHandlers,
             IHttpResponseHandler responseHandler)

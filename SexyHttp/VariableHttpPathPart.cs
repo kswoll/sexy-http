@@ -2,7 +2,7 @@
 
 namespace SexyHttp
 {
-    public class VariableHttpPathPart : IHttpPathPart
+    public class VariableHttpPathPart : HttpPathPart
     {
         public string Key { get; }
 
@@ -11,7 +11,7 @@ namespace SexyHttp
             Key = key;
         }
 
-        public string ToString(Dictionary<string, object> arguments)
+        public override string ToString(Dictionary<string, object> arguments)
         {
             return (string)arguments[Key];
         }

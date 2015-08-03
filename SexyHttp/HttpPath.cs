@@ -6,22 +6,22 @@ namespace SexyHttp
 {
     public sealed class HttpPath
     {
-        private readonly List<IHttpPathPart> parts;
+        public IReadOnlyList<HttpPathPart> Parts { get; }
 
-        public HttpPath(IEnumerable<IHttpPathPart> parts)
+        public HttpPath(IEnumerable<HttpPathPart> parts)
         {
-            this.parts = parts.ToList();
+            Parts = parts.ToList();
         }
 
-        public HttpPath(params IHttpPathPart[] parts)
+        public HttpPath(params HttpPathPart[] parts)
         {
-            this.parts = parts.ToList();
+            Parts = parts.ToList();
         }
 
         public string ToString(Dictionary<string, object> arguments)
         {
             var builder = new StringBuilder();
-            foreach (var part in parts)
+            foreach (var part in Parts)
             {
                 builder.Append(part.ToString(arguments));
             }

@@ -28,12 +28,13 @@ namespace SexyHttp
         protected HttpApiEndpoint CreateEndpoint(MethodInfo method, IHttpMethodAttribute httpMethod)
         {
             var argumentHandlers = new Dictionary<string, IHttpArgumentHandler>();
+            var path = HttpPathParser.Parse(httpMethod.Path);
             foreach (var parameter in method.GetParameters())
             {
                 
             }
 
-            var endpoint = new HttpApiEndpoint(httpMethod.Path, httpMethod.Method, argumentHandlers, null);
+            var endpoint = new HttpApiEndpoint(path, httpMethod.Method, argumentHandlers, null);
             return endpoint;
         }
 
