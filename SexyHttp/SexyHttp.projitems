@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\HttpHeaderArgumentHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DeleteAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GetAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Http.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpApi.cs" />
@@ -19,9 +20,18 @@
     <Compile Include="$(MSBuildThisFileDirectory)HttpApiResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpBody.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpHeader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpMethodAttributes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpMethodException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpPath.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpHeadersProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IHttpMethodAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IHttpPathPart.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpResponseHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LiteralHttpPathPart.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PostAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PutAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VariableHttpPathPart.cs" />
   </ItemGroup>
 </Project>

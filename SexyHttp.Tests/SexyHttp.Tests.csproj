@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HttpApiEndpointTests.cs" />
+    <Compile Include="HttpApiTests.cs" />
     <Compile Include="MockHeadersProvider.cs" />
     <Compile Include="MockHttpHandler.cs" />
     <Compile Include="MockResponseHandler.cs" />

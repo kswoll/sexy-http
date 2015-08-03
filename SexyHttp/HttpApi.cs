@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 
 namespace SexyHttp
 {
@@ -13,10 +14,28 @@ namespace SexyHttp
 
             foreach (var method in typeof(T).GetMethods())
             {
-                
+                var httpMethod = method.GetHttpMethodAttribute();
+                if (httpMethod != null)
+                {
+                    var endpoint = CreateEndpoint(method, httpMethod);
+                    endpoints.Add(endpoint);                    
+                }
             }
 
             Endpoints = endpoints;
         }
+
+        protected HttpApiEndpoint CreateEndpoint(MethodInfo method, IHttpMethodAttribute httpMethod)
+        {
+            var argumentHandlers = new Dictionary<string, IHttpArgumentHandler>();
+            foreach (var parameter in method.GetParameters())
+            {
+                
+            }
+
+            var endpoint = new HttpApiEndpoint(httpMethod.Path, httpMethod.Method, argumentHandlers, null);
+            return endpoint;
+        }
+
     }
 }

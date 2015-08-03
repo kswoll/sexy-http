@@ -4,12 +4,12 @@ using System.Net.Http;
 namespace SexyHttp
 {
     [AttributeUsage(AttributeTargets.Method)]
-    public class GetAttribute : Attribute, IHttpMethodAttribute
+    public class PutAttribute : Attribute, IHttpMethodAttribute
     {
         public string Path { get; }
-        public HttpMethod Method => HttpMethod.Get;
+        public HttpMethod Method => HttpMethod.Put;
 
-        public GetAttribute(string path)
+        public PutAttribute(string path)
         {
             Path = path;
         }
