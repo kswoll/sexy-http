@@ -10,10 +10,5 @@ namespace SexyHttp
         {
             Value = value;
         }
-
-        public override string ToString(Dictionary<string, object> arguments)
-        {
-            return Value;
-        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace SexyHttp
@@ -29,6 +30,7 @@ namespace SexyHttp
         {
             var argumentHandlers = new Dictionary<string, IHttpArgumentHandler>();
             var path = HttpPathParser.Parse(httpMethod.Path);
+            var pathParameters = new HashSet<string>(path.Parts.OfType<VariableHttpPathPart>().Select(x => x.Key));
             foreach (var parameter in method.GetParameters())
             {
                 

@@ -6,14 +6,14 @@ namespace SexyHttp
 {
     public class HttpApiEndpoint
     {
-        public HttpPath Path { get; }
+        public HttpPathDescriptor Path { get; }
         public HttpMethod Method { get; }
 
         private readonly IDictionary<string, IHttpArgumentHandler> argumentHandlers;
         private readonly IHttpResponseHandler responseHandler;
 
         public HttpApiEndpoint(
-            HttpPath path, 
+            HttpPathDescriptor path, 
             HttpMethod method,
             IDictionary<string, IHttpArgumentHandler> argumentHandlers,
             IHttpResponseHandler responseHandler)
@@ -27,8 +27,8 @@ namespace SexyHttp
 
         public async Task<object> Call(IHttpHandler httpHandler, IHttpHeadersProvider headersProvider, string baseUrl, Dictionary<string, object> arguments)
         {
-            var url = baseUrl + "/" + Path.ToString(arguments);
-            var request = new HttpApiRequest { Url = url, Method = Method, Headers = new List<HttpHeader>() };
+            var path = Path.CreatePath();
+            var request = new HttpApiRequest { BaseUrl = baseUrl, Path = path, Method = Method, Headers = new List<HttpHeader>() };
 
             headersProvider.ProvideHeaders(request);
 

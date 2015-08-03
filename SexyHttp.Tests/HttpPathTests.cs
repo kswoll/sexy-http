@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace SexyHttp.Tests
 {
@@ -9,22 +8,26 @@ namespace SexyHttp.Tests
         [Test]
         public void Literal()
         {
-            var path = new HttpPath("foo");
-            Assert.AreEqual("foo", path.ToString(new Dictionary<string, object>()));
+            var path = new HttpPathDescriptor("foo").CreatePath();
+            Assert.AreEqual("foo", path.ToString());
         }
 
         [Test]
         public void Variable()
         {
-            var path = new HttpPath(new VariableHttpPathPart("key"));
-            Assert.AreEqual("foo", path.ToString(new Dictionary<string, object> { { "key", "foo" } }));
+            var variable = new VariableHttpPathPart("key");
+            var path = new HttpPathDescriptor(variable).CreatePath();
+            path[variable] = "foo";
+            Assert.AreEqual("foo", path.ToString());
         }
 
         [Test]
         public void Mix()
         {
-            var path = new HttpPath("path/", new VariableHttpPathPart("key"), "/api");
-            Assert.AreEqual("path/to/api", path.ToString(new Dictionary<string, object> { { "key", "to" } }));
+            var variable = new VariableHttpPathPart("key");
+            var path = new HttpPathDescriptor("path/", variable, "/api").CreatePath();
+            path[variable] = "to";
+            Assert.AreEqual("path/to/api", path.ToString());
         }
     }
 }

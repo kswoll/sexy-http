@@ -17,7 +17,7 @@ namespace SexyHttp.Tests
             var endpoint = new HttpApiEndpoint("path/to/api", HttpMethod.Get, new Dictionary<string, IHttpArgumentHandler>(), responseHandler);
             await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object>());
 
-            Assert.AreEqual("http://localhost/path/to/api", httpHandler.Request.Url);
+            Assert.AreEqual("http://localhost/path/to/api", httpHandler.Request.BaseUrl + "/" + httpHandler.Request.Path);
         }
 
         [Test]

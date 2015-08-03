@@ -23,6 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)HttpMethodAttributes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpMethodException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpPath.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpPathDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpPathParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpHandler.cs" />

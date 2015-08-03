@@ -4,7 +4,7 @@ namespace SexyHttp
 {
     public static class HttpPathParser
     {
-        public static HttpPath Parse(string path)
+        public static HttpPathDescriptor Parse(string path)
         {
             var parts = new List<HttpPathPart>();
 
@@ -15,7 +15,8 @@ namespace SexyHttp
                 if (openingBraceIndex != -1)
                 {
                     var literal = path.Substring(lastIndex, openingBraceIndex - lastIndex);
-                    parts.Add(literal);
+                    if (literal.Length > 0)
+                        parts.Add(literal);
 
                     var closingBraceIndex = path.IndexOf('}', openingBraceIndex + 1);
                     var startIndex = openingBraceIndex + 1;
@@ -26,13 +27,14 @@ namespace SexyHttp
                 else
                 {
                     var literal = path.Substring(lastIndex);
-                    parts.Add(literal);
+                    if (literal.Length > 0)
+                        parts.Add(literal);
                     lastIndex = path.Length;
                 }
             }
             while (lastIndex < path.Length);
 
-            return new HttpPath(parts);
+            return new HttpPathDescriptor(parts);
         }
     }
 }

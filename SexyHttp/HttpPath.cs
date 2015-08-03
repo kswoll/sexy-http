@@ -1,36 +1,41 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace SexyHttp
 {
-    public sealed class HttpPath
+    public class HttpPath
     {
-        public IReadOnlyList<HttpPathPart> Parts { get; }
+        private readonly HttpPathDescriptor descriptor;
+        private readonly Dictionary<HttpPathPart, string> variables = new Dictionary<HttpPathPart, string>();
 
-        public HttpPath(IEnumerable<HttpPathPart> parts)
+        public HttpPath(HttpPathDescriptor descriptor)
         {
-            Parts = parts.ToList();
+            this.descriptor = descriptor;
         }
 
-        public HttpPath(params HttpPathPart[] parts)
+        public string this[HttpPathPart part]
         {
-            Parts = parts.ToList();
+            get
+            {
+                string result;
+                variables.TryGetValue(part, out result);
+                return result;
+            }
+            set { variables[part] = value; }
         }
 
-        public string ToString(Dictionary<string, object> arguments)
+        public override string ToString()
         {
             var builder = new StringBuilder();
-            foreach (var part in Parts)
+            foreach (var part in descriptor.Parts)
             {
-                builder.Append(part.ToString(arguments));
+                var literal = part as LiteralHttpPathPart;
+                if (literal != null)
+                    builder.Append(literal.Value);
+                else
+                    builder.Append(variables[part]);
             }
             return builder.ToString();
-        }
-
-        public static implicit operator HttpPath(string path)
-        {
-            return new HttpPath(new LiteralHttpPathPart(path));
         }
     }
 }
