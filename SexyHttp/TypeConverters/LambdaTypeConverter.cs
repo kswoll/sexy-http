@@ -5,14 +5,14 @@ namespace SexyHttp.TypeConverters
 {
     public static class LambdaTypeConverter
     {
-        public static LambdaTypeConverter<T> Create<T>(Func<object, Type, LambdaTypeConverter<T>.Result> converter) 
+        public static LambdaTypeConverter<T> Create<T>(Func<object, Type, TypeConverterResult<T>> converter) 
         {
             return new LambdaTypeConverter<T>(converter);
         }
 
-        public static LambdaTypeConverter<T> Create<T>(Func<object, LambdaTypeConverter<T>.Result> converter)
+        public static LambdaTypeConverter<T> Create<T>(Func<object, TypeConverterResult<T>> converter)
         {
-            return Create<T>((x, convertTo) => converter(x));
+            return Create((x, convertTo) => converter(x));
         }
 
         public static LambdaTypeConverter<T> Create<T>(Func<object, Type, T> converter) 
@@ -20,7 +20,7 @@ namespace SexyHttp.TypeConverters
             return new LambdaTypeConverter<T>((x, convertTo) =>
             {
                 var result = converter(x, convertTo);
-                return new LambdaTypeConverter<T>.Result(!EqualityComparer<T>.Default.Equals(result, default(T)), result);
+                return new TypeConverterResult<T>(!EqualityComparer<T>.Default.Equals(result, default(T)), result);
             });
         }
 
@@ -32,9 +32,9 @@ namespace SexyHttp.TypeConverters
 
     public class LambdaTypeConverter<T> : ITypeConverter
     {
-        private readonly Func<object, Type, Result> converter;
+        private readonly Func<object, Type, TypeConverterResult<T>> converter;
 
-        internal LambdaTypeConverter(Func<object, Type, Result> converter)
+        internal LambdaTypeConverter(Func<object, Type, TypeConverterResult<T>> converter)
         {
             this.converter = converter;
         }
@@ -50,18 +50,6 @@ namespace SexyHttp.TypeConverters
             var value = converter(obj, typeof(TResult));
             result = (TResult)(object)value.Value;
             return value.IsConverted;
-        }
-
-        public struct Result
-        {
-            public bool IsConverted { get; }
-            public T Value { get; }
-
-            public Result(bool isConverted, T value)
-            {
-                IsConverted = isConverted;
-                Value = value;
-            }
         }
     }
 }
