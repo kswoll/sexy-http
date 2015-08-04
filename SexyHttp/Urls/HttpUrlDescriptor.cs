@@ -14,10 +14,12 @@ namespace SexyHttp.Urls
             QueryParts = queryParts.ToList();
         }
 
-        public HttpUrlDescriptor(params HttpUrlPart[] parts)
+        public HttpUrlDescriptor(params HttpUrlPart[] parts) : this(parts, new KeyValuePair<string, HttpUrlPart>[0])
         {
-            PathParts = parts.ToList();
-            QueryParts = new List<KeyValuePair<string, HttpUrlPart>>();
+        }
+
+        public HttpUrlDescriptor(params KeyValuePair<string, HttpUrlPart>[] queryParts) : this(new HttpUrlPart[0], queryParts)
+        {
         }
 
         public static implicit operator HttpUrlDescriptor(string path)

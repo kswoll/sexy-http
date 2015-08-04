@@ -24,15 +24,19 @@ namespace SexyHttp.Urls
         {
             var builder = new StringBuilder();
             builder.Append(BaseUrl);
-            builder.Append('/');
 
-            foreach (var part in descriptor.PathParts)
+            if (descriptor.PathParts.Any())
             {
-                var literal = part as LiteralHttpUrlPart;
-                if (literal != null)
-                    builder.Append(literal.Value);
-                else
-                    builder.Append(Path[((VariableHttpPathPart)part).Key]);
+                builder.Append('/');
+
+                foreach (var part in descriptor.PathParts)
+                {
+                    var literal = part as LiteralHttpUrlPart;
+                    if (literal != null)
+                        builder.Append(literal.Value);
+                    else
+                        builder.Append(Path[((VariableHttpPathPart)part).Key]);
+                }                
             }
 
             if (descriptor.QueryParts.Any())
@@ -58,8 +62,11 @@ namespace SexyHttp.Urls
                     {
                         var variable = (VariableHttpPathPart)part;
                         var values = Query[variable.Key];
-                        foreach (var value in values)
-                            appendQuery(item.Key, value);
+                        if (values != null)
+                        {
+                            foreach (var value in values)
+                                appendQuery(item.Key, value);
+                        }
                     }
                 }
             }
