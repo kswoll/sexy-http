@@ -12,6 +12,11 @@ namespace SexyHttp.TypeConverters
             typeConverters[Tuple.Create(sourceType, targetType)] = typeConverter;
         }
 
+        public void Register<TSourceType, TTargetType>(ITypeConverter typeConverter)
+        {
+            typeConverters[Tuple.Create(typeof(TSourceType), typeof(TTargetType))] = typeConverter;
+        }
+
         public bool TryConvertTo<T>(object obj, out T result)
         {
             var targetType = typeof(T);
