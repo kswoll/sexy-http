@@ -4,7 +4,7 @@ using SexyHttp.Urls;
 namespace SexyHttp.Tests
 {
     [TestFixture]
-    public class HttpPathTests
+    public class HttpUrlTests
     {
         [Test]
         public void Literal()

@@ -1,14 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using SexyHttp.TypeConverters;
 
 namespace SexyHttp.ArgumentHandlers
 {
-    public class PathArgumentResolver : IHttpArgumentHandler
+    public class PathArgumentResolver : HttpArgumentHandler
     {
-        public void ApplyArgument(HttpApiRequest request, string name, object argument)
+        public PathArgumentResolver(ITypeConverter typeConverter) : base(typeConverter)
         {
-            
+        }
+
+        public override void ApplyArgument(HttpApiRequest request, string name, object argument)
+        {
+            var value = TypeConverter.ConvertTo<string>(argument);
+            request.Url.Path[name] = value;
         }
     }
 }
