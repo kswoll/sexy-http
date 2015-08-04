@@ -10,7 +10,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\HttpHeaderArgumentHandler.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\PathArgumentResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\PathArgumentHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\QueryArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DeleteAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GetAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Http.cs" />

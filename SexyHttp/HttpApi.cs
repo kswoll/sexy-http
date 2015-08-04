@@ -40,17 +40,16 @@ namespace SexyHttp
             {
                 if (pathParameters.Contains(parameter.Name))
                 {
-                    argumentHandlers[parameter.Name] = new PathArgumentResolver(TypeConverter);
+                    argumentHandlers[parameter.Name] = new PathArgumentHandler(TypeConverter);
                 }
                 else if (queryParameters.Contains(parameter.Name))
                 {
-                    
+                    argumentHandlers[parameter.Name] = new QueryArgumentHandler(TypeConverter);
                 }
             }
 
             var endpoint = new HttpApiEndpoint(path, httpMethod.Method, argumentHandlers, null);
             return endpoint;
         }
-
     }
 }

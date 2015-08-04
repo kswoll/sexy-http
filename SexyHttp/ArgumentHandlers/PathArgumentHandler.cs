@@ -2,9 +2,9 @@
 
 namespace SexyHttp.ArgumentHandlers
 {
-    public class PathArgumentResolver : HttpArgumentHandler
+    public class PathArgumentHandler : HttpArgumentHandler
     {
-        public PathArgumentResolver(ITypeConverter typeConverter) : base(typeConverter)
+        public PathArgumentHandler(ITypeConverter typeConverter) : base(typeConverter)
         {
         }
 
