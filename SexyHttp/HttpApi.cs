@@ -15,8 +15,7 @@ namespace SexyHttp
 
         public HttpApi()
         {
-            var typeConverterAttribute = typeof(T).GetCustomAttribute<TypeConverterAttribute>();
-            TypeConverter = typeConverterAttribute != null ? (ITypeConverter)Activator.CreateInstance(typeConverterAttribute.ConverterType) : new DefaultTypeConverter();
+            TypeConverter = TypeConverterAttribute.GetTypeConverter(typeof(T)) ?? new DefaultTypeConverter();
 
             // Create endpoints
             var endpoints = new List<HttpApiEndpoint>();
@@ -34,30 +33,33 @@ namespace SexyHttp
 
         protected HttpApiEndpoint CreateEndpoint(MethodInfo method, IHttpMethodAttribute httpMethod)
         {
+            var typeConverter = TypeConverterAttribute.Combine(method, TypeConverter);
             var argumentHandlers = new Dictionary<string, IHttpArgumentHandler>();
             var url = HttpUrlParser.Parse(httpMethod.Path);
             var pathParameters = new HashSet<string>(url.PathParts.OfType<VariableHttpPathPart>().Select(x => x.Key));
             var queryParameters = new HashSet<string>(url.QueryParts.Select(x => x.Value).OfType<VariableHttpPathPart>().Select(x => x.Key));
+            var bodyParameters = new List<ParameterInfo>();
             foreach (var parameter in method.GetParameters())
             {
+                typeConverter = TypeConverterAttribute.Combine(parameter, typeConverter);
                 if (pathParameters.Contains(parameter.Name))
                 {
-                    argumentHandlers[parameter.Name] = new PathArgumentHandler(TypeConverter);
+                    argumentHandlers[parameter.Name] = new PathArgumentHandler(typeConverter);
                 }
                 else if (queryParameters.Contains(parameter.Name))
                 {
-                    argumentHandlers[parameter.Name] = new QueryArgumentHandler(TypeConverter);
+                    argumentHandlers[parameter.Name] = new QueryArgumentHandler(typeConverter);
                 }
                 else
                 {
                     var headerAttribute = parameter.GetCustomAttribute<HeaderAttribute>();
                     if (headerAttribute != null)
                     {
-                        argumentHandlers[parameter.Name] = new HttpHeaderArgumentHandler(TypeConverter, headerAttribute.Name, headerAttribute.Values);
+                        argumentHandlers[parameter.Name] = new HttpHeaderArgumentHandler(typeConverter, headerAttribute.Name, headerAttribute.Values);
                     }
                     else
                     {
-                        
+                        bodyParameters.Add(parameter);
                     }
                 }
             }

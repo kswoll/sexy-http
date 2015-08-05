@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using SexyHttp.TypeConverters;
 
 namespace SexyHttp.Tests
 {
@@ -72,6 +73,64 @@ namespace SexyHttp.Tests
         {
             [Get("path?foo={key}")]
             Task<string> GetString(string key);
+        }
+
+        [Test]
+        public async void ApiLevelTypeConverter()
+        {
+            var api = new HttpApi<IApiLevelTypeConverter>();
+            var endpoint = api.Endpoints.Single();
+            var httpHandler = new MockHttpHandler();
+            await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object> { { "number", 5 } });
+            Assert.AreEqual("http://localhost/foo", httpHandler.Request.Url.ToString());
+        }
+
+        [TypeConverter(typeof(TestTypeConverter))]
+        interface IApiLevelTypeConverter
+        {
+            [Post("{number}")]
+            Task PostInt(int number);
+        }
+
+        [Test]
+        public async void EndpointLevelTypeConverter()
+        {
+            var api = new HttpApi<IEndpointLevelTypeConverter>();
+            var endpoint = api.Endpoints.Single();
+            var httpHandler = new MockHttpHandler();
+            await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object> { { "number", 5 } });
+            Assert.AreEqual("http://localhost/foo", httpHandler.Request.Url.ToString());            
+        }
+
+        interface IEndpointLevelTypeConverter
+        {
+            [Post("{number}"), TypeConverter(typeof(TestTypeConverter))]
+            Task PostInt(int number);
+        }
+
+        [Test]
+        public async void ParameterLevelTypeConverter()
+        {
+            var api = new HttpApi<IParameterLevelTypeConverter>();
+            var endpoint = api.Endpoints.Single();
+            var httpHandler = new MockHttpHandler();
+            await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object> { { "number", 5 } });
+            Assert.AreEqual("http://localhost/foo", httpHandler.Request.Url.ToString());                        
+        }
+
+        interface IParameterLevelTypeConverter
+        {
+            [Post("{number}")]
+            Task PostInt([TypeConverter(typeof(TestTypeConverter))]int number);            
+        }
+
+        class TestTypeConverter : ITypeConverter
+        {
+            public bool TryConvertTo<T>(object obj, out T result)
+            {
+                result = (T)(object)"foo";
+                return true;
+            }
         }
     }
 }
