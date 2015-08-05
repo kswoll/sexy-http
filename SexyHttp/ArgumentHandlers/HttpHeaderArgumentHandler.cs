@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using SexyHttp.Utils;
 
 namespace SexyHttp.ArgumentHandlers
 {
@@ -16,9 +18,10 @@ namespace SexyHttp.ArgumentHandlers
         {
         }
 
-        public void ApplyArgument(HttpApiRequest request, string name, object argument)
+        public Task ApplyArgument(HttpApiRequest request, string name, object argument)
         {
             request.Headers.Add(new HttpHeader(name, values));
+            return TaskConstants.Completed;
         }
     }
 }

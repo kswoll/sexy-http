@@ -1,9 +1,10 @@
-﻿using SexyHttp.TypeConverters;
+﻿using System.Threading.Tasks;
+using SexyHttp.TypeConverters;
 
 namespace SexyHttp
 {
     public interface IHttpArgumentHandler
     {
-        void ApplyArgument(HttpApiRequest request, string name, object argument);
+        Task ApplyArgument(HttpApiRequest request, string name, object argument);
     }
 }

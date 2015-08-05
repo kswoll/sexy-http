@@ -51,5 +51,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Urls\HttpUrlQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Urls\LiteralHttpUrlPart.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Urls\VariableHttpPathPart.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\TaskConstants.cs" />
   </ItemGroup>
 </Project>

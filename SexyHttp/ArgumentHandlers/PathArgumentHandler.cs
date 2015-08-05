@@ -1,4 +1,6 @@
-﻿using SexyHttp.TypeConverters;
+﻿using System.Threading.Tasks;
+using SexyHttp.TypeConverters;
+using SexyHttp.Utils;
 
 namespace SexyHttp.ArgumentHandlers
 {
@@ -8,10 +10,12 @@ namespace SexyHttp.ArgumentHandlers
         {
         }
 
-        public override void ApplyArgument(HttpApiRequest request, string name, object argument)
+        public override Task ApplyArgument(HttpApiRequest request, string name, object argument)
         {
             var value = TypeConverter.ConvertTo<string>(argument);
             request.Url.Path[name] = value;
+
+            return TaskConstants.Completed;
         }
     }
 }

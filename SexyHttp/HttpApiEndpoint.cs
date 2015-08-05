@@ -37,7 +37,7 @@ namespace SexyHttp
                 var name = item.Key;
                 var argument = arguments[name];
                 var handler = item.Value;
-                handler.ApplyArgument(request, name, argument);
+                await handler.ApplyArgument(request, name, argument);
             }
 
             var response = await httpHandler.Call(request);
