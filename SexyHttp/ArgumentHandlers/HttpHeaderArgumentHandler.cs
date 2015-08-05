@@ -1,25 +1,31 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using SexyHttp.TypeConverters;
 using SexyHttp.Utils;
 
 namespace SexyHttp.ArgumentHandlers
 {
-    public class HttpHeaderArgumentHandler : IHttpArgumentHandler
+    public class HttpHeaderArgumentHandler : HttpArgumentHandler
     {
-        private readonly string[] values;
+        public string Name { get; }
+        public string[] Values { get; }
 
-        public HttpHeaderArgumentHandler(params string[] values)
+        public HttpHeaderArgumentHandler(ITypeConverter typeConverter, string name = null) : base(typeConverter)
         {
-            this.values = values;
+            Name = name;
         }
 
-        public HttpHeaderArgumentHandler(IEnumerable<string> values) : this(values.ToArray())
+        public HttpHeaderArgumentHandler(ITypeConverter typeConverter, string name, params string[] values) : base(typeConverter)
         {
+            Name = name;
+            Values = values;
         }
 
-        public Task ApplyArgument(HttpApiRequest request, string name, object argument)
+        public override Task ApplyArgument(HttpApiRequest request, string name, object argument)
         {
+            name = Name ?? name;
+
+            var values = Values ?? TypeConverter.ConvertTo<string[]>(argument);
+
             request.Headers.Add(new HttpHeader(name, values));
             return TaskConstants.Completed;
         }

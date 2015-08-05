@@ -48,6 +48,18 @@ namespace SexyHttp
                 {
                     argumentHandlers[parameter.Name] = new QueryArgumentHandler(TypeConverter);
                 }
+                else
+                {
+                    var headerAttribute = parameter.GetCustomAttribute<HeaderAttribute>();
+                    if (headerAttribute != null)
+                    {
+                        argumentHandlers[parameter.Name] = new HttpHeaderArgumentHandler(TypeConverter, headerAttribute.Name, headerAttribute.Values);
+                    }
+                    else
+                    {
+                        
+                    }
+                }
             }
 
             var endpoint = new HttpApiEndpoint(url, httpMethod.Method, argumentHandlers, new NullResponseHandler());

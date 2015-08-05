@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\QueryArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DeleteAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GetAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HeaderAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Http.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpApi.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpApiClient.cs" />

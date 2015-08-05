@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using NUnit.Framework;
 using SexyHttp.ArgumentHandlers;
+using SexyHttp.TypeConverters;
 
 namespace SexyHttp.Tests
 {
@@ -61,7 +62,7 @@ namespace SexyHttp.Tests
                 HttpMethod.Get, 
                 new Dictionary<string, IHttpArgumentHandler>
                 {
-                    { "name", new HttpHeaderArgumentHandler("value")  }
+                    { "name", new HttpHeaderArgumentHandler(new DefaultTypeConverter())  }
                 }, 
                 responseHandler);
             var response = await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object> { { "name", "value" } });
