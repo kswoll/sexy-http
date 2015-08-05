@@ -54,11 +54,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HttpApiClientTests.cs" />
     <Compile Include="HttpApiEndpointTests.cs" />
     <Compile Include="HttpApiTests.cs" />
     <Compile Include="HttpUrlParserTests.cs" />
     <Compile Include="HttpUrlTests.cs" />
-    <Compile Include="MockHeadersProvider.cs" />
+    <Compile Include="MockApiRequestInstrumenter.cs" />
     <Compile Include="MockHttpHandler.cs" />
     <Compile Include="MockResponseHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
