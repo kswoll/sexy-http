@@ -1,4 +1,6 @@
-﻿namespace SexyHttp
+﻿using SexyHttp.TypeConverters;
+
+namespace SexyHttp
 {
     public interface IHttpHeadersProvider
     {

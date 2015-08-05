@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DeleteAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GetAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HeaderAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HeadersProviders\CombinedHeadersProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Http.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpApi.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpApiClient.cs" />
@@ -26,6 +27,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)HttpArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpBody.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpHeader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpHeadersProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpMethodAttributes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpMethodException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpResponseHandler.cs" />

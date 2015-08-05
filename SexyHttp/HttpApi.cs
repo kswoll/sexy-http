@@ -14,7 +14,7 @@ namespace SexyHttp
 {
     public class HttpApi<T>
     {
-        public IReadOnlyCollection<HttpApiEndpoint> Endpoints { get; }
+        public IReadOnlyDictionary<MethodInfo, HttpApiEndpoint> Endpoints { get; }
         public ITypeConverter TypeConverter { get; }
 
         public HttpApi()
@@ -22,14 +22,14 @@ namespace SexyHttp
             TypeConverter = TypeConverterAttribute.GetTypeConverter(typeof(T)) ?? new DefaultTypeConverter();
 
             // Create endpoints
-            var endpoints = new List<HttpApiEndpoint>();
+            var endpoints = new Dictionary<MethodInfo, HttpApiEndpoint>();
             foreach (var method in typeof(T).GetMethods())
             {
                 var httpMethod = method.GetHttpMethodAttribute();
                 if (httpMethod != null)
                 {
                     var endpoint = CreateEndpoint(method, httpMethod);
-                    endpoints.Add(endpoint);                    
+                    endpoints[method] = endpoint;
                 }
             }
             Endpoints = endpoints;
