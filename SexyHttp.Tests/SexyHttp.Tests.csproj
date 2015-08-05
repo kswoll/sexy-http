@@ -57,10 +57,12 @@
     <Compile Include="HttpApiClientTests.cs" />
     <Compile Include="HttpApiEndpointTests.cs" />
     <Compile Include="HttpApiTests.cs" />
+    <Compile Include="HttpClientHandlerTests.cs" />
     <Compile Include="HttpUrlParserTests.cs" />
     <Compile Include="HttpUrlTests.cs" />
     <Compile Include="MockApiRequestInstrumenter.cs" />
     <Compile Include="MockHttpHandler.cs" />
+    <Compile Include="MockHttpServer.cs" />
     <Compile Include="MockResponseHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ISampleInterfaceApi.cs" />

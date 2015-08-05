@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SexyHttp.HttpBodies;
 using SexyHttp.TypeConverters;
@@ -19,7 +20,7 @@ namespace SexyHttp.ArgumentHandlers
                 throw new Exception("DirectJsonArgumentHandler expects a null request body.");
 
             var token = TypeConverter.ConvertTo<JToken>(argument);
-            request.Body = new JsonHttpBody(token);
+            request.Body = new JsonHttpBody(token.ToString(Formatting.Indented));
 
             return TaskConstants.Completed;
         }

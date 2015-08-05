@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace SexyHttp.HttpBodies
+﻿namespace SexyHttp.HttpBodies
 {
     public interface IHttpBodyVisitor<out T>
     {
