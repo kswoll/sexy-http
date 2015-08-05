@@ -41,7 +41,7 @@ namespace SexyHttp
             }
 
             var response = await httpHandler.Call(request);
-            var result = responseHandler.HandleResponse(response);
+            var result = await responseHandler.HandleResponse(response);
             return result;
         }
     }

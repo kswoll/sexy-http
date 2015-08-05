@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using SexyHttp.ArgumentHandlers;
@@ -10,11 +11,12 @@ namespace SexyHttp
     public class HttpApi<T>
     {
         public IReadOnlyCollection<HttpApiEndpoint> Endpoints { get; }
-        public RegistryTypeConverter TypeConverter { get; }
+        public ITypeConverter TypeConverter { get; }
 
         public HttpApi()
         {
-            TypeConverter = new RegistryTypeConverter();
+            var typeConverterAttribute = typeof(T).GetCustomAttribute<TypeConverterAttribute>();
+            TypeConverter = typeConverterAttribute != null ? (ITypeConverter)Activator.CreateInstance(typeConverterAttribute.ConverterType) : new DefaultTypeConverter();
 
             // Create endpoints
             var endpoints = new List<HttpApiEndpoint>();
@@ -48,7 +50,7 @@ namespace SexyHttp
                 }
             }
 
-            var endpoint = new HttpApiEndpoint(path, httpMethod.Method, argumentHandlers, null);
+            var endpoint = new HttpApiEndpoint(path, httpMethod.Method, argumentHandlers, new NullResponseHandler());
             return endpoint;
         }
     }

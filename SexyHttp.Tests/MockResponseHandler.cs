@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace SexyHttp.Tests
 {
@@ -21,9 +22,9 @@ namespace SexyHttp.Tests
             this.responseFactory = responseFactory;
         }
 
-        public object HandleResponse(HttpApiResponse response) 
+        public Task<object> HandleResponse(HttpApiResponse response) 
         {
-            return responseFactory(response);
+            return Task.FromResult(responseFactory(response));
         }
     }
 }

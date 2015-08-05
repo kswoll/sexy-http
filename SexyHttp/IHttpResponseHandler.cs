@@ -1,7 +1,9 @@
-﻿namespace SexyHttp
+﻿using System.Threading.Tasks;
+
+namespace SexyHttp
 {
     public interface IHttpResponseHandler
     {
-        object HandleResponse(HttpApiResponse response);
+        Task<object> HandleResponse(HttpApiResponse response);
     }
 }

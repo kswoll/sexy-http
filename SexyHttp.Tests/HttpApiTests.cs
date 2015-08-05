@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -26,6 +27,35 @@ namespace SexyHttp.Tests
         {
             [Get("path")]
             Task<string> GetString();
+        }
+
+        [Test]
+        public void Post()
+        {
+            var api = new HttpApi<IPost>();
+            Assert.AreEqual(HttpMethod.Post, api.Endpoints.Single().Method);
+        }
+
+        interface IPost
+        {
+            [Post("path")]
+            Task Post();
+        }
+
+        [Test]
+        public async void PathWithSubstitution()
+        {
+            var api = new HttpApi<IPathWithSubstitution>();
+            var endpoint = api.Endpoints.Single();
+            var httpHandler = new MockHttpHandler();
+            await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object> { { "key", "to" } });
+            Assert.AreEqual("http://localhost/path/to/api", httpHandler.Request.Url.ToString());
+        }
+
+        interface IPathWithSubstitution
+        {
+            [Get("path/{key}/api")]
+            Task<string> GetString(string key);
         }
     }
 }

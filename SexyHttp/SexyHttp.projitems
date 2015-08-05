@@ -30,12 +30,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)IHttpHeadersProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpMethodAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpResponseHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NullResponseHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PostAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PutAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\CombinedTypeConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\DefaultTypeConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\IdentityTypeConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\LambdaTypeConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\RegistryTypeConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\ITypeConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\TypeConverterAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\TypeConverterExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\TypeConverterResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Urls\HttpUrlParseException.cs" />
