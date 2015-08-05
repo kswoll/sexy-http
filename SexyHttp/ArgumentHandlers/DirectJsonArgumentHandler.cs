@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using SexyHttp.HttpBodies;
 using SexyHttp.TypeConverters;
 using SexyHttp.Utils;
 

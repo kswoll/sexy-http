@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using SexyHttp.HttpBodies;
 
 namespace SexyHttp.Tests
 {

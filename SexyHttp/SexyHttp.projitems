@@ -25,7 +25,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)HttpApiRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpApiResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpArgumentHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpBodies\IAsyncHttpBodyVisitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpBodies\IHttpBodyVisitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpBodies\JsonHttpBody.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpBodies\StringHttpBody.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpBody.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpHandlers\HttpClientHandlers\HttpClientHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpHandlers\HttpClientHandlers\AsyncHttpContentVisitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpHeader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpApiRequestInstrumenter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpMethodAttributes.cs" />
@@ -36,7 +42,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)IHttpApiRequestInstrumenter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpMethodAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpResponseHandler.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)JsonHttpBody.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PostAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PutAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ResponseHandlers\JsonResponseHandler.cs" />

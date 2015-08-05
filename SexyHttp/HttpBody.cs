@@ -1,7 +1,11 @@
-﻿namespace SexyHttp
+﻿using System.Threading.Tasks;
+using SexyHttp.HttpBodies;
+
+namespace SexyHttp
 {
-    public class HttpBody
+    public abstract class HttpBody
     {
-         
+        public abstract T Accept<T>(IHttpBodyVisitor<T> visitor);
+        public abstract Task<T> AcceptAsync<T>(IAsyncHttpBodyVisitor<T> visitor);
     }
 }

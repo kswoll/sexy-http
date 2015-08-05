@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using SexyHttp.HttpBodies;
 using SexyHttp.TypeConverters;
 
 namespace SexyHttp.ResponseHandlers
