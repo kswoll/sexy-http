@@ -11,7 +11,7 @@ namespace SexyHttp.Tests
         public async void GetString()
         {
             var httpHandler = new MockHttpHandler(x => new HttpApiResponse(body: x.Body));
-            var client = HttpApiClient<IApi>.Create(new HttpApi<IApi>(), "http://localhost", httpHandler, new MockApiRequestInstrumenter());
+            var client = HttpApiClient<IApi>.Create("http://localhost", httpHandler);
             var result = await client.GetString("foo");
             Assert.AreEqual("foo", result);
         }
