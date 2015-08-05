@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace SexyHttp.Tests
 {
@@ -9,7 +10,7 @@ namespace SexyHttp.Tests
         public HttpApiRequest Request { get; set; }
         public Func<HttpApiRequest, HttpApiResponse> Response { get; set; }
 
-        public MockHttpHandler() : this(x => new HttpApiResponse(HttpStatusCode.Found, new HttpBody(), x.Headers))
+        public MockHttpHandler() : this(x => new HttpApiResponse(HttpStatusCode.Found, new JsonHttpBody(JValue.CreateNull()), x.Headers))
         {
         }
 

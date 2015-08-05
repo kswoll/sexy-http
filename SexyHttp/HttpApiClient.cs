@@ -29,10 +29,10 @@ namespace SexyHttp
             public Task<object> Call(Invocation invocation)
             {
                 var endpoint = api.Endpoints[invocation.Method];
-                return endpoint.Call(httpHandler, apiRequestInstrumenter, baseUrl, invocation.Method
+                return endpoint.Call(httpHandler, baseUrl, invocation.Method
                     .GetParameters()
                     .Select((x, i) => new { x.Name, Value = invocation.Arguments[i] })
-                    .ToDictionary(x => x.Name, x => x.Value));
+                    .ToDictionary(x => x.Name, x => x.Value), apiRequestInstrumenter);
             }
         }
     }

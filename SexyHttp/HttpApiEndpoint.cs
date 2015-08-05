@@ -27,11 +27,11 @@ namespace SexyHttp
             this.responseHandler = responseHandler;
         }
 
-        public async Task<object> Call(IHttpHandler httpHandler, IHttpApiRequestInstrumenter apiRequestInstrumenter, string baseUrl, Dictionary<string, object> arguments)
+        public async Task<object> Call(IHttpHandler httpHandler, string baseUrl, Dictionary<string, object> arguments, IHttpApiRequestInstrumenter apiRequestInstrumenter = null)
         {
             var request = new HttpApiRequest { Url = Path.CreateUrl(baseUrl), Method = Method, Headers = new List<HttpHeader>() };
 
-            apiRequestInstrumenter.InstrumentRequest(request);
+            apiRequestInstrumenter?.InstrumentRequest(request);
 
             foreach (var item in argumentHandlers)
             {
