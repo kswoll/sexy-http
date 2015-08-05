@@ -33,6 +33,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)NullResponseHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PostAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PutAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\ArrayTypeConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\CombinedTypeConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\DefaultTypeConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\IdentityTypeConverter.cs" />

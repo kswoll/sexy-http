@@ -72,6 +72,5 @@ namespace SexyHttp.Urls
             }
             return builder.ToString();
         }
-
     }
 }

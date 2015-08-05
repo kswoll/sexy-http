@@ -57,5 +57,21 @@ namespace SexyHttp.Tests
             [Get("path/{key}/api")]
             Task<string> GetString(string key);
         }
+
+        [Test]
+        public async void QueryWithSubstitution()
+        {
+            var api = new HttpApi<IQueryWithSubstitution>();
+            var endpoint = api.Endpoints.Single();
+            var httpHandler = new MockHttpHandler();
+            await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object> { { "key", "bar" } });
+            Assert.AreEqual("http://localhost/path?foo=bar", httpHandler.Request.Url.ToString());
+        }
+
+        interface IQueryWithSubstitution
+        {
+            [Get("path?foo={key}")]
+            Task<string> GetString(string key);
+        }
     }
 }

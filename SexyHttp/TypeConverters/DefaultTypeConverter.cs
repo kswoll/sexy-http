@@ -2,7 +2,7 @@
 {
     public class DefaultTypeConverter : CombinedTypeConverter
     {
-        public DefaultTypeConverter() : base(CreateRegistryTypeConverter(), new IdentityTypeConverter())
+        public DefaultTypeConverter() : base(CreateRegistryTypeConverter(), new IdentityTypeConverter(), new ArrayTypeConverter())
         {
         }
 

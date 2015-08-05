@@ -35,9 +35,9 @@ namespace SexyHttp
         protected HttpApiEndpoint CreateEndpoint(MethodInfo method, IHttpMethodAttribute httpMethod)
         {
             var argumentHandlers = new Dictionary<string, IHttpArgumentHandler>();
-            var path = HttpUrlParser.Parse(httpMethod.Path);
-            var pathParameters = new HashSet<string>(path.PathParts.OfType<VariableHttpPathPart>().Select(x => x.Key));
-            var queryParameters = new HashSet<string>(path.QueryParts.Select(x => x.Value).OfType<VariableHttpPathPart>().Select(x => x.Key));
+            var url = HttpUrlParser.Parse(httpMethod.Path);
+            var pathParameters = new HashSet<string>(url.PathParts.OfType<VariableHttpPathPart>().Select(x => x.Key));
+            var queryParameters = new HashSet<string>(url.QueryParts.Select(x => x.Value).OfType<VariableHttpPathPart>().Select(x => x.Key));
             foreach (var parameter in method.GetParameters())
             {
                 if (pathParameters.Contains(parameter.Name))
@@ -50,7 +50,7 @@ namespace SexyHttp
                 }
             }
 
-            var endpoint = new HttpApiEndpoint(path, httpMethod.Method, argumentHandlers, new NullResponseHandler());
+            var endpoint = new HttpApiEndpoint(url, httpMethod.Method, argumentHandlers, new NullResponseHandler());
             return endpoint;
         }
     }

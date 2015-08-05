@@ -2,21 +2,21 @@
 {
     public class CombinedTypeConverter : ITypeConverter
     {
-        private readonly ITypeConverter first;
-        private readonly ITypeConverter second;
+        private readonly ITypeConverter[] typeConverters;
 
-        public CombinedTypeConverter(ITypeConverter first, ITypeConverter second)
+        public CombinedTypeConverter(params ITypeConverter[] typeConverters)
         {
-            this.first = first;
-            this.second = second;
+            this.typeConverters = typeConverters;
         }
 
         public bool TryConvertTo<T>(object obj, out T result)
         {
-            if (first.TryConvertTo(obj, out result))
-                return true;
-            if (second.TryConvertTo(obj, out result))
-                return true;
+            foreach (var typeConverter in typeConverters)
+            {
+                if (typeConverter.TryConvertTo(obj, out result))
+                    return true;
+            }
+            result = default(T);
             return false;
         }
     }
