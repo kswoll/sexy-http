@@ -65,7 +65,7 @@ namespace SexyHttp.Tests
                     { "name", new HttpHeaderArgumentHandler(new DefaultTypeConverter())  }
                 }, 
                 responseHandler);
-            var response = await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object> { { "name", "value" } });
+            var response = await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object> { ["name"] = "value" });
 
             Assert.AreEqual("value", response);
         }

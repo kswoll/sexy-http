@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using SexyHttp.TypeConverters;
 
@@ -49,7 +50,7 @@ namespace SexyHttp.Tests
             var api = new HttpApi<IPathWithSubstitution>();
             var endpoint = api.Endpoints.Single();
             var httpHandler = new MockHttpHandler();
-            await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object> { { "key", "to" } });
+            await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object> { ["key"] = "to" });
             Assert.AreEqual("http://localhost/path/to/api", httpHandler.Request.Url.ToString());
         }
 
@@ -65,7 +66,7 @@ namespace SexyHttp.Tests
             var api = new HttpApi<IQueryWithSubstitution>();
             var endpoint = api.Endpoints.Single();
             var httpHandler = new MockHttpHandler();
-            await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object> { { "key", "bar" } });
+            await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object> { ["key"] = "bar" });
             Assert.AreEqual("http://localhost/path?foo=bar", httpHandler.Request.Url.ToString());
         }
 
@@ -81,7 +82,7 @@ namespace SexyHttp.Tests
             var api = new HttpApi<IApiLevelTypeConverter>();
             var endpoint = api.Endpoints.Single();
             var httpHandler = new MockHttpHandler();
-            await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object> { { "number", 5 } });
+            await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object> { ["number"] = 5 });
             Assert.AreEqual("http://localhost/foo", httpHandler.Request.Url.ToString());
         }
 
@@ -98,7 +99,7 @@ namespace SexyHttp.Tests
             var api = new HttpApi<IEndpointLevelTypeConverter>();
             var endpoint = api.Endpoints.Single();
             var httpHandler = new MockHttpHandler();
-            await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object> { { "number", 5 } });
+            await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object> { ["number"] = 5 });
             Assert.AreEqual("http://localhost/foo", httpHandler.Request.Url.ToString());            
         }
 
@@ -114,7 +115,7 @@ namespace SexyHttp.Tests
             var api = new HttpApi<IParameterLevelTypeConverter>();
             var endpoint = api.Endpoints.Single();
             var httpHandler = new MockHttpHandler();
-            await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object> { { "number", 5 } });
+            await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object> { ["number"] = 5 });
             Assert.AreEqual("http://localhost/foo", httpHandler.Request.Url.ToString());                        
         }
 
@@ -131,6 +132,45 @@ namespace SexyHttp.Tests
                 result = (T)(object)"foo";
                 return true;
             }
+        }
+
+        [Test]
+        public async Task DirectJsonBody()
+        {
+            var api = new HttpApi<IDirectJsonBody>();
+            var endpoint = api.Endpoints.Single();
+            var httpHandler = new MockHttpHandler();
+            await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object> { ["number"] = 5 });
+
+            var body = (JsonHttpBody)httpHandler.Request.Body;
+            var value = (JValue)body.Json;
+            Assert.AreEqual(5, (int)value);
+        }
+
+        interface IDirectJsonBody
+        {
+            [Post("path")]
+            Task PostInt(int number);
+        }
+
+        [Test]
+        public async Task ComposedJsonBody()
+        {
+            var api = new HttpApi<IComposedJsonBody>();
+            var endpoint = api.Endpoints.Single();
+            var httpHandler = new MockHttpHandler();
+            await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object> { ["value1"] = 5, ["value2"] = "foo" });
+
+            var body = (JsonHttpBody)httpHandler.Request.Body;
+            var jsonObject = (JObject)body.Json;
+            Assert.AreEqual(5, (int)jsonObject["value1"]);            
+            Assert.AreEqual("foo", (string)jsonObject["value2"]);
+        }
+
+        interface IComposedJsonBody
+        {
+            [Post("path")]
+            Task PostTwoValues(int value1, string value2);
         }
     }
 }

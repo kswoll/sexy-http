@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SexyHttp.Urls
+﻿namespace SexyHttp.Urls
 {
     public abstract class HttpUrlPart
     {

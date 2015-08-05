@@ -35,9 +35,15 @@ namespace SexyHttp.TypeConverters
                             return true;
                         }
                     }
-                    sourceType = sourceType.BaseType;
+                    if (sourceType.IsValueType)
+                        sourceType = typeof(object);
+                    else
+                        sourceType = sourceType.BaseType;
                 }
-                targetType = targetType.BaseType;
+                if (targetType.IsValueType)
+                    targetType = typeof(object);
+                else
+                    targetType = targetType.BaseType;
             }
 
             result = default(T);
