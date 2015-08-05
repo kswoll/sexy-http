@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
@@ -171,6 +172,22 @@ namespace SexyHttp.Tests
         {
             [Post("path")]
             Task PostTwoValues(int value1, string value2);
+        }
+
+        [Test]
+        public async void JsonResponse()
+        {
+            var api = new HttpApi<IJsonResponse>();
+            var endpoint = api.Endpoints.Single();
+            var httpHandler = new MockHttpHandler(new HttpApiResponse(body: new JsonHttpBody("foo")));
+            var result = (string)await endpoint.Call(httpHandler, new MockHeadersProvider(), "http://localhost", new Dictionary<string, object>());
+            Assert.AreEqual("foo", result);
+        }
+
+        interface IJsonResponse
+        {
+            [Get("path")]
+            Task<string> GetString();
         }
     }
 }

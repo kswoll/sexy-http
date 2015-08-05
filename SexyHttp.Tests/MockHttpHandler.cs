@@ -9,7 +9,7 @@ namespace SexyHttp.Tests
         public HttpApiRequest Request { get; set; }
         public Func<HttpApiRequest, HttpApiResponse> Response { get; set; }
 
-        public MockHttpHandler() : this(x => new HttpApiResponse(HttpStatusCode.Found, x.Headers, new HttpBody {  }))
+        public MockHttpHandler() : this(x => new HttpApiResponse(HttpStatusCode.Found, new HttpBody(), x.Headers))
         {
         }
 

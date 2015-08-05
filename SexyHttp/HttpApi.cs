@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SexyHttp.ArgumentHandlers;
+using SexyHttp.ResponseHandlers;
 using SexyHttp.TypeConverters;
 using SexyHttp.Urls;
+using SexyHttp.Utils;
 
 namespace SexyHttp
 {
@@ -82,7 +86,16 @@ namespace SexyHttp
                 }
             }
 
-            var endpoint = new HttpApiEndpoint(url, httpMethod.Method, argumentHandlers, new NullResponseHandler());
+            var returnType = method.ReturnType;
+            if (!typeof(Task).IsAssignableFrom(returnType))
+                throw new Exception("Methods must be async and return either Task or Task<T>");
+            returnType = returnType.GetTaskType() ?? typeof(void);
+
+            var responseHandler = returnType == typeof(void) ? 
+                (IHttpResponseHandler)new NullResponseHandler() : 
+                new JsonResponseHandler(typeConverter, returnType);
+
+            var endpoint = new HttpApiEndpoint(url, httpMethod.Method, argumentHandlers, responseHandler);
             return endpoint;
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using SexyHttp.Urls;
@@ -35,7 +36,9 @@ namespace SexyHttp
             foreach (var item in argumentHandlers)
             {
                 var name = item.Key;
-                var argument = arguments[name];
+                object argument;
+                if (!arguments.TryGetValue(name, out argument))
+                    throw new Exception($"The argument {name} was not found in the request.");
                 var handler = item.Value;
                 await handler.ApplyArgument(request, name, argument);
             }

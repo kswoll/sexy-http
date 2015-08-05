@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace SexyHttp
+namespace SexyHttp.ResponseHandlers
 {
     public class NullResponseHandler : IHttpResponseHandler
     {
