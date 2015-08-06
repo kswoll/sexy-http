@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace SexyHttp.Tests
 {
-    public class MockResponseHandler : IHttpResponseHandler
+    public class MockResponseHandler : HttpResponseHandler
     {
         public object Response { get; set; }
 
@@ -22,7 +22,7 @@ namespace SexyHttp.Tests
             this.responseFactory = responseFactory;
         }
 
-        public Task<object> HandleResponse(HttpApiResponse response) 
+        public override Task<object> HandleResponse(HttpApiResponse response) 
         {
             return Task.FromResult(responseFactory(response));
         }

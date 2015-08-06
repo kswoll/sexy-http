@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using SexyHttp.HttpBodies;
@@ -61,6 +62,25 @@ namespace SexyHttp.Tests
         {
             [Post("path"), Multipart]
             Task<string> PostString(string value);
+        }
+
+        [Test]
+        public async void PostByteArrayMultipart()
+        {
+            using (MockHttpServer.PostMultipartReturnByteArray(x => Task.FromResult(((ByteArrayHttpBody)x.Data["data"].Body).Data)))
+            {
+                var input = new byte[] { 3, 1, 8, 9, 15 };
+                var client = HttpApiClient<IPostByteArrayMultipart>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var result = await client.PostByteArray(input);
+                Assert.IsTrue(result.SequenceEqual(input));
+            }            
+        }
+
+        [Proxy]
+        private interface IPostByteArrayMultipart
+        {
+            [Post("path"), Multipart]
+            Task<byte[]> PostByteArray(byte[] data);
         }
     }
 }

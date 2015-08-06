@@ -18,7 +18,8 @@ namespace SexyHttp.ArgumentHandlers
                 request.Body = new MultipartHttpBody();
             }
             var multipart = (MultipartHttpBody)request.Body;
-            multipart.Data[name] = new MultipartData { Body = new StringHttpBody((string)argument) };
+            var body = TypeConverter.ConvertTo<HttpBody>(argument);
+            multipart.Data[name] = new MultipartData { Body = body };
 
             return TaskConstants.Completed;
         }

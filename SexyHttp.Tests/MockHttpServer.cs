@@ -12,8 +12,8 @@ namespace SexyHttp.Tests
     public class MockHttpServer : IDisposable
     {
         private readonly HttpListener listener = new HttpListener();
+        private readonly object locker = new object();
         private bool isRunning;
-        private object locker = new object();
 
         public MockHttpServer(Func<HttpListenerRequest, HttpListenerResponse, Task> handler)
         {
@@ -81,6 +81,13 @@ namespace SexyHttp.Tests
             response.OutputStream.Close();
         }
 
+        private async static Task WriteByteArray(HttpListenerResponse response, byte[] data)
+        {
+            response.Headers.Add("Content-Type", "application/octet-stream");
+            await response.OutputStream.WriteAsync(data, 0, data.Length);
+            response.OutputStream.Close();
+        }
+
         public static MockHttpServer ReturnJson(Func<HttpListenerRequest, JToken> jsonHandler)
         {
             return new MockHttpServer(async (request, response) =>
@@ -107,6 +114,16 @@ namespace SexyHttp.Tests
                 var content = MultipartParser.ParseMultipart(request);
                 var json = await handler(content);
                 await WriteJson(response, json);
+            });
+        }
+
+        public static MockHttpServer PostMultipartReturnByteArray(Func<MultipartHttpBody, Task<byte[]>> handler)
+        {
+            return new MockHttpServer(async (request, response) =>
+            {
+                var content = MultipartParser.ParseMultipart(request);
+                var data = await handler(content);
+                await WriteByteArray(response, data);
             });
         }
 

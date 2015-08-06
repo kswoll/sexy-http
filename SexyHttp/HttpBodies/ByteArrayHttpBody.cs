@@ -6,6 +6,11 @@ namespace SexyHttp.HttpBodies
     {
         public byte[] Data { get; set; }
 
+        public ByteArrayHttpBody(byte[] data = null)
+        {
+            Data = data;
+        }
+
         public override T Accept<T>(IHttpBodyVisitor<T> visitor)
         {
             return visitor.VisitByteArrayBody(this);

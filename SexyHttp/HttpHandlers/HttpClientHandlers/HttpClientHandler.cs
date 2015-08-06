@@ -66,7 +66,9 @@ namespace SexyHttp.HttpHandlers.HttpClientHandlers
 
             public HttpContent VisitByteArrayBody(ByteArrayHttpBody body)
             {
-                return new ByteArrayContent(body.Data);
+                var result = new ByteArrayContent(body.Data);
+                result.Headers.ContentType = MediaTypeHeaderValue.Parse("application/octet-stream");
+                return result;
             }
         }
 

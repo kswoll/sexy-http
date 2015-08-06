@@ -62,22 +62,6 @@ namespace SexyHttp.Tests
                     }
                 }
 
-                bool isText;
-                switch (contentType)
-                {
-                    case "text/plain":
-                        isText = true;
-                        break;
-                    case "application/json":
-                        isText = true;
-                        break;
-                    case "application/octet-stream":
-                        isText = false;
-                        break;
-                    default:
-                        throw new Exception($"Unsupported media type: {contentType}");
-                }
-
                 var endBoundary = IndexOf(buffer, position, boundaryBytes);
                 var dataBuffer = ReadBuffer(buffer, ref position, endBoundary - position);
                 Func<string> getText = () =>

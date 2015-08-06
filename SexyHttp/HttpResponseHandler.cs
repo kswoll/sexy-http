@@ -7,11 +7,6 @@ namespace SexyHttp
     {
         public abstract Task<object> HandleResponse(HttpApiResponse response);
 
-        public ITypeConverter TypeConverter { get; }
-
-        protected HttpResponseHandler(ITypeConverter typeConverter)
-        {
-            TypeConverter = typeConverter;
-        }
+        public ITypeConverter TypeConverter { get; set; }
     }
 }

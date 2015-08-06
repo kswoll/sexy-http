@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using SexyHttp.HttpBodies;
-using SexyHttp.TypeConverters;
 
 namespace SexyHttp.ResponseHandlers
 {
@@ -9,7 +8,7 @@ namespace SexyHttp.ResponseHandlers
     {
         public Type Type { get; }
 
-        public JsonResponseHandler(ITypeConverter typeConverter, Type type) : base(typeConverter)
+        public JsonResponseHandler(Type type) 
         {
             Type = type;
         }
