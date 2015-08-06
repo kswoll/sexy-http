@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\DirectJsonArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\HttpHeaderArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\ComposedJsonArgumentHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\MultipartArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\PathArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\QueryArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DeleteAttribute.cs" />
@@ -25,9 +26,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)HttpApiRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpApiResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpArgumentHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpBodies\ByteArrayHttpBody.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpBodies\IAsyncHttpBodyVisitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpBodies\IHttpBodyVisitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpBodies\JsonHttpBody.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpBodies\MultipartData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpBodies\MultipartHttpBody.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpBodies\StringHttpBody.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpBody.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpHandlers\HttpClientHandlers\HttpClientHandler.cs" />
@@ -41,6 +45,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)IHttpApiRequestInstrumenter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpMethodAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpResponseHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MultipartAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PostAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PutAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ResponseHandlers\JsonResponseHandler.cs" />

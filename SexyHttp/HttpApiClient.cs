@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using SexyProxy;
 
@@ -33,7 +34,9 @@ namespace SexyHttp
 
             public Task<object> Call(Invocation invocation)
             {
-                var endpoint = api.Endpoints[invocation.Method];
+                HttpApiEndpoint endpoint;
+                if (!api.Endpoints.TryGetValue(invocation.Method, out endpoint))
+                    throw new Exception($"Endpoint not found for: {invocation.Method.DeclaringType.FullName}.{invocation.Method.Name}");
                 return endpoint.Call(httpHandler, baseUrl, invocation.Method
                     .GetParameters()
                     .Select((x, i) => new { x.Name, Value = invocation.Arguments[i] })

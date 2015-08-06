@@ -6,5 +6,7 @@ namespace SexyHttp.HttpBodies
     {
         Task<T> VisitJsonBodyAsync(JsonHttpBody body);
         Task<T> VisitStringBodyAsync(StringHttpBody body);
+        Task<T> VisitMultipartBodyAsync(MultipartHttpBody body);
+        Task<T> VisitByteArrayBodyAsync(ByteArrayHttpBody body);
     }
 }

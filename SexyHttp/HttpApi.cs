@@ -70,19 +70,31 @@ namespace SexyHttp
 
             if (bodyParameters.Any())
             {
-                if (bodyParameters.Count == 1)
-                {
-                    var parameter = bodyParameters.Single();
-                    argumentHandlers[parameter.Name] = new DirectJsonArgumentHandler(typeConverter);
-                }
-                else
+                var isMultipart = method.GetCustomAttribute<MultipartAttribute>() != null;
+
+                if (isMultipart)
                 {
                     foreach (var parameter in bodyParameters)
                     {
-                        var jsonPropertyAttribute = parameter.GetCustomAttribute<JsonPropertyAttribute>(true);
-                        var nameOverride = jsonPropertyAttribute?.PropertyName;
-                        argumentHandlers[parameter.Name] = new ComposedJsonArgumentHandler(typeConverter, nameOverride);
+                        argumentHandlers[parameter.Name] = new MultipartArgumentHandler(typeConverter);
                     }
+                }
+                else
+                {
+                    if (bodyParameters.Count == 1)
+                    {
+                        var parameter = bodyParameters.Single();
+                        argumentHandlers[parameter.Name] = new DirectJsonArgumentHandler(typeConverter);
+                    }
+                    else
+                    {
+                        foreach (var parameter in bodyParameters)
+                        {
+                            var jsonPropertyAttribute = parameter.GetCustomAttribute<JsonPropertyAttribute>(true);
+                            var nameOverride = jsonPropertyAttribute?.PropertyName;
+                            argumentHandlers[parameter.Name] = new ComposedJsonArgumentHandler(typeConverter, nameOverride);
+                        }
+                    }                    
                 }
             }
 
