@@ -20,7 +20,7 @@ namespace SexyHttp.ArgumentHandlers
                 throw new Exception("DirectJsonArgumentHandler expects a null request body.");
 
             var token = TypeConverter.ConvertTo<JToken>(argument);
-            request.Body = new JsonHttpBody(token.ToString(Formatting.Indented));
+            request.Body = new JsonHttpBody(token);
 
             return TaskConstants.Completed;
         }

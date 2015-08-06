@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SexyHttp.HttpBodies;
 
@@ -37,7 +38,7 @@ namespace SexyHttp.HttpHandlers.HttpClientHandlers
         {
             public HttpContent VisitJsonBody(JsonHttpBody body)
             {
-                var text = body.Json.ToString();
+                var text = body.Json.ToString(Formatting.Indented);
                 var content = new StringContent(text);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 return content;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,18 +13,6 @@ namespace SexyHttp.Tests
         private readonly HttpListener listener = new HttpListener();
         private readonly Func<HttpListenerRequest, HttpListenerResponse, Task> handler;
         private bool isRunning;
-
-        public MockHttpServer(Func<HttpListenerRequest, JToken> jsonHandler) : this(async (request, response) =>
-            {
-                response.Headers.Add("Content-Type", "application/json");
-                var token = jsonHandler(request);
-                var s = token.ToString(Formatting.Indented);
-                var buffer = Encoding.UTF8.GetBytes(s);
-                await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
-                response.OutputStream.Close();
-            })
-        {
-        }
 
         public MockHttpServer(Func<HttpListenerRequest, HttpListenerResponse, Task> handler)
         {
@@ -54,7 +43,45 @@ namespace SexyHttp.Tests
                 while (isRunning)
                 {
                     var context = await listener.GetContextAsync();
-                    await handler(context.Request, context.Response);
+                    try
+                    {
+                        await handler(context.Request, context.Response);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+            });
+        }
+
+        public static MockHttpServer ReturnJson(Func<HttpListenerRequest, JToken> jsonHandler)
+        {
+            return new MockHttpServer(async (request, response) =>
+            {
+                response.Headers.Add("Content-Type", "application/json");
+                var token = jsonHandler(request);
+                var s = token.ToString(Formatting.Indented);
+                var buffer = Encoding.UTF8.GetBytes(s);
+                await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
+                response.OutputStream.Close();
+            });
+        }
+
+        public static MockHttpServer Json(Func<JToken, JToken> jsonHandler)
+        {
+            return new MockHttpServer(async (request, response) =>
+            {
+                response.Headers.Add("Content-Type", "application/json");
+                using (var reader = new StreamReader(request.InputStream))
+                {
+                    var inputString = await reader.ReadToEndAsync();
+                    var jsonInput = JToken.Parse(inputString);
+                    var jsonOutput = jsonHandler(jsonInput);
+                    var outputString = jsonOutput.ToString(Formatting.Indented);
+                    var outputBytes = Encoding.UTF8.GetBytes(outputString);
+                    await response.OutputStream.WriteAsync(outputBytes, 0, outputBytes.Length);
+                    response.OutputStream.Close();
                 }
             });
         }

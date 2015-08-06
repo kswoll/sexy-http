@@ -12,9 +12,9 @@ namespace SexyHttp.Tests
         [Test]
         public async void GetString()
         {
-            using (new MockHttpServer(request => new JValue("foo")))
+            using (MockHttpServer.ReturnJson(request => new JValue("foo")))
             {
-                var client = HttpApiClient<IGetString>.Create("http://localhost:8844", new HttpClientHandler());
+                var client = HttpApiClient<IGetString>.Create("http://localhost:8844/path", new HttpClientHandler());
                 await client.GetString();
             }
         }
@@ -24,6 +24,24 @@ namespace SexyHttp.Tests
         {
             [Get("path")]
             Task<string> GetString();
+        }
+
+        [Test]
+        public async void ReflectValue()
+        {
+            using (MockHttpServer.Json(x => x))
+            {
+                var client = HttpApiClient<IReflectValue>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var result = await client.ReflectValue("foo");
+                Assert.AreEqual("foo", result);
+            }
+        }
+
+        [Proxy]
+        private interface IReflectValue
+        {
+            [Post("path")]
+            Task<string> ReflectValue(string argument);
         }
     }
 }
