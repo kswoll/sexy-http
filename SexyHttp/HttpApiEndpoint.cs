@@ -33,18 +33,24 @@ namespace SexyHttp
 
             apiRequestInstrumenter?.InstrumentRequest(request);
 
-            foreach (var item in argumentHandlers)
+            Action<Func<IHttpArgumentHandler, string, object, Task>> applyArguments = async applier =>
             {
-                var name = item.Key;
-                object argument;
-                if (!arguments.TryGetValue(name, out argument))
-                    throw new Exception($"The argument {name} was not found in the request.");
-                var handler = item.Value;
-                await handler.ApplyArgument(request, name, argument);
-            }
+                foreach (var item in argumentHandlers)
+                {
+                    var name = item.Key;
+                    object argument;
+                    if (!arguments.TryGetValue(name, out argument))
+                        throw new Exception($"The argument {name} was not found in the request.");
+                    var handler = item.Value;
+                    await applier(handler, name, argument);
+                }                
+            };
+
+            applyArguments(async (handler, name, argument) => await handler.ApplyArgument(request, name, argument));
 
             var result = await httpHandler.Call(request, async response =>
             {
+                applyArguments(async (handler, name, argument) => await handler.ApplyArgument(response, name, argument));
                 return await responseHandler.HandleResponse(response);
             });
             return result;
