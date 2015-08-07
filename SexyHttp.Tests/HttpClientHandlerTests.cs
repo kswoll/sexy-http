@@ -93,7 +93,7 @@ namespace SexyHttp.Tests
             {
                 var input = new byte[] { 3, 1, 6, 9, 38 };
                 var client = HttpApiClient<IPostStream>.Create("http://localhost:8844/path", new HttpClientHandler());
-                var result = await client.PostStream(() => new MemoryStream(input));
+                var result = await client.PostStream(new MemoryStream(input));
                 Assert.IsTrue(result.SequenceEqual(input));
             }
         }
@@ -102,7 +102,7 @@ namespace SexyHttp.Tests
         private interface IPostStream
         {
             [Post("path")]
-            Task<byte[]> PostStream(Func<Stream> stream);
+            Task<byte[]> PostStream(Stream stream);
         }
     }
 }

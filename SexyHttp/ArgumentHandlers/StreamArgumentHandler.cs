@@ -20,9 +20,7 @@ namespace SexyHttp.ArgumentHandlers
                                     "should be using MultipartStreamArgumentHandler, which ought to have been selected " +
                                     "automatically under default conditions.");
 
-            var provider = (Func<Stream>)argument;
-            var stream = provider();
-            var streamBody = new StreamHttpBody(stream);
+            var streamBody = new StreamHttpBody((Stream)argument);
             request.Body = streamBody;
 
             return TaskConstants.Completed;

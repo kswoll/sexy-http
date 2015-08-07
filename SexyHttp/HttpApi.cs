@@ -79,7 +79,8 @@ namespace SexyHttp
                 {
                     argumentHandlers[parameter.Name] = new HttpHeaderArgumentHandler(typeConverter, headerAttribute.Name, headerAttribute.Values);
                 }
-                else if (parameter.ParameterType == typeof(Func<Stream>))
+                // If the argument represents an input stream, use the respective argument handler
+                else if (parameter.ParameterType == typeof(Stream))
                 {
                     argumentHandlers[parameter.Name] = new StreamArgumentHandler(typeConverter);
                 }
