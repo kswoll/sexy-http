@@ -7,5 +7,6 @@
         T VisitMultipartBody(MultipartHttpBody body);
         T VisitByteArrayBody(ByteArrayHttpBody body);
         T VisitStreamBody(StreamHttpBody body);
+        T VisitFormBody(FormHttpBody body);
     }
 }

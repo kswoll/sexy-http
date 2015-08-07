@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SexyHttp.ArgumentHandlers;
+using SexyHttp.ResponseHandlers;
 using SexyHttp.TypeConverters;
 using SexyHttp.Urls;
 using SexyHttp.Utils;
@@ -95,32 +96,27 @@ namespace SexyHttp
             if (bodyParameters.Any())
             {
                 var isMultipart = method.GetCustomAttribute<MultipartAttribute>() != null;
+                var isForm = method.GetCustomAttribute<FormAttribute>() != null;
 
                 // If the argument represents an input stream, use the respective argument handler
-                if (bodyParameters.First().ParameterType == typeof(Stream))
+                if (bodyParameters.First().ParameterType == typeof(Stream) && bodyParameters.Count == 1)
                 {
-                    // If there's only one stream parameter, the request will be a raw stream upload
-                    if (bodyParameters.Count == 1)
-                    {
-                        var parameter = bodyParameters.Single();
-                        argumentHandlers[parameter.Name] = new StreamArgumentHandler(typeConverter);
-                    }
-                    // Otherwise it'll be an ordinary multipart, with streams handled by the multipart handler
-                    else
-                    {
-                        foreach (var parameter in bodyParameters)
-                        {
-                            argumentHandlers[parameter.Name] = new MultipartArgumentHandler(typeConverter);
-                        }
-                    }
+                    var parameter = bodyParameters.Single();
+                    argumentHandlers[parameter.Name] = new StreamArgumentHandler(typeConverter);
                 }
-
-                // If it's explicitly multipart, then each parameter represent a multipart section that encapsulates the value
-                else if (isMultipart)
+                // If it's explicitly multipart or any parameter is a stream, then each parameter represent a multipart section that encapsulates the value
+                else if (isMultipart || bodyParameters.Any(x => x.ParameterType == typeof(Stream)))
                 {
                     foreach (var parameter in bodyParameters)
                     {
                         argumentHandlers[parameter.Name] = new MultipartArgumentHandler(typeConverter);
+                    }
+                }
+                else if (isForm)
+                {
+                    foreach (var parameter in bodyParameters)
+                    {
+                        argumentHandlers[parameter.Name] = new FormArgumentHandler(typeConverter);
                     }
                 }
                 // Otherwise, we're going to serialize the request as JSON
@@ -153,8 +149,15 @@ namespace SexyHttp
                 throw new Exception("Methods must be async and return either Task or Task<T>");
             returnType = returnType.GetTaskType() ?? typeof(void);
 
-            var responseHandler = typeConverter.ConvertTo<IHttpResponseHandler>(returnType);
+            IHttpResponseHandler responseHandler;
+            if (returnType == typeof(void))
+                responseHandler = new NullResponseHandler();
+            else if (returnType == typeof(byte[]))
+                responseHandler = new ByteArrayResponseHandler();
+            else
+                responseHandler = new ContentTypeBasedResponseHandler();
             responseHandler.TypeConverter = typeConverter;
+            responseHandler.ResponseType = returnType;
 
             var endpoint = new HttpApiEndpoint(url, httpMethod.Method, argumentHandlers, responseHandler);
             return endpoint;

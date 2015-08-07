@@ -42,6 +42,11 @@ namespace SexyHttp.ResponseHandlers
             {
                 return body.Stream.ReadToEndAsync();
             }
+
+            public Task<byte[]> VisitFormBodyAsync(FormHttpBody body)
+            {
+                throw new NotImplementedException("Form response not supported");
+            }
         }
     }
 }

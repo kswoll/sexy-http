@@ -146,5 +146,48 @@ namespace SexyHttp.Tests
             [Get("path")]
             Task DownloadStream(Func<Stream, Task> stream);
         }
+
+        [Test]
+        public async void PostForm()
+        {
+            using (MockHttpServer.PostFormReturnJson(x => Task.FromResult<JToken>(x.Values["value1"] + "|" + x.Values["value2"])))
+            {
+                var client = HttpApiClient<IPostForm>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var result = await client.PostForm("value&1", 5);
+                Assert.AreEqual("value&1|5", result);
+            }            
+        }
+
+        [Proxy]
+        private interface IPostForm
+        {
+            [Post("path"), Form]
+            Task<string> PostForm(string value1, int value2);
+        }
+
+        [Test]
+        public async void ReceiveForm()
+        {
+            using (MockHttpServer.PostFormReturnForm(x => Task.FromResult(x)))
+            {
+                var client = HttpApiClient<IReceiveForm>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var result = await client.GetForm("value&1", 5);
+                Assert.AreEqual("value&1", result.value1);
+                Assert.AreEqual(5, result.value2);
+            }            
+        }
+
+        [Proxy]
+        private interface IReceiveForm
+        {
+            [Post("path"), Form]
+            Task<FormResponse> GetForm(string value1, int value2);
+        }
+
+        private class FormResponse
+        {
+            public string value1 { get; set; }
+            public int value2 { get; set; }
+        }
     }
 }

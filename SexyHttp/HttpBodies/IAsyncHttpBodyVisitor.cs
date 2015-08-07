@@ -9,5 +9,6 @@ namespace SexyHttp.HttpBodies
         Task<T> VisitMultipartBodyAsync(MultipartHttpBody body);
         Task<T> VisitByteArrayBodyAsync(ByteArrayHttpBody body);
         Task<T> VisitStreamBodyAsync(StreamHttpBody body);
+        Task<T> VisitFormBodyAsync(FormHttpBody body);
     }
 }

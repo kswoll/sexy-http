@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -76,18 +77,30 @@ namespace SexyHttp.HttpHandlers.HttpClientHandlers
                 result.Headers.ContentType = MediaTypeHeaderValue.Parse("application/octet-stream");
                 return result;
             }
+
+            public HttpContent VisitFormBody(FormHttpBody body)
+            {
+                var result = new FormUrlEncodedContent(body.Values);
+                return result;
+            }
         }
 
         private async Task<HttpApiResponse> CreateResponse(HttpApiRequest request, HttpResponseMessage message)
         {
             HttpBody body = null;
+            var headers = new List<HttpHeader>();
             if (message.Content != null)
             {
+                headers.AddRange(message.Content.Headers.Select(x => new HttpHeader(x.Key, x.Value.ToArray())));
                 switch (request.ResponseContentTypeOverride ?? message.Content.Headers.ContentType.MediaType)
                 {
                     case "application/json":
                         var json = JToken.Parse(await message.Content.ReadAsStringAsync());
                         body = new JsonHttpBody(json);
+                        break;
+                    case "application/x-www-form-urlencoded":
+                        var stream = await message.Content.ReadAsStreamAsync();
+                        body = FormParser.ParseForm(stream);
                         break;
                     case "text/plain":
                         var text = await message.Content.ReadAsStringAsync();
@@ -98,8 +111,13 @@ namespace SexyHttp.HttpHandlers.HttpClientHandlers
                         break;
                 }
             }
+            foreach (var header in message.Headers)
+            {
+                if (!headers.Any(x => x.Name == header.Key))
+                    headers.Add(new HttpHeader(header.Key, header.Value.ToArray()));
+            }
 
-            var response = new HttpApiResponse(message.StatusCode, body, message.Headers.Select(x => new HttpHeader(x.Key, x.Value.ToArray())));
+            var response = new HttpApiResponse(message.StatusCode, body, headers);
             return response;
         }
     }

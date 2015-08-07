@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -88,6 +89,15 @@ namespace SexyHttp.Tests
             response.OutputStream.Close();
         }
 
+        private async static Task WriteForm(HttpListenerResponse response, FormHttpBody form)
+        {
+            response.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+            var content = new FormUrlEncodedContent(form.Values);
+            var data = await content.ReadAsStreamAsync();
+            await data.CopyToAsync(response.OutputStream);
+            response.OutputStream.Close();
+        }
+
         public static MockHttpServer ReturnJson(Func<HttpListenerRequest, JToken> jsonHandler)
         {
             return new MockHttpServer(async (request, response) =>
@@ -152,6 +162,26 @@ namespace SexyHttp.Tests
                 var content = MultipartParser.ParseMultipart(request);
                 var data = await handler(content);
                 await WriteJson(response, data);
+            });
+        }
+
+        public static MockHttpServer PostFormReturnJson(Func<FormHttpBody, Task<JToken>> handler)
+        {
+            return new MockHttpServer(async (request, response) =>
+            {
+                var content = FormParser.ParseForm(request.InputStream);
+                var result = await handler(content);
+                await WriteJson(response, result);
+            });
+        }
+
+        public static MockHttpServer PostFormReturnForm(Func<FormHttpBody, Task<FormHttpBody>> handler)
+        {
+            return new MockHttpServer(async (request, response) =>
+            {
+                var content = FormParser.ParseForm(request.InputStream);
+                var result = await handler(content);
+                await WriteForm(response, result);
             });
         }
 

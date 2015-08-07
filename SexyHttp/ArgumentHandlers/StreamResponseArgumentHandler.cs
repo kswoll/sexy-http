@@ -14,6 +14,9 @@ namespace SexyHttp.ArgumentHandlers
 
         public override Task ApplyArgument(HttpApiRequest request, string name, object argument)
         {
+            if (request.ResponseContentTypeOverride != null)
+                throw new Exception("The response content type has already been overridden.");
+
             request.ResponseContentTypeOverride = "application/octet-stream";
 
             return base.ApplyArgument(request, name, argument);
