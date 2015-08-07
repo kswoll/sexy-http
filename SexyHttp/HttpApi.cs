@@ -80,6 +80,11 @@ namespace SexyHttp
                 {
                     argumentHandlers[parameter.Name] = new HttpHeaderArgumentHandler(typeConverter, headerAttribute.Name, headerAttribute.Values);
                 }
+                // If the parameter is Func<Stream, Task> then it should be invoked with the response stream for custom handling.
+                else if (parameter.ParameterType == typeof(Func<Stream, Task>))
+                {
+                    argumentHandlers[parameter.Name] = new ArgumentHandlers.StreamResponseArgumentHandler(typeConverter);
+                }
                 else
                 {
                     bodyParameters.Add(parameter);

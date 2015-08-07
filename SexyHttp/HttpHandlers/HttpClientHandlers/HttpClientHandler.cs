@@ -16,7 +16,7 @@ namespace SexyHttp.HttpHandlers.HttpClientHandlers
             using (var client = new HttpClient())
             {
                 var response = await client.SendAsync(CreateRequestMessage(request));
-                var result = await CreateResponse(response);
+                var result = await CreateResponse(request, response);
                 return await responseHandler(result);
             }
         }
@@ -78,12 +78,12 @@ namespace SexyHttp.HttpHandlers.HttpClientHandlers
             }
         }
 
-        private async Task<HttpApiResponse> CreateResponse(HttpResponseMessage message)
+        private async Task<HttpApiResponse> CreateResponse(HttpApiRequest request, HttpResponseMessage message)
         {
             HttpBody body = null;
             if (message.Content != null)
             {
-                switch (message.Content.Headers.ContentType.MediaType)
+                switch (request.ResponseContentTypeOverride ?? message.Content.Headers.ContentType.MediaType)
                 {
                     case "application/json":
                         var json = JToken.Parse(await message.Content.ReadAsStringAsync());

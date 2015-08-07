@@ -21,7 +21,7 @@ namespace SexyHttp
             return TaskConstants.Completed;
         }
 
-        public Task ApplyArgument(HttpApiResponse response, string name, object argument)
+        public virtual Task ApplyArgument(HttpApiResponse response, string name, object argument)
         {
             return TaskConstants.Completed;
         }

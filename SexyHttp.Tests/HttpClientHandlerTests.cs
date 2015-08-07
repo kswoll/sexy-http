@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
@@ -124,6 +125,26 @@ namespace SexyHttp.Tests
         {
             [Post("path")]
             Task<int> PostTwoStreams(Stream stream1, Stream stream2);
+        }
+
+        [Test]
+        public async void DownloadStream()
+        {
+            var data = new byte[] { 3, 1, 4, 5 };
+            using (MockHttpServer.ReturnByteArray(x => data))
+            {
+                var client = HttpApiClient<IDownloadStream>.Create("http://localhost:8844/path", new HttpClientHandler());
+                byte[] result = null;
+                await client.DownloadStream(async x => result = await x.ReadToEndAsync());
+                Assert.IsTrue(result.SequenceEqual(data));
+            }
+        }
+
+        [Proxy]
+        private interface IDownloadStream
+        {
+            [Get("path")]
+            Task DownloadStream(Func<Stream, Task> stream);
         }
     }
 }

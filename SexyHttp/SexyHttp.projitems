@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\PathArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\QueryArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\StreamArgumentHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\StreamResponseArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DeleteAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GetAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HeaderAttribute.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ResponseHandlers\ByteArrayResponseHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ResponseHandlers\JsonResponseHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ResponseHandlers\NullResponseHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StreamResponseArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\ArrayTypeConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\CombinedTypeConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\DefaultTypeConverter.cs" />
