@@ -41,7 +41,7 @@ namespace SexyHttp.TypeConverters
 
         public bool TryConvertTo<TResult>(object obj, out TResult result)
         {
-            if (!typeof(TResult).IsAssignableFrom(typeof(T)))
+            if (!typeof(TResult).IsAssignableFrom(typeof(T)) && !typeof(T).IsAssignableFrom(typeof(TResult)))
             {
                 result = default(TResult);
                 return false;
