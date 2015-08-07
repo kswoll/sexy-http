@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using SexyHttp.HttpBodies;
-using SexyHttp.HttpHandlers.HttpClientHandlers;
+using SexyHttp.HttpHandlers;
 using SexyHttp.Tests.Utils;
 using SexyProxy;
 
@@ -172,8 +172,8 @@ namespace SexyHttp.Tests
             {
                 var client = HttpApiClient<IReceiveForm>.Create("http://localhost:8844/path", new HttpClientHandler());
                 var result = await client.GetForm("value&1", 5);
-                Assert.AreEqual("value&1", result.value1);
-                Assert.AreEqual(5, result.value2);
+                Assert.AreEqual("value&1", result.Value1);
+                Assert.AreEqual(5, result.Value2);
             }            
         }
 
@@ -186,8 +186,8 @@ namespace SexyHttp.Tests
 
         private class FormResponse
         {
-            public string value1 { get; set; }
-            public int value2 { get; set; }
+            public string Value1 { get; set; }
+            public int Value2 { get; set; }
         }
     }
 }

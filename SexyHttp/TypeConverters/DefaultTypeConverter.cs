@@ -1,7 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Newtonsoft.Json.Linq;
-using SexyHttp.ArgumentHandlers;
 using SexyHttp.HttpBodies;
 
 namespace SexyHttp.TypeConverters

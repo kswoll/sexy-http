@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SexyHttp.HttpBodies;
 
-namespace SexyHttp.HttpHandlers.HttpClientHandlers
+namespace SexyHttp.HttpHandlers
 {
     public class HttpClientHandler : IHttpHandler
     {
