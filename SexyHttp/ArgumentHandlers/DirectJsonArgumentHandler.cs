@@ -22,7 +22,7 @@ namespace SexyHttp.ArgumentHandlers
             var token = TypeConverter.ConvertTo<JToken>(argument);
             request.Body = new JsonHttpBody(token);
 
-            return TaskConstants.Completed;
+            return base.ApplyArgument(request, name, argument);
         }
     }
 }

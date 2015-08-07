@@ -35,7 +35,7 @@ namespace SexyHttp.ArgumentHandlers
             var value = TypeConverter.ConvertTo<JToken>(argument);
             jsonObject[jsonName] = value;
 
-            return TaskConstants.Completed;
+            return base.ApplyArgument(request, name, argument);
         }
     }
 }

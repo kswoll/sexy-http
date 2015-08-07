@@ -24,7 +24,7 @@ namespace SexyHttp.ArgumentHandlers
                 throw new Exception($"Could not create body for {name}");
             multipart.Data[name] = new MultipartData { Body = body };
 
-            return TaskConstants.Completed;
+            return base.ApplyArgument(request, name, argument);
         }
     }
 }

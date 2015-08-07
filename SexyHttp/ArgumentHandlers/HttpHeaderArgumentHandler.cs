@@ -27,7 +27,7 @@ namespace SexyHttp.ArgumentHandlers
             var values = Values ?? TypeConverter.ConvertTo<string[]>(argument);
 
             request.Headers.Add(new HttpHeader(name, values));
-            return TaskConstants.Completed;
+            return base.ApplyArgument(request, name, argument);
         }
     }
 }

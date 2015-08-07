@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace SexyHttp
 {
     public interface IHttpHandler
     {
-        Task<HttpApiResponse> Call(HttpApiRequest request);
+        Task<T> Call<T>(HttpApiRequest request, Func<HttpApiResponse, Task<T>> responseHandler);
     }
 }

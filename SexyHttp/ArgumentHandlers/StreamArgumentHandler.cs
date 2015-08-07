@@ -23,7 +23,7 @@ namespace SexyHttp.ArgumentHandlers
             var streamBody = new StreamHttpBody((Stream)argument);
             request.Body = streamBody;
 
-            return TaskConstants.Completed;
+            return base.ApplyArgument(request, name, argument);
         }
     }
 }

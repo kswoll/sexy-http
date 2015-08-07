@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -10,13 +11,13 @@ namespace SexyHttp.HttpHandlers.HttpClientHandlers
 {
     public class HttpClientHandler : IHttpHandler
     {
-        public async Task<HttpApiResponse> Call(HttpApiRequest request)
+        public async Task<T> Call<T>(HttpApiRequest request, Func<HttpApiResponse, Task<T>> responseHandler)
         {
             using (var client = new HttpClient())
             {
                 var response = await client.SendAsync(CreateRequestMessage(request));
                 var result = await CreateResponse(response);
-                return result;
+                return await responseHandler(result);
             }
         }
 

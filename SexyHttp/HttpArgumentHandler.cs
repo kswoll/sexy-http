@@ -3,18 +3,27 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using SexyHttp.TypeConverters;
+using SexyHttp.Utils;
 
 namespace SexyHttp
 {
     public abstract class HttpArgumentHandler : IHttpArgumentHandler
     {
-        public abstract Task ApplyArgument(HttpApiRequest request, string name, object argument);
-
         public ITypeConverter TypeConverter { get; }
 
         protected HttpArgumentHandler(ITypeConverter typeConverter)
         {
             TypeConverter = typeConverter;
+        }
+
+        public virtual Task ApplyArgument(HttpApiRequest request, string name, object argument)
+        {
+            return TaskConstants.Completed;
+        }
+
+        public Task ApplyArgument(HttpApiResponse response, string name, object argument)
+        {
+            return TaskConstants.Completed;
         }
     }
 }

@@ -43,8 +43,10 @@ namespace SexyHttp
                 await handler.ApplyArgument(request, name, argument);
             }
 
-            var response = await httpHandler.Call(request);
-            var result = await responseHandler.HandleResponse(response);
+            var result = await httpHandler.Call(request, async response =>
+            {
+                return await responseHandler.HandleResponse(response);
+            });
             return result;
         }
     }

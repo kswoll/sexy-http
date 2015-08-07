@@ -15,7 +15,7 @@ namespace SexyHttp.ArgumentHandlers
             var value = TypeConverter.ConvertTo<string[]>(argument);
             request.Url.Query[name] = value;
 
-            return TaskConstants.Completed;
+            return base.ApplyArgument(request, name, argument);
         }
     }
 }

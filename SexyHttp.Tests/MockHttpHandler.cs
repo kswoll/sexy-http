@@ -24,10 +24,10 @@ namespace SexyHttp.Tests
             Response = response;
         }
 
-        public Task<HttpApiResponse> Call(HttpApiRequest request)
+        public Task<T> Call<T>(HttpApiRequest request, Func<HttpApiResponse, Task<T>> responseHandler)
         {
             Request = request;
-            return Task.FromResult(Response(request));
+            return responseHandler(Response(request));
         }
     }
 }
