@@ -37,10 +37,11 @@ namespace SexyHttp
                 HttpApiEndpoint endpoint;
                 if (!api.Endpoints.TryGetValue(invocation.Method, out endpoint))
                     throw new Exception($"Endpoint not found for: {invocation.Method.DeclaringType.FullName}.{invocation.Method.Name}");
-                return endpoint.Call(httpHandler, baseUrl, invocation.Method
+                var call = endpoint.Call(httpHandler, baseUrl, invocation.Method
                     .GetParameters()
                     .Select((x, i) => new { x.Name, Value = invocation.Arguments[i] })
                     .ToDictionary(x => x.Name, x => x.Value), apiRequestInstrumenter);
+                return call;
             }
         }
     }

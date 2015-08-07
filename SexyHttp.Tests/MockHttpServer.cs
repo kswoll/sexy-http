@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SexyHttp.HttpBodies;
+using SexyHttp.Tests.Utils;
 
 namespace SexyHttp.Tests
 {
@@ -123,6 +124,15 @@ namespace SexyHttp.Tests
             {
                 var content = MultipartParser.ParseMultipart(request);
                 var data = await handler(content);
+                await WriteByteArray(response, data);
+            });
+        }
+
+        public static MockHttpServer PostStreamReturnByteArray(Func<Stream, Task<byte[]>> handler)
+        {
+            return new MockHttpServer(async (request, response) =>
+            {
+                var data = await request.InputStream.ReadToEndAsync();
                 await WriteByteArray(response, data);
             });
         }

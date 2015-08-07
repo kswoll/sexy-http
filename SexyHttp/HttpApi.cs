@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -60,6 +61,9 @@ namespace SexyHttp
                 // If the parameter overrides the type converter, we'll overwrite the typeConverter variable
                 typeConverter = TypeConverterAttribute.Combine(parameter, typeConverter);
 
+                // Store headerAttribute for later
+                var headerAttribute = parameter.GetCustomAttribute<HeaderAttribute>();
+
                 // If this is a path paraeter, then create a respective argument handler
                 if (pathParameters.Contains(parameter.Name))
                 {
@@ -70,20 +74,18 @@ namespace SexyHttp
                 {
                     argumentHandlers[parameter.Name] = new QueryArgumentHandler(typeConverter);
                 }
+                // See if the parameter represents a header.  If it does, create the respective argument handler.
+                else if (headerAttribute != null)
+                {
+                    argumentHandlers[parameter.Name] = new HttpHeaderArgumentHandler(typeConverter, headerAttribute.Name, headerAttribute.Values);
+                }
+                else if (parameter.ParameterType == typeof(Func<Stream>))
+                {
+                    argumentHandlers[parameter.Name] = new StreamArgumentHandler(typeConverter);
+                }
                 else
                 {
-                    var headerAttribute = parameter.GetCustomAttribute<HeaderAttribute>();
-
-                    // See if the parameter represents a header.  If it does, create the respective argument handler.
-                    if (headerAttribute != null)
-                    {
-                        argumentHandlers[parameter.Name] = new HttpHeaderArgumentHandler(typeConverter, headerAttribute.Name, headerAttribute.Values);
-                    }
-                    // Otherwise it actually is a body parameter
-                    else
-                    {
-                        bodyParameters.Add(parameter);
-                    }
+                    bodyParameters.Add(parameter);
                 }
             }
 

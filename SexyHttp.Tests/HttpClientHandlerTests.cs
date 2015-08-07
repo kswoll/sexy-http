@@ -1,9 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using SexyHttp.HttpBodies;
 using SexyHttp.HttpHandlers.HttpClientHandlers;
+using SexyHttp.Tests.Utils;
 using SexyProxy;
 
 namespace SexyHttp.Tests
@@ -81,6 +84,25 @@ namespace SexyHttp.Tests
         {
             [Post("path"), Multipart]
             Task<byte[]> PostByteArray(byte[] data);
+        }
+
+        [Test]
+        public async void PostStream()
+        {
+            using (MockHttpServer.PostStreamReturnByteArray(async x => await x.ReadToEndAsync()))
+            {
+                var input = new byte[] { 3, 1, 6, 9, 38 };
+                var client = HttpApiClient<IPostStream>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var result = await client.PostStream(() => new MemoryStream(input));
+                Assert.IsTrue(result.SequenceEqual(input));
+            }
+        }
+
+        [Proxy]
+        private interface IPostStream
+        {
+            [Post("path")]
+            Task<byte[]> PostStream(Func<Stream> stream);
         }
     }
 }

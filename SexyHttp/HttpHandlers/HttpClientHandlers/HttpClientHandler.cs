@@ -54,11 +54,9 @@ namespace SexyHttp.HttpHandlers.HttpClientHandlers
             public HttpContent VisitMultipartBody(MultipartHttpBody body)
             {
                 var content = new MultipartFormDataContent();
-//                content.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
                 foreach (var item in body.Data)
                 {
                     var itemContent = item.Value.Body.Accept(this);
-//                    var itemContent = new ByteArrayContent(new byte[] { 1, 34, 154, 3, 8, 0, 10 });
                     content.Add(itemContent, item.Key);
                 }
                 return content;
@@ -67,6 +65,13 @@ namespace SexyHttp.HttpHandlers.HttpClientHandlers
             public HttpContent VisitByteArrayBody(ByteArrayHttpBody body)
             {
                 var result = new ByteArrayContent(body.Data);
+                result.Headers.ContentType = MediaTypeHeaderValue.Parse("application/octet-stream");
+                return result;
+            }
+
+            public HttpContent VisitStreamBody(StreamHttpBody body)
+            {
+                var result = new StreamContent(body.Stream);
                 result.Headers.ContentType = MediaTypeHeaderValue.Parse("application/octet-stream");
                 return result;
             }
@@ -86,6 +91,9 @@ namespace SexyHttp.HttpHandlers.HttpClientHandlers
                     case "text/plain":
                         var text = await message.Content.ReadAsStringAsync();
                         body = new StringHttpBody(text);
+                        break;
+                    case "application/octet-stream":
+                        body = new StreamHttpBody(await message.Content.ReadAsStreamAsync());
                         break;
                 }
             }

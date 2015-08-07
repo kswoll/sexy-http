@@ -1,0 +1,15 @@
+﻿using System.IO;
+using System.Threading.Tasks;
+
+namespace SexyHttp.Tests.Utils
+{
+    internal static class StreamExtensions
+    {
+        public static async Task<byte[]> ReadToEndAsync(this Stream stream, long bufferSize = 1024 * 10)
+        {
+            var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+            return memoryStream.ToArray();
+        }
+    }
+}

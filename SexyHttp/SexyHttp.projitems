@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\MultipartArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\PathArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\QueryArgumentHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\StreamArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DeleteAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GetAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HeaderAttribute.cs" />
@@ -33,6 +34,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)HttpBodies\JsonHttpBody.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpBodies\MultipartData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpBodies\MultipartHttpBody.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpBodies\StreamHttpBody.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpBodies\StringHttpBody.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpBody.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpHandlers\HttpClientHandlers\HttpClientHandler.cs" />
@@ -71,7 +73,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Urls\HttpUrlQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Urls\LiteralHttpUrlPart.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Urls\VariableHttpPathPart.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\FunctionalExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\ReflectionExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\StreamExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\TaskConstants.cs" />
   </ItemGroup>
 </Project>

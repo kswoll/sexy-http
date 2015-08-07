@@ -27,9 +27,9 @@ namespace SexyHttp.ArgumentHandlers
             Type typeResult;
             if (!responseTypesByReturnType.TryGetValue(type, out typeResult))
             {
-                type = typeof(JsonResponseHandler);
+                typeResult = typeof(JsonResponseHandler);
             }
-            result = (T)Activator.CreateInstance(type);
+            result = (T)Activator.CreateInstance(typeResult);
             return true;
         }
     }
