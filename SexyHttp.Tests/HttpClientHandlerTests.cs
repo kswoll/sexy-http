@@ -17,7 +17,7 @@ namespace SexyHttp.Tests
         [Test]
         public async void GetString()
         {
-            using (MockHttpServer.ReturnJson(request => new JValue("foo")))
+            using (MockHttpServer.ReturnJson(request => Task.FromResult<JToken>(new JValue("foo"))))
             {
                 var client = HttpApiClient<IGetString>.Create("http://localhost:8844/path", new HttpClientHandler());
                 await client.GetString();

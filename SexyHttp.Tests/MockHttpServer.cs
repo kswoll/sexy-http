@@ -98,11 +98,11 @@ namespace SexyHttp.Tests
             response.OutputStream.Close();
         }
 
-        public static MockHttpServer ReturnJson(Func<HttpListenerRequest, JToken> jsonHandler)
+        public static MockHttpServer ReturnJson(Func<HttpListenerRequest, Task<JToken>> jsonHandler)
         {
             return new MockHttpServer(async (request, response) =>
             {
-                var token = jsonHandler(request);
+                var token = await jsonHandler(request);
                 await WriteJson(response, token);
             });
         }
