@@ -6,11 +6,8 @@ namespace SexyHttp.ResponseHandlers
 {
     public class JsonResponseHandler : HttpResponseHandler
     {
-        public Type Type { get; }
-
-        public JsonResponseHandler(Type type) 
+        public JsonResponseHandler() 
         {
-            Type = type;
         }
 
         public override Task<object> HandleResponse(HttpApiResponse response)
@@ -19,7 +16,7 @@ namespace SexyHttp.ResponseHandlers
             if (jsonBody == null)
                 throw new Exception("Expected a JsonHttpBody in the response");
 
-            var result = jsonBody.Json.ToObject(Type);
+            var result = jsonBody.Json.ToObject(ResponseType);
             return Task.FromResult(result);
         }
     }

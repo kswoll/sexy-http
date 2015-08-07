@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
@@ -103,6 +102,28 @@ namespace SexyHttp.Tests
         {
             [Post("path")]
             Task<byte[]> PostStream(Stream stream);
+        }
+
+        [Test]
+        public async void PostTwoStreams()
+        {
+            using (MockHttpServer.PostMultipartStreamReturnJson(x => Task.FromResult<JToken>(
+                ((ByteArrayHttpBody)x.Data["stream1"].Body).Data.Length +
+                ((ByteArrayHttpBody)x.Data["stream2"].Body).Data.Length)))
+            {
+                var input1 = new byte[] { 3, 1, 6, 9, 38 };
+                var input2 = new byte[] { 2, 5, 13, 7 };
+                var client = HttpApiClient<IPostTwoStreams>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var result = await client.PostTwoStreams(new MemoryStream(input1), new MemoryStream(input2));
+                Assert.AreEqual(9, result);
+            }            
+        }
+
+        [Proxy]
+        private interface IPostTwoStreams
+        {
+            [Post("path")]
+            Task<int> PostTwoStreams(Stream stream1, Stream stream2);
         }
     }
 }

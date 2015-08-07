@@ -130,8 +130,13 @@ namespace SexyHttp.Tests
         {
             public bool TryConvertTo<T>(object obj, out T result)
             {
-                result = (T)(object)"foo";
-                return true;
+                if (typeof(T) == typeof(string))
+                {
+                    result = (T)(object)"foo";
+                    return true;                    
+                }
+                result = default(T);
+                return false;
             }
         }
 

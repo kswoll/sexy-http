@@ -3,28 +3,24 @@ using System.Threading.Tasks;
 
 namespace SexyHttp.Tests
 {
-    public class MockResponseHandler : HttpResponseHandler
+    public class MockResponseHandler<T> : HttpResponseHandler
     {
         public object Response { get; set; }
 
-        private readonly Func<HttpApiResponse, object> responseFactory;
+        private readonly Func<HttpApiResponse, T> responseFactory;
 
-        public MockResponseHandler() : this(_ => null)
+        public MockResponseHandler(T response = default(T)) : this(_ => response)
         {
         }
 
-        public MockResponseHandler(object response = null) : this(_ => response)
-        {
-        }
-
-        public MockResponseHandler(Func<HttpApiResponse, object> responseFactory)
+        public MockResponseHandler(Func<HttpApiResponse, T> responseFactory) 
         {
             this.responseFactory = responseFactory;
         }
 
         public override Task<object> HandleResponse(HttpApiResponse response) 
         {
-            return Task.FromResult(responseFactory(response));
+            return Task.FromResult<object>(responseFactory(response));
         }
     }
 }

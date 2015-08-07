@@ -27,14 +27,15 @@ namespace SexyHttp.Tests
             var buffer = input.ToArray();
             var result = new MultipartHttpBody();
 
+//            var s2 = new StreamReader(new MemoryStream(buffer)).ReadToEnd();
+            var boundaryBytes = Encoding.UTF8.GetBytes(boundary);
+
+            var boundaryLine = ReadLine(buffer, ref position);
+            if (boundaryLine != boundary)
+                throw new Exception($"Expected boundary but found: {boundaryLine}");
+
             while (true)
             {
-                var boundaryLine = ReadLine(buffer, ref position);
-
-                if (boundaryLine != boundary)
-                    throw new Exception($"Expected boundary but found: {boundaryLine}");
-
-                var boundaryBytes = Encoding.UTF8.GetBytes(boundaryLine);
                 string name = null;
                 string fileName = null;
                 string contentType = null;
@@ -67,7 +68,7 @@ namespace SexyHttp.Tests
                 Func<string> getText = () =>
                 {
                     var s = Encoding.UTF8.GetString(dataBuffer);
-                    s = s.Substring(0, s.Length - 2);
+//                    s = s.Substring(0, s.Length - 2);
                     return s;
                 };
                 HttpBody body;
@@ -98,9 +99,9 @@ namespace SexyHttp.Tests
 
         private static byte[] ReadBuffer(byte[] bytes, ref long position, long length)
         {
-            var dataBuffer = new byte[length];
+            var dataBuffer = new byte[length - 2];
             Array.Copy(bytes, position, dataBuffer, 0, dataBuffer.Length);
-            position += dataBuffer.Length;
+            position += dataBuffer.Length + 2;
             return dataBuffer;
         }
 

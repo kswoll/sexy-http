@@ -19,7 +19,8 @@ namespace SexyHttp
 
         public HttpApi()
         {
-            TypeConverter = TypeConverterAttribute.GetTypeConverter(typeof(T)) ?? new DefaultTypeConverter();
+            var explicitTypeConverter = TypeConverterAttribute.GetTypeConverter(typeof(T));
+            TypeConverter = explicitTypeConverter != null ? new CombinedTypeConverter(explicitTypeConverter, new DefaultTypeConverter()) : new DefaultTypeConverter();
 
             // Create endpoints
             var endpoints = new Dictionary<MethodInfo, HttpApiEndpoint>();
@@ -79,11 +80,6 @@ namespace SexyHttp
                 {
                     argumentHandlers[parameter.Name] = new HttpHeaderArgumentHandler(typeConverter, headerAttribute.Name, headerAttribute.Values);
                 }
-                // If the argument represents an input stream, use the respective argument handler
-                else if (parameter.ParameterType == typeof(Stream))
-                {
-                    argumentHandlers[parameter.Name] = new StreamArgumentHandler(typeConverter);
-                }
                 else
                 {
                     bodyParameters.Add(parameter);
@@ -95,8 +91,27 @@ namespace SexyHttp
             {
                 var isMultipart = method.GetCustomAttribute<MultipartAttribute>() != null;
 
+                // If the argument represents an input stream, use the respective argument handler
+                if (bodyParameters.First().ParameterType == typeof(Stream))
+                {
+                    // If there's only one stream parameter, the request will be a raw stream upload
+                    if (bodyParameters.Count == 1)
+                    {
+                        var parameter = bodyParameters.Single();
+                        argumentHandlers[parameter.Name] = new StreamArgumentHandler(typeConverter);
+                    }
+                    // Otherwise it'll be an ordinary multipart, with streams handled by the multipart handler
+                    else
+                    {
+                        foreach (var parameter in bodyParameters)
+                        {
+                            argumentHandlers[parameter.Name] = new MultipartArgumentHandler(typeConverter);
+                        }
+                    }
+                }
+
                 // If it's explicitly multipart, then each parameter represent a multipart section that encapsulates the value
-                if (isMultipart)
+                else if (isMultipart)
                 {
                     foreach (var parameter in bodyParameters)
                     {

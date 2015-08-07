@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using SexyHttp.HttpBodies;
 using SexyHttp.TypeConverters;
 using SexyHttp.Utils;
@@ -19,6 +20,8 @@ namespace SexyHttp.ArgumentHandlers
             }
             var multipart = (MultipartHttpBody)request.Body;
             var body = TypeConverter.ConvertTo<HttpBody>(argument);
+            if (body == null)
+                throw new Exception($"Could not create body for {name}");
             multipart.Data[name] = new MultipartData { Body = body };
 
             return TaskConstants.Completed;

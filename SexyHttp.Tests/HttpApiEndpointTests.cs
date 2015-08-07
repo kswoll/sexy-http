@@ -14,7 +14,7 @@ namespace SexyHttp.Tests
         public async void Url()
         {
             var httpHandler = new MockHttpHandler();
-            var responseHandler = new MockResponseHandler();
+            var responseHandler = new MockResponseHandler<object>();
 
             var endpoint = new HttpApiEndpoint("path/to/api", HttpMethod.Get, new Dictionary<string, IHttpArgumentHandler>(), responseHandler);
             await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object>());
@@ -26,7 +26,7 @@ namespace SexyHttp.Tests
         public async void Method()
         {
             var httpHandler = new MockHttpHandler();
-            var responseHandler = new MockResponseHandler();
+            var responseHandler = new MockResponseHandler<object>();
 
             var endpoint = new HttpApiEndpoint("path/to/api", HttpMethod.Get, new Dictionary<string, IHttpArgumentHandler>(), responseHandler);
             await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object>());
@@ -38,7 +38,7 @@ namespace SexyHttp.Tests
         public async void HeadersProvider()
         {
             var httpHandler = new MockHttpHandler();
-            var responseHandler = new MockResponseHandler();
+            var responseHandler = new MockResponseHandler<object>();
 
             var headersProvider = new MockApiRequestInstrumenter();
             headersProvider.Headers.Add(new HttpHeader("key", "value"));
@@ -55,7 +55,7 @@ namespace SexyHttp.Tests
         public async void ArgumentProvider()
         {
             var httpHandler = new MockHttpHandler();
-            var responseHandler = new MockResponseHandler(x => x.Headers.Single(y => y.Name == "name").Values.Single());
+            var responseHandler = new MockResponseHandler<string>(x => x.Headers.Single(y => y.Name == "name").Values.Single());
 
             var endpoint = new HttpApiEndpoint(
                 "path/to/api", 
@@ -74,7 +74,7 @@ namespace SexyHttp.Tests
         public async void ResponseHandler()
         {
             var httpHandler = new MockHttpHandler();
-            var responseHandler = new MockResponseHandler("foo");
+            var responseHandler = new MockResponseHandler<string>("foo");
 
             var endpoint = new HttpApiEndpoint(
                 "path/to/api", 

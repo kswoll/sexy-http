@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using SexyHttp.TypeConverters;
 
 namespace SexyHttp
@@ -8,5 +9,10 @@ namespace SexyHttp
         public abstract Task<object> HandleResponse(HttpApiResponse response);
 
         public ITypeConverter TypeConverter { get; set; }
+        public Type ResponseType { get; set;  }
+
+        protected HttpResponseHandler()
+        {
+        }
     }
 }
