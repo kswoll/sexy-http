@@ -9,6 +9,7 @@
     <Import_RootNamespace>SexyHttp</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Api.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\DirectJsonArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\FormArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\HttpHeaderArgumentHandler.cs" />

@@ -36,7 +36,7 @@ namespace SexyHttp
             {
                 HttpApiEndpoint endpoint;
                 if (!api.Endpoints.TryGetValue(invocation.Method, out endpoint))
-                    throw new Exception($"Endpoint not found for: {invocation.Method.DeclaringType.FullName}.{invocation.Method.Name}");
+                    throw new Exception($"Endpoint not found for: \"{invocation.Method.DeclaringType.FullName}.{invocation.Method.Name}\".  Perhaps you forgot to decorate your method with [Get], [Post], etc.");
                 var call = endpoint.Call(httpHandler, baseUrl, invocation.Method
                     .GetParameters()
                     .Select((x, i) => new { x.Name, Value = invocation.Arguments[i] })

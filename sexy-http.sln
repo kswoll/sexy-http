@@ -9,6 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SexyHttp.Tests", "SexyHttp.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SexyHttp.Net45", "SexyHttp.Net45\SexyHttp.Net45.csproj", "{3877F34E-7FAD-4413-AE47-19E2D99E7400}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{90FD60AE-F56E-4A7E-93FD-D85CABC8D974}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		SexyHttp\SexyHttp.projitems*{474c5e95-e5e0-4648-839f-52593d20515c}*SharedItemsImports = 13
