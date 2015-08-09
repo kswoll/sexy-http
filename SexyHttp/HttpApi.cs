@@ -84,13 +84,32 @@ namespace SexyHttp
                 // If the parameter is Func<Stream, Task> then it should be invoked with the response stream for custom handling.
                 else if (parameter.ParameterType == typeof(Func<Stream, Task>))
                 {
-                    argumentHandlers[parameter.Name] = new ArgumentHandlers.StreamResponseArgumentHandler(typeConverter);
+                    argumentHandlers[parameter.Name] = new StreamResponseArgumentHandler(typeConverter);
+                }
+                else if (parameter.ParameterType == typeof(Action<HttpApiRequest>))
+                {
+                    argumentHandlers[parameter.Name] = new HttpApiRequestArgumentHandler(typeConverter);
+                }
+                else if (parameter.ParameterType == typeof(HttpBody))
+                {
+                    argumentHandlers[parameter.Name] = new HttpBodyArgumentHandler(typeConverter);
                 }
                 else
                 {
                     bodyParameters.Add(parameter);
                 }
             }
+
+            // You can override the name associated with the parameter by using either JsonPropertyAttribute or 
+            // NameAttribute.  We provide a NameAttribute to avoid forcing you to use JsonPropertyAttribute when
+            // not dealing with JSON.
+            Func<ParameterInfo, string> getName = parameter =>
+            {
+                var jsonPropertyAttribute = parameter.GetCustomAttribute<JsonPropertyAttribute>(true);
+                var nameAttribute = parameter.GetCustomAttribute<NameAttribute>(true);
+
+                return nameAttribute?.Value ?? jsonPropertyAttribute?.PropertyName ?? parameter.Name;
+            };
 
             // If there is data for a body, then create a handler to provide a body
             if (bodyParameters.Any())
@@ -116,14 +135,15 @@ namespace SexyHttp
                 {
                     foreach (var parameter in bodyParameters)
                     {
-                        argumentHandlers[parameter.Name] = new FormArgumentHandler(typeConverter);
+                        argumentHandlers[parameter.Name] = new FormArgumentHandler(typeConverter, getName(parameter));
                     }
                 }
                 // Otherwise, we're going to serialize the request as JSON
                 else
                 {
-                    // If there's only one body parameter, then we're going to serialize the argument as a raw JSON value
-                    if (bodyParameters.Count == 1)
+                    // If there's only one body parameter, then we're going to serialize the argument as a raw JSON value. 
+                    // (Unless it's decorated with [Object] in which case we force serialization as an object below)
+                    if (bodyParameters.Count == 1 && bodyParameters.Single().GetCustomAttribute<ObjectAttribute>() == null)
                     {
                         var parameter = bodyParameters.Single();
                         argumentHandlers[parameter.Name] = new DirectJsonArgumentHandler(typeConverter);
@@ -135,10 +155,7 @@ namespace SexyHttp
                         // Foreach body parameter, create a json argument handler
                         foreach (var parameter in bodyParameters)
                         {
-                            // You can override the property name of the composed JSON object by using JSO
-                            var jsonPropertyAttribute = parameter.GetCustomAttribute<JsonPropertyAttribute>(true);
-                            var nameOverride = jsonPropertyAttribute?.PropertyName;
-                            argumentHandlers[parameter.Name] = new ComposedJsonArgumentHandler(typeConverter, nameOverride);
+                            argumentHandlers[parameter.Name] = new ComposedJsonArgumentHandler(typeConverter, getName(parameter));
                         }
                     }                    
                 }
@@ -154,6 +171,10 @@ namespace SexyHttp
                 responseHandler = new NullResponseHandler();
             else if (returnType == typeof(byte[]))
                 responseHandler = new ByteArrayResponseHandler();
+            else if (returnType == typeof(HttpApiResponse))
+                responseHandler = new HttpApiResponseResponseHandler();
+            else if (returnType == typeof(HttpBody))
+                responseHandler = new HttpBodyResponseHandler();
             else
                 responseHandler = new ContentTypeBasedResponseHandler();
             responseHandler.TypeConverter = typeConverter;

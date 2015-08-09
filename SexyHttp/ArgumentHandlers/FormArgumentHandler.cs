@@ -7,8 +7,11 @@ namespace SexyHttp.ArgumentHandlers
 {
     public class FormArgumentHandler : HttpArgumentHandler
     {
-        public FormArgumentHandler(ITypeConverter typeConverter) : base(typeConverter)
+        public string Name { get; }
+
+        public FormArgumentHandler(ITypeConverter typeConverter, string name = null) : base(typeConverter)
         {
+            Name = name;
         }
 
         public override Task ApplyArgument(HttpApiRequest request, string name, object argument)
@@ -20,7 +23,7 @@ namespace SexyHttp.ArgumentHandlers
 
             var form = (FormHttpBody)request.Body;
             var value = TypeConverter.ConvertTo<string>(argument);
-            form.Values[name] = value;
+            form.Values[Name ?? name] = value;
 
             return base.ApplyArgument(request, name, argument);
         }

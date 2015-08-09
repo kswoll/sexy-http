@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using SexyHttp.TypeConverters;
-using SexyHttp.Utils;
 using SexyHttp.HttpBodies;
 
 namespace SexyHttp.ArgumentHandlers

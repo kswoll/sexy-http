@@ -189,5 +189,131 @@ namespace SexyHttp.Tests
             public string Value1 { get; set; }
             public int Value2 { get; set; }
         }
+
+        [Test]
+        public async void JsonNameOverride()
+        {
+            using (MockHttpServer.Json(x => (string)x["val1"] + x["val2"]))
+            {
+                var client = HttpApiClient<INameOverride>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var result = await client.GetString("foo", "bar");
+                Assert.AreEqual("foobar", result);
+            }            
+        }
+
+        [Proxy]
+        interface INameOverride
+        {
+            [Post("path")]
+            Task<string> GetString([Name("val1")]string value1, [Name("val2")]string value2);
+        }
+
+        [Test]
+        public async void FormNameOverride()
+        {
+            using (MockHttpServer.PostFormReturnJson(x => x.Values["val1"] + x.Values["val2"]))
+            {
+                var client = HttpApiClient<IFormNameOverride>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var result = await client.GetString("foo", "bar");
+                Assert.AreEqual("foobar", result);
+            }            
+        }
+
+        [Proxy]
+        interface IFormNameOverride
+        {
+            [Post("path"), Form]
+            Task<string> GetString([Name("val1")]string value1, [Name("val2")]string value2);
+        }
+
+        [Test]
+        public async void SingleArgumentAsObject()
+        {
+            using (MockHttpServer.Json(x => x["value"]))
+            {
+                var client = HttpApiClient<ISingleArgumentAsObject>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var result = await client.GetString("foo");
+                Assert.AreEqual("foo", result);
+            }            
+        }
+
+        [Proxy]
+        interface ISingleArgumentAsObject
+        {
+            [Post("path")]
+            Task<string> GetString([Object]string value);
+        }
+
+        [Test]
+        public async void RawRequestApi()
+        {
+            using (MockHttpServer.Json(x => x))
+            {
+                var client = HttpApiClient<IRawRequestApi>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var result = await client.GetString(x => x.Body = new JsonHttpBody("foo"));
+                Assert.AreEqual("foo", result);
+            }            
+        }
+
+        [Proxy]
+        interface IRawRequestApi
+        {
+            [Post("path")]
+            Task<string> GetString(Action<HttpApiRequest> request);
+        }
+
+        [Test]
+        public async void RawResponseApi()
+        {
+            using (MockHttpServer.Json(x => x))
+            {
+                var client = HttpApiClient<IRawResponseApi>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var result = await client.GetString("foo");
+                Assert.AreEqual("foo", (string)((JsonHttpBody)result.Body).Json);
+            }            
+        }
+
+        [Proxy]
+        interface IRawResponseApi
+        {
+            [Post("path")]
+            Task<HttpApiResponse> GetString(string value);
+        }
+
+        [Test]
+        public async void RawRequestBody()
+        {
+            using (MockHttpServer.Json(x => x))
+            {
+                var client = HttpApiClient<IRawRequestBody>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var result = await client.GetString(new JsonHttpBody("foo"));
+                Assert.AreEqual("foo", result);
+            }            
+        }
+
+        [Proxy]
+        interface IRawRequestBody
+        {
+            [Post("path")]
+            Task<string> GetString(HttpBody request);
+        }
+
+        [Test]
+        public async void RawResponseBody()
+        {
+            using (MockHttpServer.Json(x => x))
+            {
+                var client = HttpApiClient<IRawResponseBody>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var result = await client.GetString("foo");
+                Assert.AreEqual("foo", (string)((JsonHttpBody)result).Json);
+            }            
+        }
+
+        [Proxy]
+        interface IRawResponseBody
+        {
+            [Post("path")]
+            Task<HttpBody> GetString(string value);
+        }
     }
 }

@@ -165,6 +165,11 @@ namespace SexyHttp.Tests
             });
         }
 
+        public static MockHttpServer PostFormReturnJson(Func<FormHttpBody, JToken> handler)
+        {
+            return PostFormReturnJson(x => Task.FromResult(handler(x)));
+        }
+
         public static MockHttpServer PostFormReturnJson(Func<FormHttpBody, Task<JToken>> handler)
         {
             return new MockHttpServer(async (request, response) =>
@@ -183,6 +188,11 @@ namespace SexyHttp.Tests
                 var result = await handler(content);
                 await WriteForm(response, result);
             });
+        }
+
+        public static MockHttpServer PostFormReturnForm(Func<FormHttpBody, FormHttpBody> handler)
+        {
+            return PostFormReturnForm(x => Task.FromResult(handler(x)));
         }
 
         public void Dispose()

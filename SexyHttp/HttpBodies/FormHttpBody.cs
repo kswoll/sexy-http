@@ -1,11 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using SexyHttp.Utils;
 
 namespace SexyHttp.HttpBodies
 {
     public class FormHttpBody : HttpBody
     {
         public Dictionary<string, string> Values { get; set; }
+
+        public FormHttpBody(object values) : this(values.ObjectToDictionary(x => x.ToString()))
+        {
+        }
 
         public FormHttpBody(Dictionary<string, string> values = null)
         {
