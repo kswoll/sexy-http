@@ -74,6 +74,23 @@ namespace SexyHttp.Tests
             }            
         }
 
+        private async static Task<string> ReadString(HttpListenerRequest request)
+        {
+            using (var reader = new StreamReader(request.InputStream))
+            {
+                var inputString = await reader.ReadToEndAsync();
+                return inputString;
+            }            
+        }
+
+        private async static Task WriteString(HttpListenerResponse response, string s)
+        {
+            response.Headers.Add("Content-Type", "text/plain");
+            var buffer = Encoding.UTF8.GetBytes(s);
+            await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
+            response.OutputStream.Close();
+        }
+
         private async static Task WriteJson(HttpListenerResponse response, JToken json)
         {
             response.Headers.Add("Content-Type", "application/json");
@@ -124,6 +141,16 @@ namespace SexyHttp.Tests
             {
                 var token = handler(request);
                 await WriteByteArray(response, token);
+            });
+        }
+
+        public static MockHttpServer String(Func<string, string> handler)
+        {
+            return new MockHttpServer(async (request, response) =>
+            {
+                var s = await ReadString(request);
+                var output = handler(s);
+                await WriteString(response, output);
             });
         }
 

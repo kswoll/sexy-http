@@ -6,3 +6,11 @@ extensible way.
 The basic approach is very much inspired by [refit](https://github.com/paulcbetts/refit) but provides a greater array of
 extensibility points to customize the behavior of the client.
 
+To start, the general approach is that you define a contract of C# methods that specify the nature of the interaction with the 
+backend endpoint.  For example, to define an endpoint that takes an `int` and returns a `string`, create an interface like so:
+
+[Proxy]
+public interface ISampleApi
+{
+    [Post]
+}

@@ -315,5 +315,23 @@ namespace SexyHttp.Tests
             [Post("path")]
             Task<HttpBody> GetString(string value);
         }
+
+        [Test]
+        public async void ReflectString()
+        {
+            using (MockHttpServer.String(x => x))
+            {
+                var client = HttpApiClient<IReflectString>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var result = await client.ReflectString("foo");
+                Assert.AreEqual("foo", result);
+            }                        
+        }
+
+        [Proxy]
+        interface IReflectString
+        {
+            [Post, Raw]
+            Task<string> ReflectString(string s);
+        }
     }
 }

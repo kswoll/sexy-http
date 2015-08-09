@@ -116,6 +116,7 @@ namespace SexyHttp
             {
                 var isMultipart = method.GetCustomAttribute<MultipartAttribute>() != null;
                 var isForm = method.GetCustomAttribute<FormAttribute>() != null;
+                var isRaw = method.GetCustomAttribute<RawAttribute>() != null;
 
                 // If the argument represents an input stream, use the respective argument handler
                 if (bodyParameters.First().ParameterType == typeof(Stream) && bodyParameters.Count == 1)
@@ -136,6 +137,13 @@ namespace SexyHttp
                     foreach (var parameter in bodyParameters)
                     {
                         argumentHandlers[parameter.Name] = new FormArgumentHandler(typeConverter, getName(parameter));
+                    }
+                }
+                else if (isRaw)
+                {
+                    foreach (var parameter in bodyParameters)
+                    {
+                        argumentHandlers[parameter.Name] = new RawArgumentHandler(typeConverter);
                     }
                 }
                 // Otherwise, we're going to serialize the request as JSON

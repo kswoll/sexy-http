@@ -9,11 +9,13 @@ namespace SexyHttp.ResponseHandlers
     {
         private readonly JsonResponseHandler jsonHandler;
         private readonly FormResponseHandler formHandler;
+        private readonly StringResponseHandler stringHandler;
 
         public ContentTypeBasedResponseHandler()
         {
             jsonHandler = new JsonResponseHandler();
             formHandler = new FormResponseHandler();
+            stringHandler = new StringResponseHandler();
         }
 
         public override Task<object> HandleResponse(HttpApiResponse response)
@@ -24,6 +26,8 @@ namespace SexyHttp.ResponseHandlers
             {
                 case "application/x-www-form-urlencoded":
                     return formHandler.HandleResponse(response);
+                case "text/plain":
+                    return stringHandler.HandleResponse(response);
                 default:
                     return jsonHandler.HandleResponse(response);
             }
