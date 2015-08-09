@@ -33,6 +33,19 @@ namespace SexyHttp.Tests
         }
 
         [Test]
+        public void EmptyPath()
+        {
+            var api = new HttpApi<IGetEmptyPath>();
+            Assert.AreEqual("http://localhost", api.Endpoints.Single().Value.Path.CreateUrl("http://localhost").ToString());
+        }
+
+        interface IGetEmptyPath
+        {
+            [Get]
+            Task<string> GetString();
+        }
+
+        [Test]
         public void Post()
         {
             var api = new HttpApi<IPost>();

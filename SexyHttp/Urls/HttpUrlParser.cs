@@ -61,7 +61,6 @@ namespace SexyHttp.Urls
                 }
             }
             while (lastIndex < chunk.Length);
-            
         }
     }
 }

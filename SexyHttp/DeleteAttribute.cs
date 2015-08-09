@@ -9,7 +9,7 @@ namespace SexyHttp
         public string Path { get; }
         public HttpMethod Method => HttpMethod.Delete;
 
-        public DeleteAttribute(string path)
+        public DeleteAttribute(string path = "")
         {
             Path = path;
         }
