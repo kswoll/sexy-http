@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -70,6 +70,21 @@ namespace SexyHttp.Tests
             }
         }
 
+        [Test]
+        public async void Delete()
+        {
+            int deletedEntityId = 0;
+            using (MockHttpServer.Null(request =>
+            {
+                deletedEntityId = int.Parse(request.Url.ToString().Split('/').Last());
+            }))
+            {
+                var client = HttpApiClient<ICrudApi<User>>.Create("http://localhost:8844", new HttpClientHandler());
+                await client.Delete(1);
+                Assert.AreEqual(1, deletedEntityId);
+            }
+        }
+
         private class User
         {
             public int Id { get; set; }
@@ -91,6 +106,9 @@ namespace SexyHttp.Tests
 
             [Put("{id}")]
             Task Put(int id, T entity);
+
+            [Delete("{id}")]
+            Task Delete(int id);
         }
     }
 }
