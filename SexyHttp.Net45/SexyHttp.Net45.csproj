@@ -35,7 +35,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="SexyProxy, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SexyProxy.1.0.1\lib\net45\SexyProxy.dll</HintPath>
+      <HintPath>..\packages\SexyProxy.1.0.2\lib\net45\SexyProxy.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

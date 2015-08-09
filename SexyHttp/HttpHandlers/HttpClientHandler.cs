@@ -92,7 +92,7 @@ namespace SexyHttp.HttpHandlers
             if (message.Content != null)
             {
                 headers.AddRange(message.Content.Headers.Select(x => new HttpHeader(x.Key, x.Value.ToArray())));
-                switch (request.ResponseContentTypeOverride ?? message.Content.Headers.ContentType.MediaType)
+                switch (request.ResponseContentTypeOverride ?? message.Content.Headers.ContentType?.MediaType)
                 {
                     case "application/json":
                         var json = JToken.Parse(await message.Content.ReadAsStringAsync());
@@ -108,6 +108,8 @@ namespace SexyHttp.HttpHandlers
                         break;
                     case "application/octet-stream":
                         body = new StreamHttpBody(await message.Content.ReadAsStreamAsync());
+                        break;
+                    case null:
                         break;
                 }
             }
