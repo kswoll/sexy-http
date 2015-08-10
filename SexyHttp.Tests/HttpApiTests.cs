@@ -169,7 +169,7 @@ namespace SexyHttp.Tests
         interface IDirectJsonBody
         {
             [Post("path")]
-            Task PostInt(int number);
+            Task PostInt([Value]int number);
         }
 
         [Test]

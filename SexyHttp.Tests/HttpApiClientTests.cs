@@ -20,7 +20,7 @@ namespace SexyHttp.Tests
         public interface IApi 
         {
             [Get("path")]
-            Task<string> GetString(string argument);
+            Task<string> GetString([Value]string argument);
         }
     }
 }

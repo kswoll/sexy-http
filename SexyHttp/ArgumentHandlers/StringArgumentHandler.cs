@@ -4,9 +4,9 @@ using SexyHttp.TypeConverters;
 
 namespace SexyHttp.ArgumentHandlers
 {
-    public class RawArgumentHandler : HttpArgumentHandler
+    public class StringArgumentHandler : HttpArgumentHandler
     {
-        public RawArgumentHandler(ITypeConverter typeConverter) : base(typeConverter)
+        public StringArgumentHandler(ITypeConverter typeConverter) : base(typeConverter)
         {
         }
 

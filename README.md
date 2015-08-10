@@ -7,10 +7,23 @@ The basic approach is very much inspired by [refit](https://github.com/paulcbett
 extensibility points to customize the behavior of the client.
 
 To start, the general approach is that you define a contract of C# methods that specify the nature of the interaction with the 
-backend endpoint.  For example, to define an endpoint that takes an `int` and returns a `string`, create an interface like so:
+backend endpoint.  For example, to define a POST endpoint that takes a `string` and returns a `string`, create an interface like so:
 
-[Proxy]
-public interface ISampleApi
-{
-    [Post]
-}
+    public interface ISampleApi
+    {
+        [Post]
+        Task<string> PostString(int value);
+    }
+
+Before deconstructing this and explaining how the data will be serialized and deserialized, let's first see how'd you'd 
+instantiate your client:
+
+    ISampleApi client = HttpApiClient<ISampleApi>.Create("http://someserver.com", new HttpClientHandler());
+
+And to make the call:
+
+    string result = await client.PostString("foo");
+
+With the API defined as above, this will make an HTTP POST request to `http://someserver.com`.  By default, arguments are 
+serialized into JSON.  In this case, the argument is a string and is serialized as a JSON string, i.e. `"foo"` (vs `foo`).
+This serialized text makes up the HTTP body of the request.  Important to note, 

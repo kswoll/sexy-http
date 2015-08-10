@@ -3,7 +3,7 @@
 namespace SexyHttp
 {
     [AttributeUsage(AttributeTargets.Method)]
-    public class RawAttribute : Attribute
+    public class TextAttribute : Attribute
     {
     }
 }

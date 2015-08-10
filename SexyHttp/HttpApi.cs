@@ -116,7 +116,7 @@ namespace SexyHttp
             {
                 var isMultipart = method.GetCustomAttribute<MultipartAttribute>() != null;
                 var isForm = method.GetCustomAttribute<FormAttribute>() != null;
-                var isRaw = method.GetCustomAttribute<RawAttribute>() != null;
+                var isText = method.GetCustomAttribute<TextAttribute>() != null;
 
                 // If the argument represents an input stream, use the respective argument handler
                 if (bodyParameters.First().ParameterType == typeof(Stream) && bodyParameters.Count == 1)
@@ -139,25 +139,25 @@ namespace SexyHttp
                         argumentHandlers[parameter.Name] = new FormArgumentHandler(typeConverter, getName(parameter));
                     }
                 }
-                else if (isRaw)
+                else if (isText)
                 {
                     foreach (var parameter in bodyParameters)
                     {
-                        argumentHandlers[parameter.Name] = new RawArgumentHandler(typeConverter);
+                        argumentHandlers[parameter.Name] = new StringArgumentHandler(typeConverter);
                     }
                 }
                 // Otherwise, we're going to serialize the request as JSON
                 else
                 {
-                    // If there's only one body parameter, then we're going to serialize the argument as a raw JSON value. 
-                    // (Unless it's decorated with [Object] in which case we force serialization as an object below)
-                    if (bodyParameters.Count == 1 && bodyParameters.Single().GetCustomAttribute<ObjectAttribute>() == null)
+                    // If there's only one body parameter and its annotated with [Value], then we're going to serialize 
+                    // the argument as a raw JSON value.
+                    if (bodyParameters.Count == 1 && bodyParameters.Single().GetCustomAttribute<ValueAttribute>() != null)
                     {
                         var parameter = bodyParameters.Single();
                         argumentHandlers[parameter.Name] = new DirectJsonArgumentHandler(typeConverter);
                     }
                     // Otherwise we're going to create a dynamically composed JSON object where each parameter represents a 
-                    // proprety the composed JSON object.
+                    // property of the composed JSON object.
                     else
                     {
                         // Foreach body parameter, create a json argument handler
