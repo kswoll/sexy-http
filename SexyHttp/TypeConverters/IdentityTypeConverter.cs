@@ -4,7 +4,7 @@ namespace SexyHttp.TypeConverters
 {
     public class IdentityTypeConverter : ITypeConverter
     {
-        public bool TryConvertTo(Type convertTo, object obj, out object result)
+        public bool TryConvertTo(ITypeConverter root, Type convertTo, object obj, out object result)
         {
             if (convertTo.IsInstanceOfType(obj))
             {

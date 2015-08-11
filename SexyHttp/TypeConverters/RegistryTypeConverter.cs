@@ -26,9 +26,9 @@ namespace SexyHttp.TypeConverters
             else if (type.IsArray)
             {
                 var elementType = type.GetElementType();
-                if (elementType.IsValueType && elementType.BaseType == null)
-                    return type.BaseType;
-                else if (elementType.BaseType != null)
+                if (elementType.IsValueType && elementType.IsEnum)
+                    return typeof(Enum[]);
+                else if (!elementType.IsValueType && elementType.BaseType != null)
                     return elementType.BaseType.MakeArrayType();
                 else
                     return type.BaseType;
@@ -39,7 +39,7 @@ namespace SexyHttp.TypeConverters
             }            
         }
 
-        public bool TryConvertTo(Type convertTo, object obj, out object result)
+        public bool TryConvertTo(ITypeConverter root, Type convertTo, object obj, out object result)
         {
             var targetType = convertTo;
 
@@ -52,7 +52,7 @@ namespace SexyHttp.TypeConverters
                     ITypeConverter converter;
                     if (typeConverters.TryGetValue(key, out converter))
                     {
-                        if (converter.TryConvertTo(convertTo, obj, out result))
+                        if (converter.TryConvertTo(root, convertTo, obj, out result))
                         {
                             return true;
                         }

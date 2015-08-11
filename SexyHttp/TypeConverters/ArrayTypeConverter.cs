@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Linq;
 
 namespace SexyHttp.TypeConverters
 {
-    /// <summary>
-    /// If you have T and want T[], this converter converts to that for you
-    /// </summary>
     public class ArrayTypeConverter : ITypeConverter
     {
-        public bool TryConvertTo(Type convertTo, object obj, out object result)
+        public bool TryConvertTo(ITypeConverter root, Type convertTo, object obj, out object result)
         {
-/*
             if (convertTo.IsArray && obj.GetType().IsArray)
             {
                 var sourceArray = (Array)obj;
@@ -18,16 +13,15 @@ namespace SexyHttp.TypeConverters
                 for (var i = 0; i < sourceArray.Length; i++)
                 {
                     var sourceElement = sourceArray.GetValue(i);
-                    var destinationElement = ;
+                    object destinationElement;
+                    if (!root.TryConvertTo(root, convertTo.GetElementType(), sourceElement, out destinationElement))
+                    {
+                        result = null;
+                        return false;
+                    }
+                    destinationArray.SetValue(destinationElement, i);
                 }
-                return sourceArray.Cast<object>().Select(x => result.ConvertTo<>())                
-            }
-*/
-            if (convertTo.IsArray && convertTo.GetElementType().IsInstanceOfType(obj))
-            {
-                var array = Array.CreateInstance(convertTo.GetElementType(), 1);
-                array.SetValue(obj, 0);
-                result = array;
+                result = destinationArray;
                 return true;
             }
             result = null;

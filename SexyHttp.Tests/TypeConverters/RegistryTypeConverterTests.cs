@@ -42,7 +42,7 @@ namespace SexyHttp.Tests.TypeConverters
         public void ArrayToBaseElementType()
         {
             var registry = new RegistryTypeConverter();
-            registry.Register<object[], string[]>(LambdaTypeConverter.Create(value => ((Array)value).Cast<object>().Select(x => x.ToString()).ToArray()));
+            registry.Register<Array, string[]>(LambdaTypeConverter.Create(value => ((Array)value).Cast<object>().Select(x => x.ToString()).ToArray()));
 
             var result = registry.ConvertTo<string[]>(new[] { 2, 3 });
             Assert.AreEqual("2", result[0]);

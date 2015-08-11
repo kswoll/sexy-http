@@ -155,11 +155,17 @@ some optional filtering via the query string:
 
 First some examples, than a detailed explanation:
 
-api.Find(ids: new[] { 1, 3 });
-api.Find(firstName: "John", lastName: "Doe");
-api.Find();
+    api.Find(ids: new[] { 1, 3 });
+    api.Find(firstName: "John", lastName: "Doe");
+    api.Find();
 
-The default behavior for arrays in the query string is to use multiple `name=value` pairs.  (You can override this to use
-a comma separated string instead by using your own type converter that registers `object` -> `string[]` and returns a 
+These will produce, respectively:
+
+    http://someserver.com/users?ids=1&ids=3
+    http://someserver.com/users?firstName=John&lastName=Doe
+    http://someserver.com/users
+
+The default behavior for an array argument in the query string is to use multiple `name=value` pairs.  (You can override 
+this to use a comma separated string instead by using your own type converter that registers `object` -> `string[]` and returns a 
 `string[]` with only one comma-separated value)
 

@@ -10,7 +10,7 @@ namespace SexyHttp.TypeConverters
     /// </summary>
     public class SystemConvertTypeConverter : ITypeConverter
     {
-        public bool TryConvertTo(Type convertTo, object obj, out object result)
+        public bool TryConvertTo(ITypeConverter root, Type convertTo, object obj, out object result)
         {
             try
             {

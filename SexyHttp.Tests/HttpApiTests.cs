@@ -195,7 +195,7 @@ namespace SexyHttp.Tests
 
         class TestTypeConverter : ITypeConverter
         {
-            public bool TryConvertTo(Type convertTo, object obj, out object result)
+            public bool TryConvertTo(ITypeConverter root, Type convertTo, object obj, out object result)
             {
                 if (convertTo == typeof(string))
                 {

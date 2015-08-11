@@ -39,10 +39,11 @@ namespace SexyHttp
                 {
                     var name = item.Key;
                     object argument;
-                    if (!arguments.TryGetValue(name, out argument))
-                        throw new Exception($"The argument {name} was not found in the request.");
-                    var handler = item.Value;
-                    await applier(handler, name, argument);
+                    if (arguments.TryGetValue(name, out argument))
+                    {
+                        var handler = item.Value;
+                        await applier(handler, name, argument);
+                    }
                 }                
             };
 
