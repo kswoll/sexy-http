@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace SexyHttp.TypeConverters
 {
@@ -7,16 +8,29 @@ namespace SexyHttp.TypeConverters
     /// </summary>
     public class ArrayTypeConverter : ITypeConverter
     {
-        public bool TryConvertTo<T>(object obj, out T result)
+        public bool TryConvertTo(Type convertTo, object obj, out object result)
         {
-            if (typeof(T).IsArray && typeof(T).GetElementType().IsInstanceOfType(obj))
+/*
+            if (convertTo.IsArray && obj.GetType().IsArray)
             {
-                var array = Array.CreateInstance(typeof(T).GetElementType(), 1);
+                var sourceArray = (Array)obj;
+                var destinationArray = Array.CreateInstance(convertTo.GetElementType(), sourceArray.Length);
+                for (var i = 0; i < sourceArray.Length; i++)
+                {
+                    var sourceElement = sourceArray.GetValue(i);
+                    var destinationElement = ;
+                }
+                return sourceArray.Cast<object>().Select(x => result.ConvertTo<>())                
+            }
+*/
+            if (convertTo.IsArray && convertTo.GetElementType().IsInstanceOfType(obj))
+            {
+                var array = Array.CreateInstance(convertTo.GetElementType(), 1);
                 array.SetValue(obj, 0);
-                result = (T)(object)array;
+                result = array;
                 return true;
             }
-            result = default(T);
+            result = null;
             return false;
         }
     }

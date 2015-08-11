@@ -1,4 +1,6 @@
-﻿namespace SexyHttp.TypeConverters
+﻿using System;
+
+namespace SexyHttp.TypeConverters
 {
     public class CombinedTypeConverter : ITypeConverter
     {
@@ -9,14 +11,14 @@
             this.typeConverters = typeConverters;
         }
 
-        public bool TryConvertTo<T>(object obj, out T result)
+        public bool TryConvertTo(Type convertTo, object obj, out object result)
         {
             foreach (var typeConverter in typeConverters)
             {
-                if (typeConverter.TryConvertTo(obj, out result))
+                if (typeConverter.TryConvertTo(convertTo, obj, out result))
                     return true;
             }
-            result = default(T);
+            result = null;
             return false;
         }
     }

@@ -17,9 +17,31 @@ namespace SexyHttp.TypeConverters
             typeConverters[Tuple.Create(typeof(TSourceType), typeof(TTargetType))] = typeConverter;
         }
 
-        public bool TryConvertTo<T>(object obj, out T result)
+        private Type GetBaseType(Type type)
         {
-            var targetType = typeof(T);
+            if (type.IsValueType && type.BaseType == null)
+            {
+                return typeof(object);
+            }
+            else if (type.IsArray)
+            {
+                var elementType = type.GetElementType();
+                if (elementType.IsValueType && elementType.BaseType == null)
+                    return type.BaseType;
+                else if (elementType.BaseType != null)
+                    return elementType.BaseType.MakeArrayType();
+                else
+                    return type.BaseType;
+            }
+            else
+            {
+                return type.BaseType;
+            }            
+        }
+
+        public bool TryConvertTo(Type convertTo, object obj, out object result)
+        {
+            var targetType = convertTo;
 
             while (targetType != null)
             {
@@ -30,23 +52,17 @@ namespace SexyHttp.TypeConverters
                     ITypeConverter converter;
                     if (typeConverters.TryGetValue(key, out converter))
                     {
-                        if (converter.TryConvertTo(obj, out result))
+                        if (converter.TryConvertTo(convertTo, obj, out result))
                         {
                             return true;
                         }
                     }
-                    if (sourceType.IsValueType && sourceType.BaseType == null)
-                        sourceType = typeof(object);
-                    else
-                        sourceType = sourceType.BaseType;
+                    sourceType = GetBaseType(sourceType);
                 }
-                if (targetType.IsValueType && targetType.BaseType == null)
-                    targetType = typeof(object);
-                else
-                    targetType = targetType.BaseType;
+                targetType = GetBaseType(targetType);
             }
 
-            result = default(T);
+            result = null;
             return false;
         }
     }

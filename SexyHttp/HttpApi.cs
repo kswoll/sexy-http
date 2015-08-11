@@ -21,7 +21,7 @@ namespace SexyHttp
         public HttpApi()
         {
             var explicitTypeConverter = TypeConverterAttribute.GetTypeConverter(typeof(T));
-            TypeConverter = explicitTypeConverter != null ? new CombinedTypeConverter(explicitTypeConverter, new DefaultTypeConverter()) : new DefaultTypeConverter();
+            TypeConverter = explicitTypeConverter != null ? new CombinedTypeConverter(explicitTypeConverter, DefaultTypeConverter.Create()) : DefaultTypeConverter.Create();
 
             // Create endpoints
             var endpoints = new Dictionary<MethodInfo, HttpApiEndpoint>();
@@ -40,13 +40,21 @@ namespace SexyHttp
         protected HttpApiEndpoint CreateEndpoint(MethodInfo method, IHttpMethodAttribute httpMethod)
         {
             // Store a variable to store the type converter to be used for this endpoint
-            var typeConverter = TypeConverterAttribute.Combine(method, TypeConverter);
+            var endpointTypeConverter = TypeConverterAttribute.Combine(method, TypeConverter);
 
             // Store a dictionary to store the argument handlers
             var argumentHandlers = new Dictionary<string, IHttpArgumentHandler>();
 
+            // Get the path associated with the API as a whole
+            var pathPrefix = typeof(T).GetCustomAttribute<PathAttribute>()?.Path;
+
+            // Combine it with the path for the endpoint
+            var path = httpMethod.Path;
+            if (pathPrefix != null)
+                path = HttpPath.Combine(pathPrefix, path);
+
             // Store the url to where we intend to call
-            var url = HttpUrlParser.Parse(httpMethod.Path);
+            var url = HttpUrlParser.Parse(path);
 
             // Create a hash set so we can quickly deterine which parameters appy to the path
             var pathParameters = new HashSet<string>(url.PathParts.OfType<VariableHttpPathPart>().Select(x => x.Key));
@@ -61,7 +69,7 @@ namespace SexyHttp
             foreach (var parameter in method.GetParameters())
             {
                 // If the parameter overrides the type converter, we'll overwrite the typeConverter variable
-                typeConverter = TypeConverterAttribute.Combine(parameter, typeConverter);
+                var typeConverter = TypeConverterAttribute.Combine(parameter, endpointTypeConverter);
 
                 // Store headerAttribute for later
                 var headerAttribute = parameter.GetCustomAttribute<HeaderAttribute>();
@@ -118,42 +126,44 @@ namespace SexyHttp
                 var isForm = method.GetCustomAttribute<FormAttribute>() != null;
                 var isText = method.GetCustomAttribute<TextAttribute>() != null;
 
+                Action<Func<ParameterInfo, ITypeConverter, IHttpArgumentHandler>> setBodyArgumentHandlers = factory =>
+                {
+                    foreach (var parameter in bodyParameters)
+                    {
+                        var typeConverter = TypeConverterAttribute.Combine(parameter, endpointTypeConverter);
+                        argumentHandlers[parameter.Name] = factory(parameter, typeConverter);
+                    }
+                };
+
                 // If the argument represents an input stream, use the respective argument handler
                 if (bodyParameters.First().ParameterType == typeof(Stream) && bodyParameters.Count == 1)
                 {
                     var parameter = bodyParameters.Single();
+                    var typeConverter = TypeConverterAttribute.Combine(parameter, endpointTypeConverter);
                     argumentHandlers[parameter.Name] = new StreamArgumentHandler(typeConverter);
                 }
                 // If it's explicitly multipart or any parameter is a stream, then each parameter represent a multipart section that encapsulates the value
                 else if (isMultipart || bodyParameters.Any(x => x.ParameterType == typeof(Stream)))
                 {
-                    foreach (var parameter in bodyParameters)
-                    {
-                        argumentHandlers[parameter.Name] = new MultipartArgumentHandler(typeConverter);
-                    }
+                    setBodyArgumentHandlers((parameter, typeConverter) => new MultipartArgumentHandler(typeConverter));
                 }
                 else if (isForm)
                 {
-                    foreach (var parameter in bodyParameters)
-                    {
-                        argumentHandlers[parameter.Name] = new FormArgumentHandler(typeConverter, getName(parameter));
-                    }
+                    setBodyArgumentHandlers((parameter, typeConverter) => new FormArgumentHandler(typeConverter, getName(parameter)));
                 }
                 else if (isText)
                 {
-                    foreach (var parameter in bodyParameters)
-                    {
-                        argumentHandlers[parameter.Name] = new StringArgumentHandler(typeConverter);
-                    }
+                    setBodyArgumentHandlers((parameter, typeConverter) => new StringArgumentHandler(typeConverter));
                 }
                 // Otherwise, we're going to serialize the request as JSON
                 else
                 {
-                    // If there's only one body parameter and its annotated with [Value], then we're going to serialize 
+                    // If there's only one body parameter and its not annotated with [Object], then we're going to serialize 
                     // the argument as a raw JSON value.
-                    if (bodyParameters.Count == 1 && bodyParameters.Single().GetCustomAttribute<ValueAttribute>() != null)
+                    if (bodyParameters.Count == 1 && bodyParameters.Single().GetCustomAttribute<ObjectAttribute>() == null)
                     {
                         var parameter = bodyParameters.Single();
+                        var typeConverter = TypeConverterAttribute.Combine(parameter, endpointTypeConverter);
                         argumentHandlers[parameter.Name] = new DirectJsonArgumentHandler(typeConverter);
                     }
                     // Otherwise we're going to create a dynamically composed JSON object where each parameter represents a 
@@ -161,10 +171,7 @@ namespace SexyHttp
                     else
                     {
                         // Foreach body parameter, create a json argument handler
-                        foreach (var parameter in bodyParameters)
-                        {
-                            argumentHandlers[parameter.Name] = new ComposedJsonArgumentHandler(typeConverter, getName(parameter));
-                        }
+                        setBodyArgumentHandlers((parameter, typeConverter) => new ComposedJsonArgumentHandler(typeConverter, getName(parameter)));
                     }                    
                 }
             }
@@ -173,6 +180,8 @@ namespace SexyHttp
             if (!typeof(Task).IsAssignableFrom(returnType))
                 throw new Exception("Methods must be async and return either Task or Task<T>");
             returnType = returnType.GetTaskType() ?? typeof(void);
+
+            var responseTypeConverter = TypeConverterAttribute.Combine(method.ReturnTypeCustomAttributes, endpointTypeConverter);
 
             IHttpResponseHandler responseHandler;
             if (returnType == typeof(void))
@@ -185,7 +194,7 @@ namespace SexyHttp
                 responseHandler = new HttpBodyResponseHandler();
             else
                 responseHandler = new ContentTypeBasedResponseHandler();
-            responseHandler.TypeConverter = typeConverter;
+            responseHandler.TypeConverter = responseTypeConverter;
             responseHandler.ResponseType = returnType;
 
             var endpoint = new HttpApiEndpoint(url, httpMethod.Method, argumentHandlers, responseHandler);

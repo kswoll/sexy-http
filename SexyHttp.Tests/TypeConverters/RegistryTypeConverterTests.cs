@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using SexyHttp.TypeConverters;
 
@@ -35,6 +36,17 @@ namespace SexyHttp.Tests.TypeConverters
 
             var result = registry.ConvertTo<TestEnum>("Value1");
             Assert.AreEqual(TestEnum.Value1, result);
+        }
+
+        [Test]
+        public void ArrayToBaseElementType()
+        {
+            var registry = new RegistryTypeConverter();
+            registry.Register<object[], string[]>(LambdaTypeConverter.Create(value => ((Array)value).Cast<object>().Select(x => x.ToString()).ToArray()));
+
+            var result = registry.ConvertTo<string[]>(new[] { 2, 3 });
+            Assert.AreEqual("2", result[0]);
+            Assert.AreEqual("3", result[1]);
         }
 
         public enum TestEnum { Value1, Value2 }

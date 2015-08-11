@@ -62,7 +62,7 @@ namespace SexyHttp.Tests
                 HttpMethod.Get, 
                 new Dictionary<string, IHttpArgumentHandler>
                 {
-                    { "name", new HttpHeaderArgumentHandler(new DefaultTypeConverter())  }
+                    { "name", new HttpHeaderArgumentHandler(DefaultTypeConverter.Create())  }
                 }, 
                 responseHandler);
             var response = await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object> { ["name"] = "value" });

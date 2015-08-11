@@ -7,6 +7,9 @@ namespace SexyHttp.Urls
     {
         public static HttpUrlDescriptor Parse(string url)
         {
+            if (url.StartsWith("/"))
+                url = url.Substring(1);
+
             var queryIndex = url.IndexOf('?');
             var pathSection = url;
             if (queryIndex != -1)

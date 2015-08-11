@@ -39,16 +39,16 @@ namespace SexyHttp.TypeConverters
             this.converter = converter;
         }
 
-        public bool TryConvertTo<TResult>(object obj, out TResult result)
+        public bool TryConvertTo(Type convertTo, object obj, out object result)
         {
-            if (!typeof(TResult).IsAssignableFrom(typeof(T)) && !typeof(T).IsAssignableFrom(typeof(TResult)))
+            if (!convertTo.IsAssignableFrom(typeof(T)) && !typeof(T).IsAssignableFrom(convertTo))
             {
-                result = default(TResult);
+                result = null;
                 return false;
             }
 
-            var value = converter(obj, typeof(TResult));
-            result = (TResult)(object)value.Value;
+            var value = converter(obj, convertTo);
+            result = value.Value;
             return value.IsConverted;
         }
     }

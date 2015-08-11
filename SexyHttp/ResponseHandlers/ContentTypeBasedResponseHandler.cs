@@ -41,6 +41,7 @@ namespace SexyHttp.ResponseHandlers
                 base.TypeConverter = value;
                 formHandler.TypeConverter = value;
                 jsonHandler.TypeConverter = value;
+                stringHandler.TypeConverter = value;
             }
         }
 
@@ -52,6 +53,7 @@ namespace SexyHttp.ResponseHandlers
                 base.ResponseType = value;
                 formHandler.ResponseType = value;
                 jsonHandler.ResponseType = value;
+                stringHandler.ResponseType = value;
             }
         }
     }

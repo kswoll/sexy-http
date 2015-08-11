@@ -46,7 +46,7 @@ namespace SexyHttp.Tests
         private interface IReflectValue
         {
             [Post("path")]
-            Task<string> ReflectValue([Value]string argument);
+            Task<string> ReflectValue(string argument);
         }
 
         [Test]
@@ -241,7 +241,7 @@ namespace SexyHttp.Tests
         interface ISingleArgumentAsObject
         {
             [Post("path")]
-            Task<string> GetString(string value);
+            Task<string> GetString([Object]string value);
         }
 
         [Test]
@@ -277,7 +277,7 @@ namespace SexyHttp.Tests
         interface IRawResponseApi
         {
             [Post("path")]
-            Task<HttpApiResponse> GetString([Value]string value);
+            Task<HttpApiResponse> GetString(string value);
         }
 
         [Test]
@@ -313,7 +313,7 @@ namespace SexyHttp.Tests
         interface IRawResponseBody
         {
             [Post("path")]
-            Task<HttpBody> GetString([Value]string value);
+            Task<HttpBody> GetString(string value);
         }
 
         [Test]

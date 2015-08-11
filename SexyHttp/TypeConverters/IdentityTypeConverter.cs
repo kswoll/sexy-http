@@ -1,15 +1,17 @@
-﻿namespace SexyHttp.TypeConverters
+﻿using System;
+
+namespace SexyHttp.TypeConverters
 {
     public class IdentityTypeConverter : ITypeConverter
     {
-        public bool TryConvertTo<T>(object obj, out T result)
+        public bool TryConvertTo(Type convertTo, object obj, out object result)
         {
-            if (obj is T)
+            if (convertTo.IsInstanceOfType(obj))
             {
-                result = (T)obj;
+                result = obj;
                 return true;
             }
-            result = default(T);
+            result = null;
             return false;
         }
     }

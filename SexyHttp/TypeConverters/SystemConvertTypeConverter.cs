@@ -10,16 +10,16 @@ namespace SexyHttp.TypeConverters
     /// </summary>
     public class SystemConvertTypeConverter : ITypeConverter
     {
-        public bool TryConvertTo<T>(object obj, out T result)
+        public bool TryConvertTo(Type convertTo, object obj, out object result)
         {
             try
             {
-                result = (T)Convert.ChangeType(obj, typeof(T));
+                result = Convert.ChangeType(obj, convertTo);
                 return true;
             }
             catch (Exception)
             {
-                result = default(T);
+                result = null;
                 return false;
             }
         }

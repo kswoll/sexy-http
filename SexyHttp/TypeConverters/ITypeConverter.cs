@@ -1,7 +1,9 @@
-﻿namespace SexyHttp.TypeConverters
+﻿using System;
+
+namespace SexyHttp.TypeConverters
 {
     public interface ITypeConverter
     {
-        bool TryConvertTo<T>(object obj, out T result);
+        bool TryConvertTo(Type convertTo, object obj, out object result);
     }
 }

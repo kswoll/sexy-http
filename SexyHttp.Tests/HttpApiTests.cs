@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -75,6 +76,23 @@ namespace SexyHttp.Tests
         }
 
         [Test]
+        public async void PathForApiType()
+        {
+            var api = new HttpApi<IPathForApi>();
+            var endpoint = api.Endpoints.Single().Value;
+            var httpHandler = new MockHttpHandler();
+            await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object> { ["key"] = "to" });
+            Assert.AreEqual("http://localhost/path/to/api", httpHandler.Request.Url.ToString());
+        }
+
+        [Path("path")]
+        interface IPathForApi
+        {
+            [Get("{key}/api")]
+            Task<string> GetString(string key);
+        }
+
+        [Test]
         public async void QueryWithSubstitution()
         {
             var api = new HttpApi<IQueryWithSubstitution>();
@@ -88,6 +106,26 @@ namespace SexyHttp.Tests
         {
             [Get("path?foo={key}")]
             Task<string> GetString(string key);
+        }
+
+        [Test]
+        public async void MultipleQueryArguments()
+        {
+            var api = new HttpApi<IMultipeQueryArguments>();
+            var endpoint = api.Endpoints.Single().Value;
+            var httpHandler = new MockHttpHandler();
+            await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object> { ["ids"] = new[] { 1, 3 } });
+            Assert.AreEqual("http://localhost?ids=1&ids=3", httpHandler.Request.Url.ToString());            
+        }
+
+        interface IMultipeQueryArguments
+        {
+            [Get("?ids={ids}&firstName={firstName}&lastName={lastName}")]
+            Task<User[]> Find(int[] ids = null, string firstName = null, string lastName = null);
+        }
+
+        private class User
+        {
         }
 
         [Test]
@@ -139,16 +177,32 @@ namespace SexyHttp.Tests
             Task PostInt([TypeConverter(typeof(TestTypeConverter))]int number);            
         }
 
+        [Test]
+        public async void ReturnTypeConverter()
+        {
+            var api = new HttpApi<IReturnTypeConverter>();
+            var endpoint = api.Endpoints.Single().Value;
+            var httpHandler = new MockHttpHandler();
+            var result = await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object> { ["number"] = 5 });
+            Assert.AreEqual("foo", result);
+        }
+
+        interface IReturnTypeConverter
+        {
+            [Post]
+            [return: TypeConverter(typeof(TestTypeConverter))]Task<string> Post();
+        }
+
         class TestTypeConverter : ITypeConverter
         {
-            public bool TryConvertTo<T>(object obj, out T result)
+            public bool TryConvertTo(Type convertTo, object obj, out object result)
             {
-                if (typeof(T) == typeof(string))
+                if (convertTo == typeof(string))
                 {
-                    result = (T)(object)"foo";
+                    result = "foo";
                     return true;                    
                 }
-                result = default(T);
+                result = null;
                 return false;
             }
         }
@@ -169,7 +223,7 @@ namespace SexyHttp.Tests
         interface IDirectJsonBody
         {
             [Post("path")]
-            Task PostInt([Value]int number);
+            Task PostInt(int number);
         }
 
         [Test]

@@ -3,7 +3,7 @@
 namespace SexyHttp
 {
     [AttributeUsage(AttributeTargets.Parameter)]
-    public class ValueAttribute : Attribute
+    public class ObjectAttribute : Attribute
     {
     }
 }
