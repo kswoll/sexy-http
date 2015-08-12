@@ -116,12 +116,46 @@ namespace SexyHttp.Tests
             var httpHandler = new MockHttpHandler();
             await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object> { ["ids"] = new[] { 1, 3 } });
             Assert.AreEqual("http://localhost?ids=1&ids=3", httpHandler.Request.Url.ToString());            
+            await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object> { ["firstName"] = "John" });
+            Assert.AreEqual("http://localhost?firstName=John", httpHandler.Request.Url.ToString());            
         }
 
         interface IMultipeQueryArguments
         {
             [Get("?ids={ids}&firstName={firstName}&lastName={lastName}")]
             Task<User[]> Find(int[] ids = null, string firstName = null, string lastName = null);
+        }
+
+        [Test]
+        public async void MultipelIdsCommaSeparated()
+        {
+            var api = new HttpApi<IMultipleIdsCommaSeparated>();
+            var endpoint = api.Endpoints.Single().Value;
+            var httpHandler = new MockHttpHandler();
+            await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object> { ["ids"] = new[] { 1, 3 } });
+            Assert.AreEqual("http://localhost?ids=1,3", httpHandler.Request.Url.ToString());            
+        }
+
+        [TypeConverter(typeof(CommaSeparatedConverter))]
+        interface IMultipleIdsCommaSeparated
+        {
+            [Get("?ids={ids}&firstName={firstName}&lastName={lastName}")]
+            Task<User[]> Find(int[] ids = null, string firstName = null, string lastName = null);
+        }
+
+        class CommaSeparatedConverter : CombinedTypeConverter
+        {
+            public CommaSeparatedConverter() : base(CreateTypeConverters())
+            {
+            }
+
+            private static ITypeConverter[] CreateTypeConverters()
+            {
+                var registry = new RegistryTypeConverter();
+                registry.Register<Array, string[]>(LambdaTypeConverter.Create((root, value, convertTo) => new[] { string.Join(",", ((Array)value).Cast<object>().Select(x => root.ConvertTo<string>(x))) }));
+
+                return new ITypeConverter[] { registry, DefaultTypeConverter.Create() };
+            }
         }
 
         private class User
