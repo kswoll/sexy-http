@@ -81,6 +81,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\RegistryTypeConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\ITypeConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\SystemConvertTypeConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\TypeConversionException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\TypeConverterAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\TypeConverterExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\TypeConverterResult.cs" />
