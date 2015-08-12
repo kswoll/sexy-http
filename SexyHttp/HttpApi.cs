@@ -20,8 +20,7 @@ namespace SexyHttp
 
         public HttpApi()
         {
-            var explicitTypeConverter = TypeConverterAttribute.GetTypeConverter(typeof(T));
-            TypeConverter = explicitTypeConverter != null ? new CombinedTypeConverter(explicitTypeConverter, DefaultTypeConverter.Create()) : DefaultTypeConverter.Create();
+            TypeConverter = TypeConverterAttribute.Combine(typeof(T), DefaultTypeConverter.Create());
 
             // Create endpoints
             var endpoints = new Dictionary<MethodInfo, HttpApiEndpoint>();

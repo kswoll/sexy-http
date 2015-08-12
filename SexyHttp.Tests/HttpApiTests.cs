@@ -136,26 +136,11 @@ namespace SexyHttp.Tests
             Assert.AreEqual("http://localhost?ids=1,3", httpHandler.Request.Url.ToString());            
         }
 
-        [TypeConverter(typeof(CommaSeparatedConverter))]
+        [TypeConverter(typeof(ArrayAsCommaSeparatedStringConverter))]
         interface IMultipleIdsCommaSeparated
         {
             [Get("?ids={ids}&firstName={firstName}&lastName={lastName}")]
             Task<User[]> Find(int[] ids = null, string firstName = null, string lastName = null);
-        }
-
-        class CommaSeparatedConverter : CombinedTypeConverter
-        {
-            public CommaSeparatedConverter() : base(CreateTypeConverters())
-            {
-            }
-
-            private static ITypeConverter[] CreateTypeConverters()
-            {
-                var registry = new RegistryTypeConverter();
-                registry.Register<Array, string[]>(LambdaTypeConverter.Create((root, value, convertTo) => new[] { string.Join(",", ((Array)value).Cast<object>().Select(x => root.ConvertTo<string>(x))) }));
-
-                return new ITypeConverter[] { registry, DefaultTypeConverter.Create() };
-            }
         }
 
         private class User

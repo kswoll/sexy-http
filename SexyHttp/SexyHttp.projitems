@@ -72,6 +72,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ResponseHandlers\JsonResponseHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ResponseHandlers\NullResponseHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ResponseHandlers\StringResponseHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\ArrayAsCommaSeparatedStringConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\ArrayTypeConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\ElementToArrayTypeConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\CombinedTypeConverter.cs" />

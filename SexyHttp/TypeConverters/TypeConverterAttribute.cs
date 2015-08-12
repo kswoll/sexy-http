@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace SexyHttp.TypeConverters
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.ReturnValue)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.ReturnValue, AllowMultiple = true)]
     public class TypeConverterAttribute : Attribute
     {
         public Type ConverterType { get; }
@@ -16,20 +16,17 @@ namespace SexyHttp.TypeConverters
 
         public static ITypeConverter Combine(ICustomAttributeProvider attributeProvider, ITypeConverter typeConverter)
         {
-            var result = GetTypeConverter(attributeProvider);
-            if (result == null)
+            var results = GetTypeConverters(attributeProvider);
+            if (!results.Any())
                 return typeConverter;
             else
-                return new CombinedTypeConverter(result, typeConverter);
+                return new CombinedTypeConverter(results.Concat(new[] { typeConverter }).ToArray());
         }
 
-        public static ITypeConverter GetTypeConverter(ICustomAttributeProvider attributeProvider)
+        public static ITypeConverter[] GetTypeConverters(ICustomAttributeProvider attributeProvider)
         {
-            var attribute = (TypeConverterAttribute)attributeProvider.GetCustomAttributes(typeof(TypeConverterAttribute), true).SingleOrDefault();
-            if (attribute != null)
-                return (ITypeConverter)Activator.CreateInstance(attribute.ConverterType);
-            else
-                return null;
+            var attributes = attributeProvider.GetCustomAttributes(typeof(TypeConverterAttribute), true).Cast<TypeConverterAttribute>();
+            return attributes.Select(x => x.ConverterType).Select(x => (ITypeConverter)Activator.CreateInstance(x)).ToArray();
         }
     }
 }
