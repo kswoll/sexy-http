@@ -141,6 +141,13 @@ namespace SexyHttp
                     var typeConverter = TypeConverterAttribute.Combine(parameter, endpointTypeConverter);
                     argumentHandlers[parameter.Name] = new StreamArgumentHandler(typeConverter);
                 }
+                // If the argument represents an input stream, use the respective argument handler
+                else if (bodyParameters.First().ParameterType == typeof(byte[]) && bodyParameters.Count == 1)
+                {
+                    var parameter = bodyParameters.Single();
+                    var typeConverter = TypeConverterAttribute.Combine(parameter, endpointTypeConverter);
+                    argumentHandlers[parameter.Name] = new ByteArrayArgumentHandler(typeConverter);
+                }
                 // If it's explicitly multipart or any parameter is a stream, then each parameter represent a multipart section that encapsulates the value
                 else if (isMultipart || bodyParameters.Any(x => x.ParameterType == typeof(Stream)))
                 {

@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Api.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\ByteArrayArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\DirectJsonArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\FormArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\HttpApiRequestArgumentHandler.cs" />

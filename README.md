@@ -17,7 +17,8 @@ converter is simply an implementation of the provided `ITypeConverter` interface
 
     public interface ITypeConverter
     {
-        bool TryConvertTo<T>(object obj, out T result);
+        bool TryConvertTo(ITypeConverter root, TypeConversionContext context, Type convertTo, 
+            object value, out object result);
     }
 
 A custom type converter can be provided for arguments, return values, endpoint methods, or the api type itself.  
@@ -173,3 +174,48 @@ this to use a comma separated string instead by annotating your API with
     [TypeConverter(ArrayAsCommaSeparatedStringConverter, TypeConversionContext.Query)]
     
 Specifying the `TypeConversionContext` prevents the converter from being used in contexts other than the query string.
+
+## Parameter Types
+
+The type of a parameter for your method can be important if they are one of the following types:
+
+* **`Stream`**  
+  When the parameter is a `Stream`, it will be consumed upon invocation as the body of the HTTP request.  Useful for 
+  things like uploading files without having to buffer the entire payload into memory.
+
+* **`byte[]`**  
+  Similar to `Stream` as defined above but the HTTP body is simply this raw byte array.
+
+* **`Func<Stream, Task>`**  
+  When the parameter is of this type, the idea is that you provide a method that consumes a stream asynchronously.  In 
+  other words, this allows you to access the *response* as a `Stream` and completely handle it in the context of the 
+  method such that when the invocation to the API is complete, it everything can be disposed of immediately.  This is 
+  why it's a *parameter* of type `Func<Stream, Task>` rather a *return* type of `Stream`.  If we implemented it as a 
+  return type, then we couldn't dispose of the `HttpClient` upon completion of the invocation of the method.
+  
+* **`Action<HttpApiRequest>`**  
+  This allows you to instrument the request before sending it to the server.  You can use this to either *completely* 
+  define the parameters to the backend endpoint, or you can use this to simply tweak the nature of the request *in
+  addition* to also naturally filling in the request as usual.  For example, you could modify the URL, change up the 
+  body, etc.
+  
+* **`HttpBody`**  
+  When you provide a parameter of this type, the entire body of the HTTP request will use this value directly.  There
+  are various subclasses of `HttpBody` (such as `JsonHttpBody` and `StreamHttpBody`) that allows you to provide data 
+  of different kinds.
+  
+## Response Types
+
+Similar to the above, if the return type of your method is one of the following types, then it is handled specially as 
+defined below:
+
+* **`byte[]`**  
+  The response body is returned as a raw byte array.
+  
+* **`HttpApiResponse`** 
+  An `HttpApiResponse` describes the HTTP response, including its headers and body.  You can further interrogate the body 
+  by checking its type and casting accordingly (or by using an `IHttpBodyVisitor`).
+  
+* **`HttpBody`**
+  Similar to the above that returns an `HttpApiResponse`, except this provides you with only the body, so you wouldn't be
+  able to access the headers, etc.

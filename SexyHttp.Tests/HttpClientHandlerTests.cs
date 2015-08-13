@@ -87,6 +87,25 @@ namespace SexyHttp.Tests
         }
 
         [Test]
+        public async void PostByteArray()
+        {
+            using (MockHttpServer.PostByteArrayReturnByteArray(x => Task.FromResult(x)))
+            {
+                var input = new byte[] { 3, 1, 8, 9, 15 };
+                var client = HttpApiClient<IPostByteArray>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var result = await client.PostByteArray(input);
+                Assert.IsTrue(result.SequenceEqual(input));
+            }            
+        }
+
+        [Proxy]
+        private interface IPostByteArray
+        {
+            [Post("path"), Multipart]
+            Task<byte[]> PostByteArray(byte[] data);
+        }
+
+        [Test]
         public async void PostStream()
         {
             using (MockHttpServer.PostStreamReturnByteArray(async x => await x.ReadToEndAsync()))
