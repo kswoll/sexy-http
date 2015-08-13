@@ -15,15 +15,16 @@ namespace SexyHttp.TypeConverters
         /// is stored in result and the value returned indicates whether conversion was successful.<br/>
         /// </summary>
         /// <param name="typeConverter">The type converter performing the conversion (i.e. "this").</param>
+        /// <param name="context">The usage scenario of the type conversion (path, query string, etc.)</param>
         /// <param name="convertTo">The type to which the <c>value</c> should be converted.</param>
         /// <param name="value">The object that should be converted to <c>T</c>.</param>
         /// <returns>The <c>value</c> converted into type <c>T</c>.</returns>
         /// <exception cref="TypeConversionException">When the type converter could not convert the value to the specified 
         /// type.</exception>
-        public static object ConvertTo(this ITypeConverter typeConverter, Type convertTo, object value)
+        public static object ConvertTo(this ITypeConverter typeConverter, TypeConversionContext context, Type convertTo, object value)
         {
             object result;
-            if (!typeConverter.TryConvertTo(typeConverter, convertTo, value, out result))
+            if (!typeConverter.TryConvertTo(typeConverter, context, convertTo, value, out result))
                 throw new TypeConversionException(value, convertTo);
             return result;
         }
@@ -33,13 +34,14 @@ namespace SexyHttp.TypeConverters
         /// is stored in result and the value returned indicates whether conversion was successful.<br/>
         /// </summary>
         /// <param name="typeConverter">The type converter performing the conversion (i.e. "this").</param>
+        /// <param name="context">The usage scenario of the type conversion (path, query string, etc.)</param>
         /// <param name="convertTo">The type to which the <c>value</c> should be converted.</param>
         /// <param name="value">The object that should be converted to <c>T</c>.</param>
         /// <param name="result">The result of the conversion is stored here.</param>
         /// <returns>True if this type converter could accomodate the conversion and False if it could not.</returns>
-        public static bool TryConvertTo(this ITypeConverter typeConverter, Type convertTo, object value, out object result)
+        public static bool TryConvertTo(this ITypeConverter typeConverter, TypeConversionContext context, Type convertTo, object value, out object result)
         {
-            return typeConverter.TryConvertTo(typeConverter, convertTo, value, out result);
+            return typeConverter.TryConvertTo(typeConverter, context, convertTo, value, out result);
         }
 
         /// <summary>
@@ -48,13 +50,14 @@ namespace SexyHttp.TypeConverters
         /// </summary>
         /// <typeparam name="T">The type to which the <c>value</c> should be converted.</typeparam>
         /// <param name="typeConverter">The type converter performing the conversion (i.e. "this").</param>
+        /// <param name="context">The usage scenario of the type conversion (path, query string, etc.)</param>
         /// <param name="value">The object that should be converted to <c>T</c>.</param>
         /// <param name="result">The result of the conversion is stored here.</param>
         /// <returns>True if this type converter could accomodate the conversion and False if it could not.</returns>
-        public static bool TryConvertTo<T>(this ITypeConverter typeConverter, object value, out T result)
+        public static bool TryConvertTo<T>(this ITypeConverter typeConverter, TypeConversionContext context, object value, out T result)
         {
             object objectResult;
-            var converted = typeConverter.TryConvertTo(typeConverter, typeof(T), value, out objectResult);
+            var converted = typeConverter.TryConvertTo(typeConverter, context, typeof(T), value, out objectResult);
             if (converted)
             {
                 result = (T)objectResult;
@@ -73,13 +76,14 @@ namespace SexyHttp.TypeConverters
         /// </summary>
         /// <typeparam name="T">The type to which the <c>value</c> should be converted.</typeparam>
         /// <param name="typeConverter">The type converter performing the conversion (i.e. "this").</param>
+        /// <param name="context">The usage scenario of the type conversion (path, query string, etc.)</param>
         /// <param name="value">The object that should be converted to <c>T</c>.</param>
         /// <returns>The <c>value</c> converted into type <c>T</c>.</returns>
         /// <exception cref="TypeConversionException">When the type converter could not convert the value to the specified 
         /// type.</exception>
-        public static T ConvertTo<T>(this ITypeConverter typeConverter, object value)
+        public static T ConvertTo<T>(this ITypeConverter typeConverter, TypeConversionContext context, object value)
         {
-            return (T)typeConverter.ConvertTo(typeof(T), value);
+            return (T)typeConverter.ConvertTo(context, typeof(T), value);
         }
     }
 }

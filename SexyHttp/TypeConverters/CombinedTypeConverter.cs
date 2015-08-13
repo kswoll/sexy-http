@@ -11,11 +11,11 @@ namespace SexyHttp.TypeConverters
             this.typeConverters = typeConverters;
         }
 
-        public bool TryConvertTo(ITypeConverter root, Type convertTo, object obj, out object result)
+        public bool TryConvertTo(ITypeConverter root, TypeConversionContext context, Type convertTo, object value, out object result)
         {
             foreach (var typeConverter in typeConverters)
             {
-                if (typeConverter.TryConvertTo(root, convertTo, obj, out result))
+                if (typeConverter.TryConvertTo(root, context, convertTo, value, out result))
                     return true;
             }
             result = null;

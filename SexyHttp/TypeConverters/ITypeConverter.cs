@@ -14,6 +14,7 @@ namespace SexyHttp.TypeConverters
         /// <param name="root">The top-level instance of ITypeConverter that initiated the conversion.  Implementors
         /// should use this to perform additional conversions from within your type converter. Callers should not be
         /// invoking this method in the first place.</param>
+        /// <param name="context">The usage scenario of the type conversion (path, query string, etc.)</param>
         /// <param name="convertTo">The type to which the <c>value</c> should be converted.</param>
         /// <param name="value">The object that should be converted to <c>convertTo</c>.</param>
         /// <param name="result">The result of the conversion is stored here.</param>
@@ -22,6 +23,6 @@ namespace SexyHttp.TypeConverters
         /// Callers should never invoke this method directly.  Rather, you should invoke one of 
         /// the methods in TypeConverterExtensions instead which will take care of specifying the ITypeConverter root.  
         /// </remarks>
-        bool TryConvertTo(ITypeConverter root, Type convertTo, object value, out object result);
+        bool TryConvertTo(ITypeConverter root, TypeConversionContext context, Type convertTo, object value, out object result);
     }
 }

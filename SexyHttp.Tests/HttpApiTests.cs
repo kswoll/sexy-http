@@ -109,6 +109,22 @@ namespace SexyHttp.Tests
         }
 
         [Test]
+        public async void QueryWithInt()
+        {
+            var api = new HttpApi<IQueryWithInt>();
+            var endpoint = api.Endpoints.Single().Value;
+            var httpHandler = new MockHttpHandler();
+            await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object> { ["key"] = 5 });
+            Assert.AreEqual("http://localhost/path?foo=5", httpHandler.Request.Url.ToString());
+        }
+
+        interface IQueryWithInt
+        {
+            [Get("path?foo={key}")]
+            Task<string> GetString(int key);
+        }
+
+        [Test]
         public async void MultipleQueryArguments()
         {
             var api = new HttpApi<IMultipeQueryArguments>();
@@ -214,7 +230,7 @@ namespace SexyHttp.Tests
 
         class TestTypeConverter : ITypeConverter
         {
-            public bool TryConvertTo(ITypeConverter root, Type convertTo, object obj, out object result)
+            public bool TryConvertTo(ITypeConverter root, TypeConversionContext context, Type convertTo, object value, out object result)
             {
                 if (convertTo == typeof(string))
                 {

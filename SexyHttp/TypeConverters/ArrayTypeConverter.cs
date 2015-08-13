@@ -4,7 +4,7 @@ namespace SexyHttp.TypeConverters
 {
     public class ArrayTypeConverter : ITypeConverter
     {
-        public bool TryConvertTo(ITypeConverter root, Type convertTo, object obj, out object result)
+        public bool TryConvertTo(ITypeConverter root, TypeConversionContext context, Type convertTo, object obj, out object result)
         {
             if (convertTo.IsArray && obj.GetType().IsArray)
             {
@@ -14,7 +14,7 @@ namespace SexyHttp.TypeConverters
                 {
                     var sourceElement = sourceArray.GetValue(i);
                     object destinationElement;
-                    if (!root.TryConvertTo(root, convertTo.GetElementType(), sourceElement, out destinationElement))
+                    if (!root.TryConvertTo(root, context, convertTo.GetElementType(), sourceElement, out destinationElement))
                     {
                         result = null;
                         return false;

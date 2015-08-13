@@ -39,20 +39,20 @@ namespace SexyHttp.TypeConverters
             }            
         }
 
-        public bool TryConvertTo(ITypeConverter root, Type convertTo, object obj, out object result)
+        public bool TryConvertTo(ITypeConverter root, TypeConversionContext context, Type convertTo, object value, out object result)
         {
             var targetType = convertTo;
 
             while (targetType != null)
             {
-                var sourceType = obj?.GetType() ?? typeof(void);
+                var sourceType = value?.GetType() ?? typeof(void);
                 while (sourceType != null)
                 {
                     var key = Tuple.Create(sourceType, targetType);
                     ITypeConverter converter;
                     if (typeConverters.TryGetValue(key, out converter))
                     {
-                        if (converter.TryConvertTo(root, convertTo, obj, out result))
+                        if (converter.TryConvertTo(root, context, convertTo, value, out result))
                         {
                             return true;
                         }

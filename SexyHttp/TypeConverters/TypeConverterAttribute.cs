@@ -8,10 +8,12 @@ namespace SexyHttp.TypeConverters
     public class TypeConverterAttribute : Attribute
     {
         public Type ConverterType { get; }
+        public TypeConversionContext Context { get; }
 
-        public TypeConverterAttribute(Type converterType)
+        public TypeConverterAttribute(Type converterType, TypeConversionContext context = TypeConversionContext.All)
         {
             ConverterType = converterType;
+            Context = context;
         }
 
         public static ITypeConverter Combine(ICustomAttributeProvider attributeProvider, ITypeConverter typeConverter)
@@ -26,7 +28,10 @@ namespace SexyHttp.TypeConverters
         public static ITypeConverter[] GetTypeConverters(ICustomAttributeProvider attributeProvider)
         {
             var attributes = attributeProvider.GetCustomAttributes(typeof(TypeConverterAttribute), true).Cast<TypeConverterAttribute>();
-            return attributes.Select(x => x.ConverterType).Select(x => (ITypeConverter)Activator.CreateInstance(x)).ToArray();
+            return attributes
+                .Select(x => new { x.Context, Converter = (ITypeConverter)Activator.CreateInstance(x.ConverterType) })
+                .Select(x => x.Context == TypeConversionContext.None ? x.Converter : new ContextBasedTypeConverter(x.Context, x.Converter))
+                .ToArray();
         }
     }
 }

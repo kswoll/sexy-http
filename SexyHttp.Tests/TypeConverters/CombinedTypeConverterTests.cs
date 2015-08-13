@@ -21,7 +21,7 @@ namespace SexyHttp.Tests.TypeConverters
                     return new TypeConverterResult<double>(double.TryParse((string)x, out result), result);
                 }));
 
-            var value = typeConverter.ConvertTo<int>("5");
+            var value = typeConverter.ConvertTo<int>(TypeConversionContext.None, "5");
             Assert.AreEqual(5, value);
         }
 
@@ -40,7 +40,7 @@ namespace SexyHttp.Tests.TypeConverters
                     return new TypeConverterResult<double>(double.TryParse((string)x, out result), result);
                 }));
 
-            var value = typeConverter.ConvertTo<double>("5.5");
+            var value = typeConverter.ConvertTo<double>(TypeConversionContext.None, "5.5");
             Assert.AreEqual(5.5D, value);
         }
     }

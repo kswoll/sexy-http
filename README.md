@@ -166,6 +166,5 @@ These will produce, respectively:
     http://someserver.com/users
 
 The default behavior for an array argument in the query string is to use multiple `name=value` pairs.  (You can override 
-this to use a comma separated string instead by using your own type converter that registers `Array` -> `string[]` and returns a 
-`string[]` with only one comma-separated value)
+this to use a comma separated string instead by annotating your API with `[TypeConverter(ArrayAsCommaSeparatedStringConverter)]`.
 

@@ -19,7 +19,7 @@ namespace SexyHttp.ArgumentHandlers
             if (request.Body != null)
                 throw new Exception("DirectJsonArgumentHandler expects a null request body.");
 
-            var token = TypeConverter.ConvertTo<JToken>(argument);
+            var token = TypeConverter.ConvertTo<JToken>(TypeConversionContext.Body, argument);
             request.Body = new JsonHttpBody(token);
 
             return base.ApplyArgument(request, name, argument);

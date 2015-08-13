@@ -19,7 +19,7 @@ namespace SexyHttp.ArgumentHandlers
                 request.Body = new MultipartHttpBody();
             }
             var multipart = (MultipartHttpBody)request.Body;
-            var body = TypeConverter.ConvertTo<HttpBody>(argument);
+            var body = TypeConverter.ConvertTo<HttpBody>(TypeConversionContext.Body, argument);
             if (body == null)
                 throw new Exception($"Could not create body for {name}");
             multipart.Data[name] = new MultipartData { Body = body };

@@ -13,7 +13,7 @@ namespace SexyHttp.ResponseHandlers
             if (jsonBody == null)
                 throw new Exception("Expected a JsonHttpBody in the response");
 
-            var result = TypeConverter.ConvertTo(ResponseType, jsonBody.Json);
+            var result = TypeConverter.ConvertTo(TypeConversionContext.Body, ResponseType, jsonBody.Json);
             return Task.FromResult(result);
         }
     }

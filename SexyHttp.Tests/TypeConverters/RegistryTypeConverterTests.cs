@@ -14,7 +14,7 @@ namespace SexyHttp.Tests.TypeConverters
             var registry = new RegistryTypeConverter();
             registry.Register(typeof(string), typeof(int), LambdaTypeConverter.Create(x => int.Parse((string)x)));
 
-            var result = registry.ConvertTo<int>("5");
+            var result = registry.ConvertTo<int>(TypeConversionContext.None, "5");
             Assert.AreEqual(5, result);
         }
 
@@ -24,7 +24,7 @@ namespace SexyHttp.Tests.TypeConverters
             var registry = new RegistryTypeConverter();
             registry.Register<Enum, string>(LambdaTypeConverter.Create(x => x.ToString()));
 
-            var result = registry.ConvertTo<string>(TestEnum.Value1);
+            var result = registry.ConvertTo<string>(TypeConversionContext.None, TestEnum.Value1);
             Assert.AreEqual("Value1", result);
         }
 
@@ -34,7 +34,7 @@ namespace SexyHttp.Tests.TypeConverters
             var registry = new RegistryTypeConverter();
             registry.Register<string, Enum>(LambdaTypeConverter.Create((x, convertTo) => Enum.Parse(convertTo, (string)x)));
 
-            var result = registry.ConvertTo<TestEnum>("Value1");
+            var result = registry.ConvertTo<TestEnum>(TypeConversionContext.None, "Value1");
             Assert.AreEqual(TestEnum.Value1, result);
         }
 
@@ -44,7 +44,7 @@ namespace SexyHttp.Tests.TypeConverters
             var registry = new RegistryTypeConverter();
             registry.Register<Array, string[]>(LambdaTypeConverter.Create(value => ((Array)value).Cast<object>().Select(x => x.ToString()).ToArray()));
 
-            var result = registry.ConvertTo<string[]>(new[] { 2, 3 });
+            var result = registry.ConvertTo<string[]>(TypeConversionContext.None, new[] { 2, 3 });
             Assert.AreEqual("2", result[0]);
             Assert.AreEqual("3", result[1]);
         }

@@ -22,7 +22,7 @@ namespace SexyHttp.ArgumentHandlers
                 throw new Exception("Cannot apply form argument because body is already assigned and is not an instance of FormHttpBody");
 
             var form = (FormHttpBody)request.Body;
-            var value = TypeConverter.ConvertTo<string>(argument);
+            var value = TypeConverter.ConvertTo<string>(TypeConversionContext.Body, argument);
             form.Values[Name ?? name] = value;
 
             return base.ApplyArgument(request, name, argument);

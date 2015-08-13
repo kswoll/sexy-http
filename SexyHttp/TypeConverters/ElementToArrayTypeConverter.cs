@@ -7,12 +7,13 @@ namespace SexyHttp.TypeConverters
     /// </summary>
     public class ElementToArrayTypeConverter : ITypeConverter
     {
-        public bool TryConvertTo(ITypeConverter root, Type convertTo, object obj, out object result)
+        public bool TryConvertTo(ITypeConverter root, TypeConversionContext context, Type convertTo, object value, out object result)
         {
-            if (convertTo.IsArray && convertTo.GetElementType().IsInstanceOfType(obj))
+            if (convertTo.IsArray)
             {
                 var array = Array.CreateInstance(convertTo.GetElementType(), 1);
-                array.SetValue(obj, 0);
+                var typedValue = root.ConvertTo(context, convertTo.GetElementType(), value);
+                array.SetValue(typedValue, 0);
                 result = array;
                 return true;
             }
