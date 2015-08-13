@@ -165,6 +165,11 @@ These will produce, respectively:
     http://someserver.com/users?firstName=John&lastName=Doe
     http://someserver.com/users
 
-The default behavior for an array argument in the query string is to use multiple `name=value` pairs.  (You can override 
-this to use a comma separated string instead by annotating your API with `[TypeConverter(ArrayAsCommaSeparatedStringConverter)]`.
+#### Comma-separated string for arrays
 
+The default behavior for an array argument in the query string is to use multiple `name=value` pairs.  (You can override 
+this to use a comma separated string instead by annotating your API with 
+
+    [TypeConverter(ArrayAsCommaSeparatedStringConverter, TypeConversionContext.Query)]
+    
+Specifying the `TypeConversionContext` prevents the converter from being used in contexts other than the query string.
