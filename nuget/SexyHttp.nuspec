@@ -10,7 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Http client library.</description>
     <copyright>Copyright 2015</copyright>
-    <tags>sexy-proxy async proxy</tags>
+    <tags>sexy-http http client proxy</tags>
     <dependencies>
       <dependency id="SexyProxy" version="1.0.20" />
     </dependencies>
