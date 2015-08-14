@@ -45,8 +45,7 @@ backend endpoint.  For example, to define a POST endpoint that takes a `string` 
 Before deconstructing this and explaining how the data will be serialized and deserialized, let's first see how'd you'd 
 instantiate your client:
 
-    ISampleApi client = HttpApiClient<ISampleApi>.Create("http://someserver.com", 
-        new HttpClientHandler());
+    ISampleApi client = HttpApiClient<ISampleApi>.Create("http://someserver.com");
 
 And to make the call:
 

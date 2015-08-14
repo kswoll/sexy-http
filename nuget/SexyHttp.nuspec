@@ -11,5 +11,8 @@
     <description>Http client library.</description>
     <copyright>Copyright 2015</copyright>
     <tags>sexy-proxy async proxy</tags>
+    <dependencies>
+      <dependency id="SexyProxy" version="1.0.20" />
+    </dependencies>
   </metadata>
 </package>
