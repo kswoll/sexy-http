@@ -135,14 +135,14 @@ namespace SexyHttp
                 };
 
                 // If the argument represents an input stream, use the respective argument handler
-                if (bodyParameters.First().ParameterType == typeof(Stream) && bodyParameters.Count == 1)
+                if (bodyParameters.First().ParameterType == typeof(Stream) && bodyParameters.Count == 1 && !isMultipart)
                 {
                     var parameter = bodyParameters.Single();
                     var typeConverter = TypeConverterAttribute.Combine(parameter, endpointTypeConverter);
                     argumentHandlers[parameter.Name] = new StreamArgumentHandler(typeConverter);
                 }
                 // If the argument represents an input stream, use the respective argument handler
-                else if (bodyParameters.First().ParameterType == typeof(byte[]) && bodyParameters.Count == 1)
+                else if (bodyParameters.First().ParameterType == typeof(byte[]) && bodyParameters.Count == 1 && !isMultipart)
                 {
                     var parameter = bodyParameters.Single();
                     var typeConverter = TypeConverterAttribute.Combine(parameter, endpointTypeConverter);

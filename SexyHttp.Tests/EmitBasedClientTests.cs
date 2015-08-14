@@ -13,7 +13,7 @@ namespace SexyHttp.Tests
         {
             using (MockHttpServer.ReturnJson(request => Task.FromResult<JToken>(new JValue("foo"))))
             {
-                var client = HttpApiClient<IGetString>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var client = HttpApiClient<IGetString>.Create("http://localhost:8844/path");
                 var result = await client.GetString();
                 Assert.AreEqual("foo", result);
             }

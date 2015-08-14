@@ -19,7 +19,7 @@ namespace SexyHttp.Tests
         {
             using (MockHttpServer.ReturnJson(request => Task.FromResult<JToken>(new JValue("foo"))))
             {
-                var client = HttpApiClient<IGetString>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var client = HttpApiClient<IGetString>.Create("http://localhost:8844/path");
                 await client.GetString();
             }
         }
@@ -36,7 +36,7 @@ namespace SexyHttp.Tests
         {
             using (MockHttpServer.Json(x => x))
             {
-                var client = HttpApiClient<IReflectValue>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var client = HttpApiClient<IReflectValue>.Create("http://localhost:8844/path");
                 var result = await client.ReflectValue("foo");
                 Assert.AreEqual("foo", result);
             }
@@ -54,7 +54,7 @@ namespace SexyHttp.Tests
         {
             using (MockHttpServer.PostMultipartReturnJson(x => Task.FromResult<JToken>(((StringHttpBody)x.Data["value"].Body).Text)))
             {
-                var client = HttpApiClient<IPostStringMultipart>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var client = HttpApiClient<IPostStringMultipart>.Create("http://localhost:8844/path");
                 var result = await client.PostString("foo");
                 Assert.AreEqual("foo", result);
             }            
@@ -73,7 +73,7 @@ namespace SexyHttp.Tests
             using (MockHttpServer.PostMultipartReturnByteArray(x => Task.FromResult(((ByteArrayHttpBody)x.Data["data"].Body).Data)))
             {
                 var input = new byte[] { 3, 1, 8, 9, 15 };
-                var client = HttpApiClient<IPostByteArrayMultipart>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var client = HttpApiClient<IPostByteArrayMultipart>.Create("http://localhost:8844/path");
                 var result = await client.PostByteArray(input);
                 Assert.IsTrue(result.SequenceEqual(input));
             }            
@@ -92,7 +92,7 @@ namespace SexyHttp.Tests
             using (MockHttpServer.PostByteArrayReturnByteArray(x => Task.FromResult(x)))
             {
                 var input = new byte[] { 3, 1, 8, 9, 15 };
-                var client = HttpApiClient<IPostByteArray>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var client = HttpApiClient<IPostByteArray>.Create("http://localhost:8844/path");
                 var result = await client.PostByteArray(input);
                 Assert.IsTrue(result.SequenceEqual(input));
             }            
@@ -101,7 +101,7 @@ namespace SexyHttp.Tests
         [Proxy]
         private interface IPostByteArray
         {
-            [Post("path"), Multipart]
+            [Post("path")]
             Task<byte[]> PostByteArray(byte[] data);
         }
 
@@ -111,7 +111,7 @@ namespace SexyHttp.Tests
             using (MockHttpServer.PostStreamReturnByteArray(async x => await x.ReadToEndAsync()))
             {
                 var input = new byte[] { 3, 1, 6, 9, 38 };
-                var client = HttpApiClient<IPostStream>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var client = HttpApiClient<IPostStream>.Create("http://localhost:8844/path");
                 var result = await client.PostStream(new MemoryStream(input));
                 Assert.IsTrue(result.SequenceEqual(input));
             }
@@ -133,7 +133,7 @@ namespace SexyHttp.Tests
             {
                 var input1 = new byte[] { 3, 1, 6, 9, 38 };
                 var input2 = new byte[] { 2, 5, 13, 7 };
-                var client = HttpApiClient<IPostTwoStreams>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var client = HttpApiClient<IPostTwoStreams>.Create("http://localhost:8844/path");
                 var result = await client.PostTwoStreams(new MemoryStream(input1), new MemoryStream(input2));
                 Assert.AreEqual(9, result);
             }            
@@ -152,7 +152,7 @@ namespace SexyHttp.Tests
             var data = new byte[] { 3, 1, 4, 5 };
             using (MockHttpServer.ReturnByteArray(x => data))
             {
-                var client = HttpApiClient<IDownloadStream>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var client = HttpApiClient<IDownloadStream>.Create("http://localhost:8844/path");
                 byte[] result = null;
                 await client.DownloadStream(async x => result = await x.ReadToEndAsync());
                 Assert.IsTrue(result.SequenceEqual(data));
@@ -171,7 +171,7 @@ namespace SexyHttp.Tests
         {
             using (MockHttpServer.PostFormReturnJson(x => Task.FromResult<JToken>(x.Values["value1"] + "|" + x.Values["value2"])))
             {
-                var client = HttpApiClient<IPostForm>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var client = HttpApiClient<IPostForm>.Create("http://localhost:8844/path");
                 var result = await client.PostForm("value&1", 5);
                 Assert.AreEqual("value&1|5", result);
             }            
@@ -189,7 +189,7 @@ namespace SexyHttp.Tests
         {
             using (MockHttpServer.PostFormReturnForm(x => Task.FromResult(x)))
             {
-                var client = HttpApiClient<IReceiveForm>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var client = HttpApiClient<IReceiveForm>.Create("http://localhost:8844/path");
                 var result = await client.GetForm("value&1", 5);
                 Assert.AreEqual("value&1", result.Value1);
                 Assert.AreEqual(5, result.Value2);
@@ -214,7 +214,7 @@ namespace SexyHttp.Tests
         {
             using (MockHttpServer.Json(x => (string)x["val1"] + x["val2"]))
             {
-                var client = HttpApiClient<INameOverride>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var client = HttpApiClient<INameOverride>.Create("http://localhost:8844/path");
                 var result = await client.GetString("foo", "bar");
                 Assert.AreEqual("foobar", result);
             }            
@@ -232,7 +232,7 @@ namespace SexyHttp.Tests
         {
             using (MockHttpServer.PostFormReturnJson(x => x.Values["val1"] + x.Values["val2"]))
             {
-                var client = HttpApiClient<IFormNameOverride>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var client = HttpApiClient<IFormNameOverride>.Create("http://localhost:8844/path");
                 var result = await client.GetString("foo", "bar");
                 Assert.AreEqual("foobar", result);
             }            
@@ -250,7 +250,7 @@ namespace SexyHttp.Tests
         {
             using (MockHttpServer.Json(x => x["value"]))
             {
-                var client = HttpApiClient<ISingleArgumentAsObject>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var client = HttpApiClient<ISingleArgumentAsObject>.Create("http://localhost:8844/path");
                 var result = await client.GetString("foo");
                 Assert.AreEqual("foo", result);
             }            
@@ -268,7 +268,7 @@ namespace SexyHttp.Tests
         {
             using (MockHttpServer.Json(x => x))
             {
-                var client = HttpApiClient<IRawRequestApi>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var client = HttpApiClient<IRawRequestApi>.Create("http://localhost:8844/path");
                 var result = await client.GetString(x => x.Body = new JsonHttpBody("foo"));
                 Assert.AreEqual("foo", result);
             }            
@@ -286,7 +286,7 @@ namespace SexyHttp.Tests
         {
             using (MockHttpServer.Json(x => x))
             {
-                var client = HttpApiClient<IRawResponseApi>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var client = HttpApiClient<IRawResponseApi>.Create("http://localhost:8844/path");
                 var result = await client.GetString("foo");
                 Assert.AreEqual("foo", (string)((JsonHttpBody)result.Body).Json);
             }            
@@ -304,7 +304,7 @@ namespace SexyHttp.Tests
         {
             using (MockHttpServer.Json(x => x))
             {
-                var client = HttpApiClient<IRawRequestBody>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var client = HttpApiClient<IRawRequestBody>.Create("http://localhost:8844/path");
                 var result = await client.GetString(new JsonHttpBody("foo"));
                 Assert.AreEqual("foo", result);
             }            
@@ -322,7 +322,7 @@ namespace SexyHttp.Tests
         {
             using (MockHttpServer.Json(x => x))
             {
-                var client = HttpApiClient<IRawResponseBody>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var client = HttpApiClient<IRawResponseBody>.Create("http://localhost:8844/path");
                 var result = await client.GetString("foo");
                 Assert.AreEqual("foo", (string)((JsonHttpBody)result).Json);
             }            
@@ -340,7 +340,7 @@ namespace SexyHttp.Tests
         {
             using (MockHttpServer.String(x => x))
             {
-                var client = HttpApiClient<IReflectString>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var client = HttpApiClient<IReflectString>.Create("http://localhost:8844/path");
                 var result = await client.ReflectString("foo");
                 Assert.AreEqual("foo", result);
             }                        

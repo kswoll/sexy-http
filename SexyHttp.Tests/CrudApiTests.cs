@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using SexyHttp.HttpHandlers;
 using SexyProxy;
 
 namespace SexyHttp.Tests
@@ -15,7 +14,7 @@ namespace SexyHttp.Tests
         {
             using (MockHttpServer.ReturnJson(request => Task.FromResult(JToken.FromObject(new { Id = 1, FirstName = "John", LastName = "Doe" }))))
             {
-                var client = HttpApiClient<ICrudApi<User>>.Create("http://localhost:8844", new HttpClientHandler());
+                var client = HttpApiClient<ICrudApi<User>>.Create("http://localhost:8844");
                 var user = await client.Get(1);
                 Assert.AreEqual(1, user.Id);
                 Assert.AreEqual("John", user.FirstName);
@@ -28,7 +27,7 @@ namespace SexyHttp.Tests
         {
             using (MockHttpServer.ReturnJson(request => Task.FromResult(JToken.FromObject(new[] { new { Id = 1, FirstName = "John", LastName = "Doe" }}))))
             {
-                var client = HttpApiClient<ICrudApi<User>>.Create("http://localhost:8844", new HttpClientHandler());
+                var client = HttpApiClient<ICrudApi<User>>.Create("http://localhost:8844");
                 var users = await client.GetAll();
                 Assert.AreEqual(1, users[0].Id);
                 Assert.AreEqual("John", users[0].FirstName);
@@ -45,7 +44,7 @@ namespace SexyHttp.Tests
                 user = new User { Id = 1, FirstName = "John", LastName = "Doe" };
             }))
             {
-                var client = HttpApiClient<ICrudApi<User>>.Create("http://localhost:8844", new HttpClientHandler());
+                var client = HttpApiClient<ICrudApi<User>>.Create("http://localhost:8844");
                 await client.Post(new User { Id = 1, FirstName = "John", LastName = "Doe" });
                 Assert.AreEqual(1, user.Id);
                 Assert.AreEqual("John", user.FirstName);
@@ -62,7 +61,7 @@ namespace SexyHttp.Tests
                 user = new User { Id = 1, FirstName = "John", LastName = "Doe" };
             }))
             {
-                var client = HttpApiClient<ICrudApi<User>>.Create("http://localhost:8844", new HttpClientHandler());
+                var client = HttpApiClient<ICrudApi<User>>.Create("http://localhost:8844");
                 await client.Put(1, new User { Id = 1, FirstName = "John", LastName = "Doe" });
                 Assert.AreEqual(1, user.Id);
                 Assert.AreEqual("John", user.FirstName);
@@ -79,7 +78,7 @@ namespace SexyHttp.Tests
                 deletedEntityId = int.Parse(request.Url.ToString().Split('/').Last());
             }))
             {
-                var client = HttpApiClient<ICrudApi<User>>.Create("http://localhost:8844", new HttpClientHandler());
+                var client = HttpApiClient<ICrudApi<User>>.Create("http://localhost:8844");
                 await client.Delete(1);
                 Assert.AreEqual(1, deletedEntityId);
             }

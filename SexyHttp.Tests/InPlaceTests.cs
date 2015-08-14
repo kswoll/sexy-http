@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using SexyHttp.HttpHandlers;
 using SexyProxy;
 
 namespace SexyHttp.Tests
@@ -14,7 +13,7 @@ namespace SexyHttp.Tests
         {
             using (MockHttpServer.ReturnJson(request => Task.FromResult<JToken>(new JValue("foo"))))
             {
-                var client = HttpApiClient<GetStringApi>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var client = HttpApiClient<GetStringApi>.Create("http://localhost:8844/path");
                 var result = await client.GetString();
                 Assert.AreEqual("foo", result);
             }
@@ -31,7 +30,7 @@ namespace SexyHttp.Tests
         {
             using (MockHttpServer.ReturnJson(request => Task.FromResult<JToken>(new JValue("foo"))))
             {
-                var client = HttpApiClient<CustomizeInvocationApi>.Create("http://localhost:8844/path", new HttpClientHandler());
+                var client = HttpApiClient<CustomizeInvocationApi>.Create("http://localhost:8844/path");
                 var result = await client.PostString("foo");
                 Assert.AreEqual("foofoo", result);
             }

@@ -45,7 +45,8 @@ backend endpoint.  For example, to define a POST endpoint that takes a `string` 
 Before deconstructing this and explaining how the data will be serialized and deserialized, let's first see how'd you'd 
 instantiate your client:
 
-    ISampleApi client = HttpApiClient<ISampleApi>.Create("http://someserver.com", new HttpClientHandler());
+    ISampleApi client = HttpApiClient<ISampleApi>.Create("http://someserver.com", 
+        new HttpClientHandler());
 
 And to make the call:
 
@@ -191,8 +192,8 @@ The type of a parameter for your method can be important if they are one of the 
 * **`Func<Stream, Task>`**  
   When the parameter is of this type, the idea is that you provide a method that consumes a stream asynchronously.  In 
   other words, this allows you to access the *response* as a `Stream` and completely handle it in the context of the 
-  method such that when the invocation to the API is complete, it everything can be disposed of immediately.  This is 
-  why it's a *parameter* of type `Func<Stream, Task>` rather a *return* type of `Stream`.  If we implemented it as a 
+  method such that when the invocation to the API is complete, everything can be disposed of immediately.  This is 
+  why it's a *parameter* of type `Func<Stream, Task>` rather than a *return* type of `Stream`.  If we implemented it as a 
   return type, then we couldn't dispose of the `HttpClient` upon completion of the invocation of the method.
   
 * **`Action<HttpApiRequest>`**  
@@ -208,8 +209,8 @@ The type of a parameter for your method can be important if they are one of the 
   
 ## Response Types
 
-Similar to the above, if the return type of your method is one of the following types, then it is handled specially as 
-defined below:
+Similar to the above, if the return type (meaning the type `T` of the `Task<T>`) of your method is one of the following 
+types, then it is handled specially as defined below:
 
 * **`byte[]`**  
   The response body is returned as a raw byte array.

@@ -9,7 +9,7 @@ namespace SexyHttp.Tests.TypeConverters
         [Test]
         public void ToArray()
         {
-            var typeConverter = new ElementToArrayTypeConverter();
+            var typeConverter = new CombinedTypeConverter(new ElementToArrayTypeConverter(), new IdentityTypeConverter());
             var result = typeConverter.ConvertTo<string[]>(TypeConversionContext.None, "foo");
             Assert.AreEqual(1, result.Length);
             Assert.AreEqual("foo", result[0]);

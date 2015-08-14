@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using SexyHttp.HttpHandlers;
 using SexyProxy;
 
 namespace SexyHttp
 {
     public static class HttpApiClient<T>
     {
-        public static T Create(string baseUrl, IHttpHandler httpHandler, IHttpApiRequestInstrumenter apiRequestInstrumenter = null)
+        public static T Create(string baseUrl, IHttpHandler httpHandler = null, IHttpApiRequestInstrumenter apiRequestInstrumenter = null)
         {
             return Create(new HttpApi<T>(), baseUrl, httpHandler, apiRequestInstrumenter);
         }
 
-        public static T Create(HttpApi<T> api, string baseUrl, IHttpHandler httpHandler, IHttpApiRequestInstrumenter apiRequestInstrumenter = null)
+        public static T Create(HttpApi<T> api, string baseUrl, IHttpHandler httpHandler = null, IHttpApiRequestInstrumenter apiRequestInstrumenter = null)
         {
+            httpHandler = httpHandler ?? new HttpClientHandler();
             return Proxy.CreateProxy<T>(new ClientHandler(api, baseUrl, httpHandler, apiRequestInstrumenter).Call);
         }
 
