@@ -1,0 +1,15 @@
+<package>
+  <metadata>
+    <id>SexyHttp</id>
+    <version>1.0.0</version>
+    <authors>kirk</authors>
+    <owners>kirk</owners>
+    <projectUrl>https://github.com/kswoll/sexy-http</projectUrl>
+    <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
+	  <releaseNotes>Initial release.</releaseNotes>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Http client library.</description>
+    <copyright>Copyright 2015</copyright>
+    <tags>sexy-proxy async proxy</tags>
+  </metadata>
+</package>
