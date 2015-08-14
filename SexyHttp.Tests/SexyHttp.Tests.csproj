@@ -9,10 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SexyHttp.Tests</RootNamespace>
     <AssemblyName>SexyHttp.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,7 +42,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="SexyProxy, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SexyProxy.1.0.20\lib\net45\SexyProxy.dll</HintPath>
+      <HintPath>..\packages\SexyProxy.1.0.21\lib\net45\SexyProxy.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
