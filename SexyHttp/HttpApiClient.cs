@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SexyHttp.HttpHandlers;
@@ -16,7 +17,10 @@ namespace SexyHttp
         public static T Create(HttpApi<T> api, string baseUrl, IHttpHandler httpHandler = null, IHttpApiRequestInstrumenter apiRequestInstrumenter = null)
         {
             httpHandler = httpHandler ?? new HttpClientHttpHandler();
-            return Proxy.CreateProxy<T>(new ClientHandler(api, baseUrl, httpHandler, apiRequestInstrumenter).Call);
+            var clientHandler = new ClientHandler(api, baseUrl, httpHandler, apiRequestInstrumenter);
+            T proxy = Proxy.CreateProxy<T>(clientHandler.Call);
+            clientHandler.proxy = proxy;
+            return proxy;
         }
 
         private class ClientHandler
@@ -25,6 +29,7 @@ namespace SexyHttp
             private readonly string baseUrl;
             private readonly IHttpHandler httpHandler;
             private readonly IHttpApiRequestInstrumenter apiRequestInstrumenter;
+            internal T proxy;
 
             public ClientHandler(HttpApi<T> api, string baseUrl, IHttpHandler httpHandler, IHttpApiRequestInstrumenter apiRequestInstrumenter)
             {
@@ -39,11 +44,20 @@ namespace SexyHttp
                 HttpApiEndpoint endpoint;
                 if (!api.Endpoints.TryGetValue(invocation.Method, out endpoint))
                     throw new Exception($"Endpoint not found for: \"{invocation.Method.DeclaringType.FullName}.{invocation.Method.Name}\".  Perhaps you forgot to decorate your method with [Get], [Post], etc.");
-                var call = endpoint.Call(httpHandler, baseUrl, invocation.Method
+
+                var arguments = invocation.Method
                     .GetParameters()
                     .Select((x, i) => new { x.Name, Value = invocation.Arguments[i] })
-                    .ToDictionary(x => x.Name, x => x.Value), apiRequestInstrumenter);
-                return call;
+                    .ToDictionary(x => x.Name, x => x.Value);
+                if (proxy is Api)
+                {
+                    return ((Api)(object)proxy).Call(endpoint, httpHandler, baseUrl, arguments, apiRequestInstrumenter);
+                }
+                else
+                {
+                    var call = endpoint.Call(httpHandler, baseUrl, arguments, apiRequestInstrumenter);
+                    return call;
+                }
             }
         }
     }

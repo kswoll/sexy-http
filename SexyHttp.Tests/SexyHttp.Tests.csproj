@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiCallOverrideTests.cs" />
     <Compile Include="ContextBasedTypeConvertersTests.cs" />
     <Compile Include="CrudApiTests.cs" />
     <Compile Include="EmitBasedClientTests.cs" />

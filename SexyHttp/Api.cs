@@ -1,4 +1,6 @@
-﻿using SexyProxy;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using SexyProxy;
 
 namespace SexyHttp
 {
@@ -11,6 +13,11 @@ namespace SexyHttp
         InvocationHandler ISetInvocationHandler.InvocationHandler
         {
             set { invocationHandler = value; }
+        }
+
+        public virtual Task<object> Call(HttpApiEndpoint endpoint, IHttpHandler httpHandler, string baseUrl, Dictionary<string, object> arguments, IHttpApiRequestInstrumenter apiRequestInstrumenter)
+        {
+            return endpoint.Call(httpHandler, baseUrl, arguments, apiRequestInstrumenter);
         }
     }
 }
