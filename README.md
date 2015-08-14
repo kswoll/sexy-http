@@ -21,7 +21,9 @@ converter is simply an implementation of the provided `ITypeConverter` interface
             object value, out object result);
     }
 
-A custom type converter can be provided for arguments, return values, endpoint methods, or the api type itself.  
+A custom type converter can be provided for arguments, return values, endpoint methods, or the api type itself.  Furthermore, the 
+*context* in which the type conversion is occurring is provided to the converter so it can discriminate its behavior based on whether
+the conversion is for the path, query string, body, etc.  
 
 ## Installation
 
