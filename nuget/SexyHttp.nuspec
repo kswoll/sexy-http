@@ -13,7 +13,7 @@
     <tags>sexy-http http client proxy</tags>
     <dependencies>
       <dependency id="SexyProxy" version="1.0.21" />
-      <dependency id="Newtonsoft.Json" version="7.0.1" />
+      <dependency id="Newtonsoft.Json" version="6.0.1" />
     </dependencies>
   </metadata>
 </package>
