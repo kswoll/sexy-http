@@ -15,7 +15,7 @@ namespace SexyHttp
 
         public static T Create(HttpApi<T> api, string baseUrl, IHttpHandler httpHandler = null, IHttpApiRequestInstrumenter apiRequestInstrumenter = null)
         {
-            httpHandler = httpHandler ?? new HttpClientHandler();
+            httpHandler = httpHandler ?? new HttpClientHttpHandler();
             return Proxy.CreateProxy<T>(new ClientHandler(api, baseUrl, httpHandler, apiRequestInstrumenter).Call);
         }
 

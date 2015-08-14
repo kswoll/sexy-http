@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -10,11 +11,21 @@ using SexyHttp.HttpBodies;
 
 namespace SexyHttp.HttpHandlers
 {
-    public class HttpClientHandler : IHttpHandler
+    public class HttpClientHttpHandler : IHttpHandler
     {
+        private readonly HttpClientHandler handler;
+
+        public HttpClientHttpHandler(HttpClientHandler handler = null)
+        {
+            this.handler = handler ?? new HttpClientHandler
+            {
+                AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip
+            };
+        }
+
         public async Task<T> Call<T>(HttpApiRequest request, Func<HttpApiResponse, Task<T>> responseHandler)
         {
-            using (var client = new HttpClient())
+            using (var client = new HttpClient(handler))
             {
                 var response = await client.SendAsync(CreateRequestMessage(request));
                 var result = await CreateResponse(request, response);
