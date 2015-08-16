@@ -25,10 +25,10 @@ namespace SexyHttp.Tests
             [Post]
             public abstract Task<string> ReflectString(string s);
 
-            public override async Task<object> Call(HttpApiEndpoint endpoint, IHttpHandler httpHandler, string baseUrl, Dictionary<string, object> arguments, IHttpApiRequestInstrumenter apiRequestInstrumenter)
+            public override async Task<object> Call(HttpApiEndpoint endpoint, IHttpHandler httpHandler, string baseUrl, Dictionary<string, object> arguments, IHttpApiInstrumenter apiInstrumenter)
             {
                 arguments["s"] = arguments["s"] + "bar";
-                var result = await base.Call(endpoint, httpHandler, baseUrl, arguments, apiRequestInstrumenter);
+                var result = await base.Call(endpoint, httpHandler, baseUrl, arguments, apiInstrumenter);
                 return result + "goat";
             }
         }

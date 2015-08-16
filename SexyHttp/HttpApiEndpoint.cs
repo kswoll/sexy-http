@@ -30,12 +30,12 @@ namespace SexyHttp
             Headers = headers.ToList();
         }
 
-        public async Task<object> Call(IHttpHandler httpHandler, string baseUrl, Dictionary<string, object> arguments, IHttpApiRequestInstrumenter apiRequestInstrumenter = null)
+        public async Task<object> Call(IHttpHandler httpHandler, string baseUrl, Dictionary<string, object> arguments, IHttpApiInstrumenter apiInstrumenter = null)
         {
             var request = new HttpApiRequest { Url = Url.CreateUrl(baseUrl), Method = Method, Headers = Headers.ToList() };
 
-            if (apiRequestInstrumenter != null)
-                await apiRequestInstrumenter.InstrumentRequest(request);
+            if (apiInstrumenter != null)
+                await apiInstrumenter.InstrumentRequest(request);
 
             Action<Func<IHttpArgumentHandler, string, object, Task>> applyArguments = async applier =>
             {
@@ -55,6 +55,8 @@ namespace SexyHttp
 
             var result = await httpHandler.Call(request, async response =>
             {
+                if (apiInstrumenter != null)
+                    await apiInstrumenter.InstrumentResponse(response);
                 applyArguments(async (handler, name, argument) => await handler.ApplyArgument(response, name, argument));
                 return await ResponseHandler.HandleResponse(response);
             });

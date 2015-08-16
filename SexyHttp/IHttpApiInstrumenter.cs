@@ -2,8 +2,9 @@
 
 namespace SexyHttp
 {
-    public interface IHttpApiRequestInstrumenter
+    public interface IHttpApiInstrumenter
     {
         Task InstrumentRequest(HttpApiRequest request);
+        Task InstrumentResponse(HttpApiResponse response);
     }
 }

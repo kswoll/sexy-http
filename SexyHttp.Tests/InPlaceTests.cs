@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using SexyHttp.HttpBodies;
 using SexyHttp.Utils;
 using SexyProxy;
 
@@ -48,24 +49,57 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void Instrumenter()
+        public async void InstrumentedRequest()
         {
             using (MockHttpServer.ReturnJson(request => request.Headers.Get("Test")))
             {
-                var client = HttpApiClient<InstrumenterClass>.Create("http://localhost:8844");
-                var result = await client.GetString();
+                var client = HttpApiClient<InstrumentRequestClass>.Create("http://localhost:8844");
+                var result = await client.InstrumentedRequest();
                 Assert.AreEqual("Value", result);
             }            
         }
 
-        private abstract class InstrumenterClass : Api, IHttpApiRequestInstrumenter
+        [Test]
+        public async void InstrumentedResponse()
+        {
+            using (MockHttpServer.ReturnJson(request => request.Headers.Get("Test")))
+            {
+                var client = HttpApiClient<InstrumentResponseClass>.Create("http://localhost:8844");
+                var result = await client.InstrumentedResponse();
+                Assert.AreEqual("foo", result);
+            }            
+        }
+
+        private abstract class InstrumentRequestClass : Api, IHttpApiInstrumenter
         {
             [Get]
-            public abstract Task<string> GetString();
+            public abstract Task<string> InstrumentedRequest();
 
             public Task InstrumentRequest(HttpApiRequest request)
             {
                 request.Headers.Add(new HttpHeader("Test", "Value"));
+                return TaskConstants.Completed;
+            }
+
+            public Task InstrumentResponse(HttpApiResponse response)
+            {
+                return TaskConstants.Completed;
+            }
+        }
+
+        private abstract class InstrumentResponseClass : Api, IHttpApiInstrumenter
+        {
+            [Get]
+            public abstract Task<string> InstrumentedResponse();
+
+            public Task InstrumentRequest(HttpApiRequest request)
+            {
+                return TaskConstants.Completed;
+            }
+
+            public Task InstrumentResponse(HttpApiResponse response)
+            {
+                response.Body = new JsonHttpBody("foo");
                 return TaskConstants.Completed;
             }
         }

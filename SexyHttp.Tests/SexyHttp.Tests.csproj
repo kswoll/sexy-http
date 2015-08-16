@@ -67,7 +67,7 @@
     <Compile Include="HttpUrlParserTests.cs" />
     <Compile Include="HttpUrlTests.cs" />
     <Compile Include="InPlaceTests.cs" />
-    <Compile Include="MockApiRequestInstrumenter.cs" />
+    <Compile Include="MockApiInstrumenter.cs" />
     <Compile Include="MockHttpHandler.cs" />
     <Compile Include="MockHttpServer.cs" />
     <Compile Include="MockResponseHandler.cs" />

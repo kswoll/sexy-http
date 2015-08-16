@@ -4,13 +4,18 @@ using SexyHttp.Utils;
 
 namespace SexyHttp.Tests
 {
-    public class MockApiRequestInstrumenter : IHttpApiRequestInstrumenter
+    public class MockApiInstrumenter : IHttpApiInstrumenter
     {
         public List<HttpHeader> Headers { get; } = new List<HttpHeader>();
 
         public Task InstrumentRequest(HttpApiRequest request)
         {
             request.Headers.AddRange(Headers);
+            return TaskConstants.Completed;
+        }
+
+        public Task InstrumentResponse(HttpApiResponse response)
+        {
             return TaskConstants.Completed;
         }
     }

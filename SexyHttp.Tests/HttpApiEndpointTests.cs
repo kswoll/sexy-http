@@ -40,7 +40,7 @@ namespace SexyHttp.Tests
             var httpHandler = new MockHttpHandler();
             var responseHandler = new MockResponseHandler<object>();
 
-            var headersProvider = new MockApiRequestInstrumenter();
+            var headersProvider = new MockApiInstrumenter();
             headersProvider.Headers.Add(new HttpHeader("key", "value"));
 
             var endpoint = new HttpApiEndpoint("path/to/api", HttpMethod.Get, new Dictionary<string, IHttpArgumentHandler>(), responseHandler, Enumerable.Empty<HttpHeader>());
