@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace SexyHttp
 {
-    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Method, AllowMultiple = true)]
     public class HeaderAttribute : Attribute
     {
         public string Name { get; }
