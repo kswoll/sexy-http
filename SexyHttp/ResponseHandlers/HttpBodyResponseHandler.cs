@@ -4,7 +4,7 @@ namespace SexyHttp.ResponseHandlers
 {
     public class HttpBodyResponseHandler : HttpResponseHandler
     {
-        protected override Task<object> ProvideResult(HttpApiResponse response)
+        protected override Task<object> ProvideResult(HttpApiRequest request, HttpApiResponse response)
         {
             return Task.FromResult<object>(response.Body);
         }

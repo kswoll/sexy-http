@@ -6,7 +6,7 @@ namespace SexyHttp
 {
     public abstract class HttpResponseHandler : IHttpResponseHandler
     {
-        protected abstract Task<object> ProvideResult(HttpApiResponse response);
+        protected abstract Task<object> ProvideResult(HttpApiRequest request, HttpApiResponse response);
 
         public bool NonSuccessThrowsException { get; protected set; }
         public virtual ITypeConverter TypeConverter { get; set; }
@@ -17,13 +17,13 @@ namespace SexyHttp
             NonSuccessThrowsException = true;
         }
 
-        public Task<object> HandleResponse(HttpApiResponse response)
+        public Task<object> HandleResponse(HttpApiRequest request, HttpApiResponse response)
         {
             if (NonSuccessThrowsException && ((int)response.StatusCode < 200 || (int)response.StatusCode >= 300))
             {
-                throw new NonSuccessfulResponseException(response);
+                throw new NonSuccessfulResponseException(request, response);
             }
-            return ProvideResult(response);
+            return ProvideResult(request, response);
         }
     }
 }

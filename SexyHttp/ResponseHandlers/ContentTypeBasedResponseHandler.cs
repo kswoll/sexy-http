@@ -18,18 +18,18 @@ namespace SexyHttp.ResponseHandlers
             stringHandler = new StringResponseHandler();
         }
 
-        protected override Task<object> ProvideResult(HttpApiResponse response)
+        protected override Task<object> ProvideResult(HttpApiRequest request, HttpApiResponse response)
         {
             var contentType = response.Headers.SingleOrDefault(x => x.Name == "Content-Type")?.Values?.Single();
             contentType = contentType ?? "application/json";
             switch (contentType)
             {
                 case "application/x-www-form-urlencoded":
-                    return formHandler.HandleResponse(response);
+                    return formHandler.HandleResponse(request, response);
                 case "text/plain":
-                    return stringHandler.HandleResponse(response);
+                    return stringHandler.HandleResponse(request, response);
                 default:
-                    return jsonHandler.HandleResponse(response);
+                    return jsonHandler.HandleResponse(request, response);
             }
         }
 

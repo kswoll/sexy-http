@@ -8,6 +8,6 @@ namespace SexyHttp
     {
         Type ResponseType { set; }
         ITypeConverter TypeConverter { set; }
-        Task<object> HandleResponse(HttpApiResponse response);
+        Task<object> HandleResponse(HttpApiRequest request, HttpApiResponse response);
     }
 }

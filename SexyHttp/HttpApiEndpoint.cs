@@ -58,7 +58,7 @@ namespace SexyHttp
                 if (apiInstrumenter != null)
                     await apiInstrumenter.InstrumentResponse(response);
                 applyArguments(async (handler, name, argument) => await handler.ApplyArgument(response, name, argument));
-                return await ResponseHandler.HandleResponse(response);
+                return await ResponseHandler.HandleResponse(request, response);
             });
             return result;
         }
