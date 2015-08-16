@@ -12,34 +12,33 @@ namespace SexyHttp
         public HttpUrlDescriptor Path { get; }
         public HttpMethod Method { get; }
 
-        private readonly IDictionary<string, IHttpArgumentHandler> argumentHandlers;
-        private readonly IHttpResponseHandler responseHandler;
-        private readonly IList<HttpHeader> headers;
+        public IReadOnlyDictionary<string, IHttpArgumentHandler> ArgumentHandlers { get; }
+        public IHttpResponseHandler ResponseHandler { get; }
+        public IReadOnlyList<HttpHeader> Headers { get; }
 
         public HttpApiEndpoint(
             HttpUrlDescriptor path, 
             HttpMethod method,
-            IDictionary<string, IHttpArgumentHandler> argumentHandlers,
+            Dictionary<string, IHttpArgumentHandler> argumentHandlers,
             IHttpResponseHandler responseHandler,
             IEnumerable<HttpHeader> headers)
         {
             Path = path;
             Method = method;
-
-            this.argumentHandlers = argumentHandlers;
-            this.responseHandler = responseHandler;
-            this.headers = headers.ToList();
+            ArgumentHandlers = argumentHandlers;
+            ResponseHandler = responseHandler;
+            Headers = headers.ToList();
         }
 
         public async Task<object> Call(IHttpHandler httpHandler, string baseUrl, Dictionary<string, object> arguments, IHttpApiRequestInstrumenter apiRequestInstrumenter = null)
         {
-            var request = new HttpApiRequest { Url = Path.CreateUrl(baseUrl), Method = Method, Headers = headers.ToList() };
+            var request = new HttpApiRequest { Url = Path.CreateUrl(baseUrl), Method = Method, Headers = Headers.ToList() };
 
             apiRequestInstrumenter?.InstrumentRequest(request);
 
             Action<Func<IHttpArgumentHandler, string, object, Task>> applyArguments = async applier =>
             {
-                foreach (var item in argumentHandlers)
+                foreach (var item in ArgumentHandlers)
                 {
                     var name = item.Key;
                     object argument;
@@ -56,7 +55,7 @@ namespace SexyHttp
             var result = await httpHandler.Call(request, async response =>
             {
                 applyArguments(async (handler, name, argument) => await handler.ApplyArgument(response, name, argument));
-                return await responseHandler.HandleResponse(response);
+                return await ResponseHandler.HandleResponse(response);
             });
             return result;
         }
