@@ -1,7 +1,9 @@
-﻿namespace SexyHttp
+﻿using System.Threading.Tasks;
+
+namespace SexyHttp
 {
     public interface IHttpApiRequestInstrumenter
     {
-        void InstrumentRequest(HttpApiRequest request);
+        Task InstrumentRequest(HttpApiRequest request);
     }
 }

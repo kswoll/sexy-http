@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SexyHttp.HttpHandlers;
+using SexyHttp.RequestInstrumenters;
 using SexyProxy;
 
 namespace SexyHttp
@@ -19,7 +19,7 @@ namespace SexyHttp
             httpHandler = httpHandler ?? new HttpClientHttpHandler();
             var clientHandler = new ClientHandler(api, baseUrl, httpHandler, apiRequestInstrumenter);
             T proxy = Proxy.CreateProxy<T>(clientHandler.Call);
-            clientHandler.proxy = proxy;
+            clientHandler.SetProxy(proxy);
             return proxy;
         }
 
@@ -28,8 +28,8 @@ namespace SexyHttp
             private readonly HttpApi<T> api;
             private readonly string baseUrl;
             private readonly IHttpHandler httpHandler;
-            private readonly IHttpApiRequestInstrumenter apiRequestInstrumenter;
-            internal T proxy;
+            private IHttpApiRequestInstrumenter apiRequestInstrumenter;
+            private T proxy;
 
             public ClientHandler(HttpApi<T> api, string baseUrl, IHttpHandler httpHandler, IHttpApiRequestInstrumenter apiRequestInstrumenter)
             {
@@ -37,6 +37,19 @@ namespace SexyHttp
                 this.baseUrl = baseUrl;
                 this.httpHandler = httpHandler;
                 this.apiRequestInstrumenter = apiRequestInstrumenter;
+            }
+
+            internal void SetProxy(T proxy)
+            {
+                this.proxy = proxy;
+
+                if (typeof(IHttpApiRequestInstrumenter).IsAssignableFrom(typeof(T)))
+                {
+                    if (apiRequestInstrumenter == null)
+                        apiRequestInstrumenter = (IHttpApiRequestInstrumenter)proxy;
+                    else
+                        apiRequestInstrumenter = new CombinedRequestInstrumenter(apiRequestInstrumenter, (IHttpApiRequestInstrumenter)proxy);
+                }
             }
 
             public Task<object> Call(Invocation invocation)

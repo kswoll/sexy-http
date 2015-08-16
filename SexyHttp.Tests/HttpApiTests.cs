@@ -24,7 +24,7 @@ namespace SexyHttp.Tests
         public void Path()
         {
             var api = new HttpApi<IGet>();
-            Assert.AreEqual("http://localhost/path", api.Endpoints.Single().Value.Path.CreateUrl("http://localhost").ToString());
+            Assert.AreEqual("http://localhost/path", api.Endpoints.Single().Value.Url.CreateUrl("http://localhost").ToString());
         }
 
         interface IGet
@@ -37,7 +37,7 @@ namespace SexyHttp.Tests
         public void EmptyPath()
         {
             var api = new HttpApi<IGetEmptyPath>();
-            Assert.AreEqual("http://localhost", api.Endpoints.Single().Value.Path.CreateUrl("http://localhost").ToString());
+            Assert.AreEqual("http://localhost", api.Endpoints.Single().Value.Url.CreateUrl("http://localhost").ToString());
         }
 
         interface IGetEmptyPath

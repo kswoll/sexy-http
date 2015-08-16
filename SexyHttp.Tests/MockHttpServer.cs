@@ -146,6 +146,23 @@ namespace SexyHttp.Tests
             });
         }
 
+        public static MockHttpServer ReturnJson(JToken json)
+        {
+            return new MockHttpServer(async (request, response) =>
+            {
+                await WriteJson(response, json);
+            });
+        }
+
+        public static MockHttpServer ReturnJson(Func<HttpListenerRequest, JToken> jsonHandler)
+        {
+            return new MockHttpServer(async (request, response) =>
+            {
+                var json = jsonHandler(request);
+                await WriteJson(response, json);
+            });
+        }
+
         public static MockHttpServer ReturnByteArray(Func<HttpListenerRequest, byte[]> handler)
         {
             return new MockHttpServer(async (request, response) =>

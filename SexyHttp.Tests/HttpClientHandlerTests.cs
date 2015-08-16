@@ -376,5 +376,33 @@ namespace SexyHttp.Tests
             [Get]
             Task<string> Call();
         }
+
+        [Test]
+        public async void OtherPropertiesAndMethodsDoNotCauseProblems()
+        {
+            using (MockHttpServer.ReturnJson("foo"))
+            {
+                var client = HttpApiClient<ExtraneousMembersClass>.Create("http://localhost:8844");
+                client.SomeProperty = "foo";
+                Assert.AreEqual("foo", client.SomeProperty);
+                Assert.AreEqual("foo", client.SomeMethod("foo"));
+
+                var result = await client.GetString();
+                Assert.AreEqual("foo", result);
+            }                                    
+        }
+
+        abstract class ExtraneousMembersClass : Api
+        {
+            public string SomeProperty { get; set; }
+
+            public string SomeMethod(string s)
+            {
+                return s;
+            }
+
+            [Get]
+            public abstract Task<string> GetString();
+        }
     }
 }

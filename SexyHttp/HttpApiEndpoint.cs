@@ -9,7 +9,7 @@ namespace SexyHttp
 {
     public class HttpApiEndpoint
     {
-        public HttpUrlDescriptor Path { get; }
+        public HttpUrlDescriptor Url { get; }
         public HttpMethod Method { get; }
 
         public IReadOnlyDictionary<string, IHttpArgumentHandler> ArgumentHandlers { get; }
@@ -17,13 +17,13 @@ namespace SexyHttp
         public IReadOnlyList<HttpHeader> Headers { get; }
 
         public HttpApiEndpoint(
-            HttpUrlDescriptor path, 
+            HttpUrlDescriptor url, 
             HttpMethod method,
             Dictionary<string, IHttpArgumentHandler> argumentHandlers,
             IHttpResponseHandler responseHandler,
             IEnumerable<HttpHeader> headers)
         {
-            Path = path;
+            Url = url;
             Method = method;
             ArgumentHandlers = argumentHandlers;
             ResponseHandler = responseHandler;
@@ -32,9 +32,10 @@ namespace SexyHttp
 
         public async Task<object> Call(IHttpHandler httpHandler, string baseUrl, Dictionary<string, object> arguments, IHttpApiRequestInstrumenter apiRequestInstrumenter = null)
         {
-            var request = new HttpApiRequest { Url = Path.CreateUrl(baseUrl), Method = Method, Headers = Headers.ToList() };
+            var request = new HttpApiRequest { Url = Url.CreateUrl(baseUrl), Method = Method, Headers = Headers.ToList() };
 
-            apiRequestInstrumenter?.InstrumentRequest(request);
+            if (apiRequestInstrumenter != null)
+                await apiRequestInstrumenter.InstrumentRequest(request);
 
             Action<Func<IHttpArgumentHandler, string, object, Task>> applyArguments = async applier =>
             {
