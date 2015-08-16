@@ -296,5 +296,23 @@ namespace SexyHttp.Tests
             [Get("path")]
             Task<string> GetString();
         }
+
+        [Test]
+        public async void Header()
+        {
+            var api = new HttpApi<IHeaderApi>();
+            var endpoint = api.Endpoints.Single().Value;
+            var httpHandler = new MockHttpHandler();
+            await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object>());
+            var header = httpHandler.Request.Headers.Single(x => x.Name == "User-Agent");
+            Assert.AreEqual("TestUserAgent", header.Values.Single());
+        }
+
+        [Header("User-Agent", "TestUserAgent")]
+        interface IHeaderApi
+        {
+            [Get]
+            Task Header();
+        }
     }
 }

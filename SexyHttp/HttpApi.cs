@@ -17,10 +17,12 @@ namespace SexyHttp
     {
         public IReadOnlyDictionary<MethodInfo, HttpApiEndpoint> Endpoints { get; }
         public ITypeConverter TypeConverter { get; }
+        public IReadOnlyList<HttpHeader> Headers { get; } 
 
         public HttpApi()
         {
             TypeConverter = TypeConverterAttribute.Combine(typeof(T), DefaultTypeConverter.Create());
+            Headers = HeaderAttribute.GetHeaders(typeof(T));
 
             // Create endpoints
             var endpoints = new Dictionary<MethodInfo, HttpApiEndpoint>();
@@ -40,6 +42,9 @@ namespace SexyHttp
         {
             // Store a variable to store the type converter to be used for this endpoint
             var endpointTypeConverter = TypeConverterAttribute.Combine(method, TypeConverter);
+
+            // Store the additional custom headers (if any) defined on the method itself
+            var headers = Headers.Concat(HeaderAttribute.GetHeaders(method));
 
             // Store a dictionary to store the argument handlers
             var argumentHandlers = new Dictionary<string, IHttpArgumentHandler>();
@@ -203,7 +208,7 @@ namespace SexyHttp
             responseHandler.TypeConverter = responseTypeConverter;
             responseHandler.ResponseType = returnType;
 
-            var endpoint = new HttpApiEndpoint(url, httpMethod.Method, argumentHandlers, responseHandler);
+            var endpoint = new HttpApiEndpoint(url, httpMethod.Method, argumentHandlers, responseHandler, headers);
             return endpoint;
         }
     }

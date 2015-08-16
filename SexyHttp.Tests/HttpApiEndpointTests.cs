@@ -16,7 +16,7 @@ namespace SexyHttp.Tests
             var httpHandler = new MockHttpHandler();
             var responseHandler = new MockResponseHandler<object>();
 
-            var endpoint = new HttpApiEndpoint("path/to/api", HttpMethod.Get, new Dictionary<string, IHttpArgumentHandler>(), responseHandler);
+            var endpoint = new HttpApiEndpoint("path/to/api", HttpMethod.Get, new Dictionary<string, IHttpArgumentHandler>(), responseHandler, Enumerable.Empty<HttpHeader>());
             await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object>());
 
             Assert.AreEqual("http://localhost/path/to/api", httpHandler.Request.Url.ToString());
@@ -28,7 +28,7 @@ namespace SexyHttp.Tests
             var httpHandler = new MockHttpHandler();
             var responseHandler = new MockResponseHandler<object>();
 
-            var endpoint = new HttpApiEndpoint("path/to/api", HttpMethod.Get, new Dictionary<string, IHttpArgumentHandler>(), responseHandler);
+            var endpoint = new HttpApiEndpoint("path/to/api", HttpMethod.Get, new Dictionary<string, IHttpArgumentHandler>(), responseHandler, Enumerable.Empty<HttpHeader>());
             await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object>());
 
             Assert.AreEqual(HttpMethod.Get, httpHandler.Request.Method);
@@ -43,7 +43,7 @@ namespace SexyHttp.Tests
             var headersProvider = new MockApiRequestInstrumenter();
             headersProvider.Headers.Add(new HttpHeader("key", "value"));
 
-            var endpoint = new HttpApiEndpoint("path/to/api", HttpMethod.Get, new Dictionary<string, IHttpArgumentHandler>(), responseHandler);
+            var endpoint = new HttpApiEndpoint("path/to/api", HttpMethod.Get, new Dictionary<string, IHttpArgumentHandler>(), responseHandler, Enumerable.Empty<HttpHeader>());
             await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object>(), headersProvider);
 
             var header = httpHandler.Request.Headers.Single();
@@ -64,7 +64,8 @@ namespace SexyHttp.Tests
                 {
                     { "name", new HttpHeaderArgumentHandler(DefaultTypeConverter.Create())  }
                 }, 
-                responseHandler);
+                responseHandler,
+                Enumerable.Empty<HttpHeader>());
             var response = await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object> { ["name"] = "value" });
 
             Assert.AreEqual("value", response);
@@ -80,7 +81,8 @@ namespace SexyHttp.Tests
                 "path/to/api", 
                 HttpMethod.Get, 
                 new Dictionary<string, IHttpArgumentHandler>(), 
-                responseHandler);
+                responseHandler,
+                Enumerable.Empty<HttpHeader>());
             var response = await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object>());
 
             Assert.AreEqual("foo", response);            

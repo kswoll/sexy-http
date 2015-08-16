@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using SexyHttp.Urls;
@@ -13,23 +14,26 @@ namespace SexyHttp
 
         private readonly IDictionary<string, IHttpArgumentHandler> argumentHandlers;
         private readonly IHttpResponseHandler responseHandler;
+        private readonly IList<HttpHeader> headers;
 
         public HttpApiEndpoint(
             HttpUrlDescriptor path, 
             HttpMethod method,
             IDictionary<string, IHttpArgumentHandler> argumentHandlers,
-            IHttpResponseHandler responseHandler)
+            IHttpResponseHandler responseHandler,
+            IEnumerable<HttpHeader> headers)
         {
             Path = path;
             Method = method;
 
             this.argumentHandlers = argumentHandlers;
             this.responseHandler = responseHandler;
+            this.headers = headers.ToList();
         }
 
         public async Task<object> Call(IHttpHandler httpHandler, string baseUrl, Dictionary<string, object> arguments, IHttpApiRequestInstrumenter apiRequestInstrumenter = null)
         {
-            var request = new HttpApiRequest { Url = Path.CreateUrl(baseUrl), Method = Method, Headers = new List<HttpHeader>() };
+            var request = new HttpApiRequest { Url = Path.CreateUrl(baseUrl), Method = Method, Headers = headers.ToList() };
 
             apiRequestInstrumenter?.InstrumentRequest(request);
 

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 
 namespace SexyHttp
 {
@@ -21,6 +23,15 @@ namespace SexyHttp
         {
             Name = name;
             Values = values;
+        }
+
+        public static HttpHeader[] GetHeaders(ICustomAttributeProvider provider)
+        {
+            return provider
+                .GetCustomAttributes(typeof(HeaderAttribute), true)
+                .Cast<HeaderAttribute>()
+                .Select(x => new HttpHeader(x.Name, x.Values))
+                .ToArray();
         }
     }
 }
