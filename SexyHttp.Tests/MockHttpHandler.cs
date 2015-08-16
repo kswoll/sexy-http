@@ -11,7 +11,7 @@ namespace SexyHttp.Tests
         public HttpApiRequest Request { get; set; }
         public Func<HttpApiRequest, HttpApiResponse> Response { get; set; }
 
-        public MockHttpHandler() : this(x => new HttpApiResponse(HttpStatusCode.Found, new JsonHttpBody(JValue.CreateNull()), x.Headers))
+        public MockHttpHandler() : this(x => new HttpApiResponse(HttpStatusCode.OK, new JsonHttpBody(JValue.CreateNull()), x.Headers))
         {
         }
 

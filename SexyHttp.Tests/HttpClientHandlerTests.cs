@@ -352,5 +352,29 @@ namespace SexyHttp.Tests
             [Post, Text]
             Task<string> ReflectString(string s);
         }
+
+        [Test]
+        public async void NonSuccessThrowsException()
+        {
+            using (MockHttpServer.Raw((request, response) => response.StatusCode = 500))
+            {
+                var client = HttpApiClient<INonSuccess>.Create("http://localhost:8844");
+                try
+                {
+                    await client.Call();
+                    Assert.Fail("An exception should have been thrown");
+                }
+                catch (NonSuccessfulResponseException)
+                {
+                }
+            }                        
+        }
+
+        [Proxy]
+        interface INonSuccess
+        {
+            [Get]
+            Task<string> Call();
+        }
     }
 }

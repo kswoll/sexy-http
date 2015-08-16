@@ -127,6 +127,16 @@ namespace SexyHttp.Tests
             });
         }
 
+        public static MockHttpServer Raw(Action<HttpListenerRequest, HttpListenerResponse> handler)
+        {
+            return new MockHttpServer((request, response) =>
+            {
+                handler(request, response);
+                response.OutputStream.Close();
+                return TaskConstants.Completed;
+            });
+        }
+
         public static MockHttpServer ReturnJson(Func<HttpListenerRequest, Task<JToken>> jsonHandler)
         {
             return new MockHttpServer(async (request, response) =>

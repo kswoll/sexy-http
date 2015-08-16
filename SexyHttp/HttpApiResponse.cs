@@ -10,7 +10,7 @@ namespace SexyHttp
         public IReadOnlyCollection<HttpHeader> Headers { get; }
         public HttpBody Body { get; }
 
-        public HttpApiResponse(HttpStatusCode statusCode = HttpStatusCode.Found, HttpBody body = null, IEnumerable<HttpHeader> headers = null)
+        public HttpApiResponse(HttpStatusCode statusCode = HttpStatusCode.OK, HttpBody body = null, IEnumerable<HttpHeader> headers = null)
         {
             var headersList = headers?.ToList() ?? new List<HttpHeader>();
 

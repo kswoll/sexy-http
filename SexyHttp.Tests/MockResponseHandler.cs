@@ -18,7 +18,7 @@ namespace SexyHttp.Tests
             this.responseFactory = responseFactory;
         }
 
-        public override Task<object> HandleResponse(HttpApiResponse response) 
+        protected override Task<object> ProvideResult(HttpApiResponse response)
         {
             return Task.FromResult<object>(responseFactory(response));
         }

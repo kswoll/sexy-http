@@ -4,7 +4,12 @@ namespace SexyHttp.ResponseHandlers
 {
     public class HttpApiResponseResponseHandler : HttpResponseHandler
     {
-        public override Task<object> HandleResponse(HttpApiResponse response)
+        public HttpApiResponseResponseHandler()
+        {
+            NonSuccessThrowsException = false;
+        }
+
+        protected override Task<object> ProvideResult(HttpApiResponse response)
         {
             return Task.FromResult<object>(response);
         }

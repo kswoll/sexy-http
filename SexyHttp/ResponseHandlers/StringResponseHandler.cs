@@ -5,7 +5,7 @@ namespace SexyHttp.ResponseHandlers
 {
     public class StringResponseHandler : HttpResponseHandler
     {
-        public override Task<object> HandleResponse(HttpApiResponse response)
+        protected override Task<object> ProvideResult(HttpApiResponse response)
         {
             return Task.FromResult<object>(((StringHttpBody)response.Body).Text);
         }

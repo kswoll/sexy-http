@@ -60,6 +60,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)IHttpResponseHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MultipartAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NameAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NonSuccessfulResponseException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ObjectAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PathAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PostAttribute.cs" />

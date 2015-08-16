@@ -18,7 +18,7 @@ namespace SexyHttp.ResponseHandlers
             stringHandler = new StringResponseHandler();
         }
 
-        public override Task<object> HandleResponse(HttpApiResponse response)
+        protected override Task<object> ProvideResult(HttpApiResponse response)
         {
             var contentType = response.Headers.SingleOrDefault(x => x.Name == "Content-Type")?.Values?.Single();
             contentType = contentType ?? "application/json";

@@ -9,7 +9,7 @@ namespace SexyHttp.ResponseHandlers
 {
     public class ByteArrayResponseHandler : HttpResponseHandler
     {
-        public override async Task<object> HandleResponse(HttpApiResponse response)
+        protected async override Task<object> ProvideResult(HttpApiResponse response)
         {
             var body = response.Body;
             var byteArray = await body.AcceptAsync(new ByteArrayExtractor());

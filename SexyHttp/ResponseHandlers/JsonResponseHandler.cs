@@ -7,7 +7,7 @@ namespace SexyHttp.ResponseHandlers
 {
     public class JsonResponseHandler : HttpResponseHandler
     {
-        public override Task<object> HandleResponse(HttpApiResponse response)
+        protected override Task<object> ProvideResult(HttpApiResponse response)
         {
             var jsonBody = response.Body as JsonHttpBody;
             if (jsonBody == null)
