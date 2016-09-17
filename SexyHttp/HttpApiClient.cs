@@ -9,12 +9,12 @@ namespace SexyHttp
 {
     public static class HttpApiClient<T>
     {
-        public static T Create(string baseUrl, IHttpHandler httpHandler = null, IHttpApiInstrumenter apiInstrumenter = null, Func<Invocation, object> interfaceHandler = null)
+        public static T Create(string baseUrl, IHttpHandler httpHandler = null, IHttpApiInstrumenter apiInstrumenter = null, Func<Invocation, Task<object>> interfaceHandler = null)
         {
             return Create(new HttpApi<T>(), baseUrl, httpHandler, apiInstrumenter, interfaceHandler);
         }
 
-        public static T Create(HttpApi<T> api, string baseUrl, IHttpHandler httpHandler = null, IHttpApiInstrumenter apiInstrumenter = null, Func<Invocation, object> interfaceHandler = null)
+        public static T Create(HttpApi<T> api, string baseUrl, IHttpHandler httpHandler = null, IHttpApiInstrumenter apiInstrumenter = null, Func<Invocation, Task<object>> interfaceHandler = null)
         {
             httpHandler = httpHandler ?? new HttpClientHttpHandler();
             var clientHandler = new ClientHandler(api, baseUrl, httpHandler, apiInstrumenter);

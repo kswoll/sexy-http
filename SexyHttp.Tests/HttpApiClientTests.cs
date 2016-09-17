@@ -33,7 +33,7 @@ namespace SexyHttp.Tests
                 switch (invocation.Method.Name)
                 {
                     case "get_AccessToken":
-                        return accessToken;
+                        return Task.FromResult((object)accessToken);
                 }
                 return invocation.Proceed();
             });
