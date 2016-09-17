@@ -27,7 +27,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)FormAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GetAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HeaderAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Http.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpApi.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpApiClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpApiEndpoint.cs" />

@@ -17,10 +17,34 @@ namespace SexyHttp.Tests
         }
 
         [Proxy]
-        public interface IApi 
+        public interface IApi
         {
             [Get("path")]
             Task<string> GetString(string argument);
+        }
+
+        [Test]
+        public void InterfaceHandlerForPropertyGet()
+        {
+            var httpHandler = new MockHttpHandler(x => new HttpApiResponse(body: x.Body));
+            var accessToken = "foo";
+            var client = HttpApiClient<IInterfaceHandlerApi>.Create("http://localhost", httpHandler, interfaceHandler: invocation =>
+            {
+                switch (invocation.Method.Name)
+                {
+                    case "get_AccessToken":
+                        return accessToken;
+                }
+                return invocation.Proceed();
+            });
+            var result = client.AccessToken;
+            Assert.AreEqual("foo", result);
+        }
+
+        [Proxy]
+        public interface IInterfaceHandlerApi
+        {
+            string AccessToken { get; }
         }
     }
 }

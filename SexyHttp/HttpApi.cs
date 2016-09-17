@@ -17,7 +17,7 @@ namespace SexyHttp
     {
         public IReadOnlyDictionary<MethodInfo, HttpApiEndpoint> Endpoints { get; }
         public ITypeConverter TypeConverter { get; }
-        public IReadOnlyList<HttpHeader> Headers { get; } 
+        public IReadOnlyList<HttpHeader> Headers { get; }
 
         public HttpApi()
         {
@@ -112,7 +112,7 @@ namespace SexyHttp
                 }
             }
 
-            // You can override the name associated with the parameter by using either JsonPropertyAttribute or 
+            // You can override the name associated with the parameter by using either JsonPropertyAttribute or
             // NameAttribute.  We provide a NameAttribute to avoid forcing you to use JsonPropertyAttribute when
             // not dealing with JSON.
             Func<ParameterInfo, string> getName = parameter =>
@@ -169,7 +169,7 @@ namespace SexyHttp
                 // Otherwise, we're going to serialize the request as JSON
                 else
                 {
-                    // If there's only one body parameter and its not annotated with [Object], then we're going to serialize 
+                    // If there's only one body parameter and its not annotated with [Object], then we're going to serialize
                     // the argument as a raw JSON value.
                     if (bodyParameters.Count == 1 && bodyParameters.Single().GetCustomAttribute<ObjectAttribute>() == null)
                     {
@@ -177,13 +177,13 @@ namespace SexyHttp
                         var typeConverter = TypeConverterAttribute.Combine(parameter, endpointTypeConverter);
                         argumentHandlers[parameter.Name] = new DirectJsonArgumentHandler(typeConverter);
                     }
-                    // Otherwise we're going to create a dynamically composed JSON object where each parameter represents a 
+                    // Otherwise we're going to create a dynamically composed JSON object where each parameter represents a
                     // property of the composed JSON object.
                     else
                     {
                         // Foreach body parameter, create a json argument handler
                         setBodyArgumentHandlers((parameter, typeConverter) => new ComposedJsonArgumentHandler(typeConverter, getName(parameter)));
-                    }                    
+                    }
                 }
             }
 

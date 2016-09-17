@@ -9,16 +9,24 @@ namespace SexyHttp
 {
     public static class HttpApiClient<T>
     {
-        public static T Create(string baseUrl, IHttpHandler httpHandler = null, IHttpApiInstrumenter apiInstrumenter = null)
+        public static T Create(string baseUrl, IHttpHandler httpHandler = null, IHttpApiInstrumenter apiInstrumenter = null, Func<Invocation, object> interfaceHandler = null)
         {
-            return Create(new HttpApi<T>(), baseUrl, httpHandler, apiInstrumenter);
+            return Create(new HttpApi<T>(), baseUrl, httpHandler, apiInstrumenter, interfaceHandler);
         }
 
-        public static T Create(HttpApi<T> api, string baseUrl, IHttpHandler httpHandler = null, IHttpApiInstrumenter apiInstrumenter = null)
+        public static T Create(HttpApi<T> api, string baseUrl, IHttpHandler httpHandler = null, IHttpApiInstrumenter apiInstrumenter = null, Func<Invocation, object> interfaceHandler = null)
         {
             httpHandler = httpHandler ?? new HttpClientHttpHandler();
             var clientHandler = new ClientHandler(api, baseUrl, httpHandler, apiInstrumenter);
             T proxy = Proxy.CreateProxy<T>(clientHandler.Call);
+
+            if (interfaceHandler != null)
+            {
+                // If the interfaceHandler is specified, we allow it to intercept each call. It can invoke Proceed itself if it
+                // wants the default implementation.
+                proxy = Proxy.CreateProxy<T>(invocation => interfaceHandler(invocation));
+            }
+
             clientHandler.SetProxy(proxy);
             return proxy;
         }
