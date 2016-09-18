@@ -13,19 +13,19 @@ namespace SexyHttp.HttpHandlers
 {
     public class HttpClientHttpHandler : IHttpHandler
     {
-        private readonly HttpClientHandler handler;
+        private readonly Func<HttpClientHandler> handler;
 
-        public HttpClientHttpHandler(HttpClientHandler handler = null)
+        public HttpClientHttpHandler(Func<HttpClientHandler> handler = null)
         {
-            this.handler = handler ?? new HttpClientHandler
+            this.handler = handler ?? (() => new HttpClientHandler
             {
                 AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip
-            };
+            });
         }
 
         public async Task<T> Call<T>(HttpApiRequest request, Func<HttpApiResponse, Task<T>> responseHandler)
         {
-            using (var client = new HttpClient(handler))
+            using (var client = new HttpClient(handler()))
             {
                 var response = await client.SendAsync(CreateRequestMessage(request));
                 var result = await CreateResponse(request, response);

@@ -12,7 +12,7 @@ using SexyProxy;
 namespace SexyHttp.Tests
 {
     [TestFixture]
-    public class HttpClientHandlerTests 
+    public class HttpClientHandlerTests
     {
         [Test]
         public async void GetString()
@@ -20,6 +20,17 @@ namespace SexyHttp.Tests
             using (MockHttpServer.ReturnJson(request => Task.FromResult<JToken>(new JValue("foo"))))
             {
                 var client = HttpApiClient<IGetString>.Create("http://localhost:8844/path");
+                await client.GetString();
+            }
+        }
+
+        [Test]
+        public async void GetStringTwice()
+        {
+            using (MockHttpServer.ReturnJson(request => Task.FromResult<JToken>(new JValue("foo"))))
+            {
+                var client = HttpApiClient<IGetString>.Create("http://localhost:8844/path");
+                await client.GetString();
                 await client.GetString();
             }
         }
@@ -57,7 +68,7 @@ namespace SexyHttp.Tests
                 var client = HttpApiClient<IPostStringMultipart>.Create("http://localhost:8844/path");
                 var result = await client.PostString("foo");
                 Assert.AreEqual("foo", result);
-            }            
+            }
         }
 
         [Proxy]
@@ -76,7 +87,7 @@ namespace SexyHttp.Tests
                 var client = HttpApiClient<IPostByteArrayMultipart>.Create("http://localhost:8844/path");
                 var result = await client.PostByteArray(input);
                 Assert.IsTrue(result.SequenceEqual(input));
-            }            
+            }
         }
 
         [Proxy]
@@ -95,7 +106,7 @@ namespace SexyHttp.Tests
                 var client = HttpApiClient<IPostByteArray>.Create("http://localhost:8844/path");
                 var result = await client.PostByteArray(input);
                 Assert.IsTrue(result.SequenceEqual(input));
-            }            
+            }
         }
 
         [Proxy]
@@ -136,7 +147,7 @@ namespace SexyHttp.Tests
                 var client = HttpApiClient<IPostTwoStreams>.Create("http://localhost:8844/path");
                 var result = await client.PostTwoStreams(new MemoryStream(input1), new MemoryStream(input2));
                 Assert.AreEqual(9, result);
-            }            
+            }
         }
 
         [Proxy]
@@ -174,7 +185,7 @@ namespace SexyHttp.Tests
                 var client = HttpApiClient<IPostForm>.Create("http://localhost:8844/path");
                 var result = await client.PostForm("value&1", 5);
                 Assert.AreEqual("value&1|5", result);
-            }            
+            }
         }
 
         [Proxy]
@@ -193,7 +204,7 @@ namespace SexyHttp.Tests
                 var result = await client.GetForm("value&1", 5);
                 Assert.AreEqual("value&1", result.Value1);
                 Assert.AreEqual(5, result.Value2);
-            }            
+            }
         }
 
         [Proxy]
@@ -217,7 +228,7 @@ namespace SexyHttp.Tests
                 var client = HttpApiClient<INameOverride>.Create("http://localhost:8844/path");
                 var result = await client.GetString("foo", "bar");
                 Assert.AreEqual("foobar", result);
-            }            
+            }
         }
 
         [Proxy]
@@ -235,7 +246,7 @@ namespace SexyHttp.Tests
                 var client = HttpApiClient<IFormNameOverride>.Create("http://localhost:8844/path");
                 var result = await client.GetString("foo", "bar");
                 Assert.AreEqual("foobar", result);
-            }            
+            }
         }
 
         [Proxy]
@@ -253,7 +264,7 @@ namespace SexyHttp.Tests
                 var client = HttpApiClient<ISingleArgumentAsObject>.Create("http://localhost:8844/path");
                 var result = await client.GetString("foo");
                 Assert.AreEqual("foo", result);
-            }            
+            }
         }
 
         [Proxy]
@@ -271,7 +282,7 @@ namespace SexyHttp.Tests
                 var client = HttpApiClient<IRawRequestApi>.Create("http://localhost:8844/path");
                 var result = await client.GetString(x => x.Body = new JsonHttpBody("foo"));
                 Assert.AreEqual("foo", result);
-            }            
+            }
         }
 
         [Proxy]
@@ -289,7 +300,7 @@ namespace SexyHttp.Tests
                 var client = HttpApiClient<IRawResponseApi>.Create("http://localhost:8844/path");
                 var result = await client.GetString("foo");
                 Assert.AreEqual("foo", (string)((JsonHttpBody)result.Body).Json);
-            }            
+            }
         }
 
         [Proxy]
@@ -307,7 +318,7 @@ namespace SexyHttp.Tests
                 var client = HttpApiClient<IRawRequestBody>.Create("http://localhost:8844/path");
                 var result = await client.GetString(new JsonHttpBody("foo"));
                 Assert.AreEqual("foo", result);
-            }            
+            }
         }
 
         [Proxy]
@@ -325,7 +336,7 @@ namespace SexyHttp.Tests
                 var client = HttpApiClient<IRawResponseBody>.Create("http://localhost:8844/path");
                 var result = await client.GetString("foo");
                 Assert.AreEqual("foo", (string)((JsonHttpBody)result).Json);
-            }            
+            }
         }
 
         [Proxy]
@@ -343,7 +354,7 @@ namespace SexyHttp.Tests
                 var client = HttpApiClient<IReflectString>.Create("http://localhost:8844/path");
                 var result = await client.ReflectString("foo");
                 Assert.AreEqual("foo", result);
-            }                        
+            }
         }
 
         [Proxy]
@@ -367,7 +378,7 @@ namespace SexyHttp.Tests
                 catch (NonSuccessfulResponseException)
                 {
                 }
-            }                        
+            }
         }
 
         [Proxy]
@@ -389,7 +400,7 @@ namespace SexyHttp.Tests
 
                 var result = await client.GetString();
                 Assert.AreEqual("foo", result);
-            }                                    
+            }
         }
 
         abstract class ExtraneousMembersClass : Api
