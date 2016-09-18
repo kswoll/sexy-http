@@ -16,10 +16,9 @@ namespace SexyHttp.Tests
                 var client = HttpApiClient<OverrideApi>.Create("http://localhost:8844");
                 var result = await client.ReflectString("foo");
                 Assert.AreEqual("foobargoat", result);
-            }            
+            }
         }
 
-        [Proxy]
         private abstract class OverrideApi : Api
         {
             [Post]

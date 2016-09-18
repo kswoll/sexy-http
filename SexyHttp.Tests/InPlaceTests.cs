@@ -56,7 +56,7 @@ namespace SexyHttp.Tests
                 var client = HttpApiClient<InstrumentRequestClass>.Create("http://localhost:8844");
                 var result = await client.InstrumentedRequest();
                 Assert.AreEqual("Value", result);
-            }            
+            }
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace SexyHttp.Tests
                 var client = HttpApiClient<InstrumentResponseClass>.Create("http://localhost:8844");
                 var result = await client.InstrumentedResponse();
                 Assert.AreEqual("foo", result);
-            }            
+            }
         }
 
         private abstract class InstrumentRequestClass : Api, IHttpApiInstrumenter

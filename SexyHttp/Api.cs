@@ -4,11 +4,11 @@ using SexyProxy;
 
 namespace SexyHttp
 {
-    public class Api : IProxy, ISetInvocationHandler
+    public class Api : IReverseProxy, ISetInvocationHandler
     {
         private InvocationHandler invocationHandler;
 
-        InvocationHandler IProxy.InvocationHandler => invocationHandler;
+        InvocationHandler IReverseProxy.InvocationHandler => invocationHandler;
 
         InvocationHandler ISetInvocationHandler.InvocationHandler
         {
