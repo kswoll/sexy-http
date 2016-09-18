@@ -24,7 +24,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public void InterfaceHandlerForPropertyGet()
+        public async Task InterfaceHandlerForPropertyGet()
         {
             var httpHandler = new MockHttpHandler(x => new HttpApiResponse(body: x.Body));
             var accessToken = "foo";
@@ -37,14 +37,19 @@ namespace SexyHttp.Tests
                 }
                 return invocation.Proceed();
             });
-            var result = client.AccessToken;
-            Assert.AreEqual("foo", result);
+            Assert.AreEqual(accessToken, client.AccessToken);
+
+            var result = await client.GetString("bar");
+            Assert.AreEqual("bar", result);
         }
 
         [Proxy]
         public interface IInterfaceHandlerApi
         {
             string AccessToken { get; }
+
+            [Get("path")]
+            Task<string> GetString(string argument);
         }
     }
 }

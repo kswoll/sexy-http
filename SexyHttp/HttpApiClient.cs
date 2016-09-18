@@ -24,10 +24,10 @@ namespace SexyHttp
             {
                 // If the interfaceHandler is specified, we allow it to intercept each call. It can invoke Proceed itself if it
                 // wants the default implementation.
-                proxy = Proxy.CreateProxy<T>(invocation => interfaceHandler(invocation));
+                proxy = Proxy.CreateProxy(proxy, invocation => interfaceHandler(invocation));
             }
-
             clientHandler.SetProxy(proxy);
+
             return proxy;
         }
 
