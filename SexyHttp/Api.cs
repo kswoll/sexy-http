@@ -15,7 +15,7 @@ namespace SexyHttp
             set { invocationHandler = value; }
         }
 
-        public virtual Task<object> Call(HttpApiEndpoint endpoint, IHttpHandler httpHandler, string baseUrl, Dictionary<string, object> arguments, IHttpApiInstrumenter apiInstrumenter)
+        public virtual Task<object> Call(HttpApiEndpoint endpoint, IHttpHandler httpHandler, string baseUrl, Dictionary<string, object> arguments, HttpApiInstrumenter apiInstrumenter)
         {
             return endpoint.Call(httpHandler, baseUrl, arguments, apiInstrumenter);
         }

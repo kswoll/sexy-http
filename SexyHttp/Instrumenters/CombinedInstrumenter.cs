@@ -1,30 +1,30 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SexyHttp.Instrumenters
 {
     public class CombinedInstrumenter : IHttpApiInstrumenter
     {
-        private readonly IHttpApiInstrumenter[] instrumenters;
+        private readonly HttpApiInstrumenter[] instrumenters;
 
-        public CombinedInstrumenter(params IHttpApiInstrumenter[] instrumenters)
+        public CombinedInstrumenter(params HttpApiInstrumenter[] instrumenters)
         {
             this.instrumenters = instrumenters;
         }
 
-        public async Task InstrumentRequest(HttpApiRequest request)
+        public async Task<HttpApiResponse> InstrumentCall(HttpApiRequest request, Func<HttpApiRequest, Task<HttpApiResponse>> inner)
         {
-            foreach (var instrumenter in instrumenters)
-            {
-                await instrumenter.InstrumentRequest(request);
-            }
-        }
+            if (instrumenters.Length == 0)
+                return await inner(request);
 
-        public async Task InstrumentResponse(HttpApiResponse response)
-        {
-            foreach (var instrumenter in instrumenters)
+            var current = inner;
+            foreach (var instrumenter in instrumenters.Skip(1).Reverse())
             {
-                await instrumenter.InstrumentResponse(response);
+                current = apiRequest => instrumenter(apiRequest, current);
             }
+
+            return await instrumenters.First()(request, current);
         }
     }
 }

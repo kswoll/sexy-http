@@ -23,13 +23,13 @@ namespace SexyHttp.HttpHandlers
             });
         }
 
-        public async Task<T> Call<T>(HttpApiRequest request, Func<HttpApiResponse, Task<T>> responseHandler)
+        public async Task<HttpApiResponse> Call(HttpApiRequest request)
         {
             using (var client = new HttpClient(handler()))
             {
                 var response = await client.SendAsync(CreateRequestMessage(request));
                 var result = await CreateResponse(request, response);
-                return await responseHandler(result);
+                return result;
             }
         }
 

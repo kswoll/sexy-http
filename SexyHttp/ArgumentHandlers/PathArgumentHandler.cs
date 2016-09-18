@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using SexyHttp.TypeConverters;
-using SexyHttp.Utils;
 
 namespace SexyHttp.ArgumentHandlers
 {

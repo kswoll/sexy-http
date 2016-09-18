@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using SexyHttp.Utils;
 
 namespace SexyHttp.Tests
 {
@@ -8,15 +8,10 @@ namespace SexyHttp.Tests
     {
         public List<HttpHeader> Headers { get; } = new List<HttpHeader>();
 
-        public Task InstrumentRequest(HttpApiRequest request)
+        public async Task<HttpApiResponse> InstrumentCall(HttpApiRequest request, Func<HttpApiRequest, Task<HttpApiResponse>> inner)
         {
             request.Headers.AddRange(Headers);
-            return TaskConstants.Completed;
-        }
-
-        public Task InstrumentResponse(HttpApiResponse response)
-        {
-            return TaskConstants.Completed;
+            return await inner(request);
         }
     }
 }

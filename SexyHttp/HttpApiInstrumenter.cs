@@ -1,18 +1,7 @@
-﻿using System.Threading.Tasks;
-using SexyHttp.TypeConverters;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace SexyHttp
 {
-    public abstract class HttpApiInstrumenter : IHttpApiInstrumenter
-    {
-        public abstract Task InstrumentRequest(HttpApiRequest request);
-        public abstract Task InstrumentResponse(HttpApiResponse response);
-
-        public ITypeConverter TypeConverter { get; }
-
-        protected HttpApiInstrumenter(ITypeConverter typeConverter)
-        {
-            TypeConverter = typeConverter;
-        }
-    }
+    public delegate Task<HttpApiResponse> HttpApiInstrumenter(HttpApiRequest request, Func<HttpApiRequest, Task<HttpApiResponse>> inner);
 }

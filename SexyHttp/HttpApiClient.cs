@@ -2,19 +2,18 @@
 using System.Linq;
 using System.Threading.Tasks;
 using SexyHttp.HttpHandlers;
-using SexyHttp.Instrumenters;
 using SexyProxy;
 
 namespace SexyHttp
 {
     public static class HttpApiClient<T>
     {
-        public static T Create(string baseUrl, IHttpHandler httpHandler = null, IHttpApiInstrumenter apiInstrumenter = null, Func<Invocation, Task<object>> interfaceHandler = null)
+        public static T Create(string baseUrl, IHttpHandler httpHandler = null, HttpApiInstrumenter apiInstrumenter = null, Func<Invocation, Task<object>> interfaceHandler = null)
         {
             return Create(new HttpApi<T>(), baseUrl, httpHandler, apiInstrumenter, interfaceHandler);
         }
 
-        public static T Create(HttpApi<T> api, string baseUrl, IHttpHandler httpHandler = null, IHttpApiInstrumenter apiInstrumenter = null, Func<Invocation, Task<object>> interfaceHandler = null)
+        public static T Create(HttpApi<T> api, string baseUrl, IHttpHandler httpHandler = null, HttpApiInstrumenter apiInstrumenter = null, Func<Invocation, Task<object>> interfaceHandler = null)
         {
             httpHandler = httpHandler ?? new HttpClientHttpHandler();
             var clientHandler = new ClientHandler(api, baseUrl, httpHandler, apiInstrumenter);
@@ -36,10 +35,10 @@ namespace SexyHttp
             private readonly HttpApi<T> api;
             private readonly string baseUrl;
             private readonly IHttpHandler httpHandler;
-            private IHttpApiInstrumenter apiInstrumenter;
+            private HttpApiInstrumenter apiInstrumenter;
             private T proxy;
 
-            public ClientHandler(HttpApi<T> api, string baseUrl, IHttpHandler httpHandler, IHttpApiInstrumenter apiInstrumenter)
+            public ClientHandler(HttpApi<T> api, string baseUrl, IHttpHandler httpHandler, HttpApiInstrumenter apiInstrumenter)
             {
                 this.api = api;
                 this.baseUrl = baseUrl;
@@ -53,10 +52,11 @@ namespace SexyHttp
 
                 if (typeof(IHttpApiInstrumenter).IsAssignableFrom(typeof(T)))
                 {
+                    HttpApiInstrumenter classInstrumenter = (request, inner) => ((IHttpApiInstrumenter)proxy).InstrumentCall(request, inner);
                     if (apiInstrumenter == null)
-                        apiInstrumenter = (IHttpApiInstrumenter)proxy;
+                        apiInstrumenter = classInstrumenter;
                     else
-                        apiInstrumenter = new CombinedInstrumenter(apiInstrumenter, (IHttpApiInstrumenter)proxy);
+                        apiInstrumenter = (request, inner) => apiInstrumenter(request, apiRequest => classInstrumenter(apiRequest, inner));
                 }
             }
 

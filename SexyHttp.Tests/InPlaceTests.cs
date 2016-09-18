@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using SexyHttp.HttpBodies;
-using SexyHttp.Utils;
 using SexyProxy;
 
 namespace SexyHttp.Tests
@@ -75,15 +75,10 @@ namespace SexyHttp.Tests
             [Get]
             public abstract Task<string> InstrumentedRequest();
 
-            public Task InstrumentRequest(HttpApiRequest request)
+            public async Task<HttpApiResponse> InstrumentCall(HttpApiRequest request, Func<HttpApiRequest, Task<HttpApiResponse>> inner)
             {
                 request.Headers.Add(new HttpHeader("Test", "Value"));
-                return TaskConstants.Completed;
-            }
-
-            public Task InstrumentResponse(HttpApiResponse response)
-            {
-                return TaskConstants.Completed;
+                return await inner(request);
             }
         }
 
@@ -92,15 +87,11 @@ namespace SexyHttp.Tests
             [Get]
             public abstract Task<string> InstrumentedResponse();
 
-            public Task InstrumentRequest(HttpApiRequest request)
+            public async Task<HttpApiResponse> InstrumentCall(HttpApiRequest request, Func<HttpApiRequest, Task<HttpApiResponse>> inner)
             {
-                return TaskConstants.Completed;
-            }
-
-            public Task InstrumentResponse(HttpApiResponse response)
-            {
+                var response = await inner(request);
                 response.Body = new JsonHttpBody("foo");
-                return TaskConstants.Completed;
+                return response;
             }
         }
     }

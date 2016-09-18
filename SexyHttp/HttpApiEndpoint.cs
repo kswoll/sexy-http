@@ -17,7 +17,7 @@ namespace SexyHttp
         public IReadOnlyList<HttpHeader> Headers { get; }
 
         public HttpApiEndpoint(
-            HttpUrlDescriptor url, 
+            HttpUrlDescriptor url,
             HttpMethod method,
             Dictionary<string, IHttpArgumentHandler> argumentHandlers,
             IHttpResponseHandler responseHandler,
@@ -30,12 +30,9 @@ namespace SexyHttp
             Headers = headers.ToList();
         }
 
-        public async Task<object> Call(IHttpHandler httpHandler, string baseUrl, Dictionary<string, object> arguments, IHttpApiInstrumenter apiInstrumenter = null)
+        public async Task<object> Call(IHttpHandler httpHandler, string baseUrl, Dictionary<string, object> arguments, HttpApiInstrumenter apiInstrumenter = null)
         {
             var request = new HttpApiRequest { Url = Url.CreateUrl(baseUrl), Method = Method, Headers = Headers.ToList() };
-
-            if (apiInstrumenter != null)
-                await apiInstrumenter.InstrumentRequest(request);
 
             Action<Func<IHttpArgumentHandler, string, object, Task>> applyArguments = async applier =>
             {
@@ -48,19 +45,22 @@ namespace SexyHttp
                         var handler = item.Value;
                         await applier(handler, name, argument);
                     }
-                }                
+                }
             };
 
             applyArguments(async (handler, name, argument) => await handler.ApplyArgument(request, name, argument));
 
-            var result = await httpHandler.Call(request, async response =>
-            {
-                if (apiInstrumenter != null)
-                    await apiInstrumenter.InstrumentResponse(response);
-                applyArguments(async (handler, name, argument) => await handler.ApplyArgument(response, name, argument));
-                return await ResponseHandler.HandleResponse(request, response);
-            });
-            return result;
+            Func<HttpApiRequest, Task<HttpApiResponse>> call = async apiRequest => await httpHandler.Call(apiRequest);
+
+
+            HttpApiResponse response;
+            if (apiInstrumenter != null)
+                response = await apiInstrumenter(request, call);
+            else
+                response = await call(request);
+
+            applyArguments(async (handler, name, argument) => await handler.ApplyArgument(response, name, argument));
+            return await ResponseHandler.HandleResponse(request, response);
         }
     }
 }

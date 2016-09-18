@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using SexyProxy;
 
 namespace SexyHttp.Tests
 {
@@ -24,7 +23,7 @@ namespace SexyHttp.Tests
             [Post]
             public abstract Task<string> ReflectString(string s);
 
-            public override async Task<object> Call(HttpApiEndpoint endpoint, IHttpHandler httpHandler, string baseUrl, Dictionary<string, object> arguments, IHttpApiInstrumenter apiInstrumenter)
+            public override async Task<object> Call(HttpApiEndpoint endpoint, IHttpHandler httpHandler, string baseUrl, Dictionary<string, object> arguments, HttpApiInstrumenter apiInstrumenter)
             {
                 arguments["s"] = arguments["s"] + "bar";
                 var result = await base.Call(endpoint, httpHandler, baseUrl, arguments, apiInstrumenter);

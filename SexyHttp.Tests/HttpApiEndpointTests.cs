@@ -44,7 +44,7 @@ namespace SexyHttp.Tests
             headersProvider.Headers.Add(new HttpHeader("key", "value"));
 
             var endpoint = new HttpApiEndpoint("path/to/api", HttpMethod.Get, new Dictionary<string, IHttpArgumentHandler>(), responseHandler, Enumerable.Empty<HttpHeader>());
-            await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object>(), headersProvider);
+            await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object>(), headersProvider.InstrumentCall);
 
             var header = httpHandler.Request.Headers.Single();
             Assert.AreEqual("key", header.Name);
@@ -58,12 +58,12 @@ namespace SexyHttp.Tests
             var responseHandler = new MockResponseHandler<string>(x => x.Headers.Single(y => y.Name == "name").Values.Single());
 
             var endpoint = new HttpApiEndpoint(
-                "path/to/api", 
-                HttpMethod.Get, 
+                "path/to/api",
+                HttpMethod.Get,
                 new Dictionary<string, IHttpArgumentHandler>
                 {
                     { "name", new HttpHeaderArgumentHandler(DefaultTypeConverter.Create())  }
-                }, 
+                },
                 responseHandler,
                 Enumerable.Empty<HttpHeader>());
             var response = await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object> { ["name"] = "value" });
@@ -78,14 +78,14 @@ namespace SexyHttp.Tests
             var responseHandler = new MockResponseHandler<string>("foo");
 
             var endpoint = new HttpApiEndpoint(
-                "path/to/api", 
-                HttpMethod.Get, 
-                new Dictionary<string, IHttpArgumentHandler>(), 
+                "path/to/api",
+                HttpMethod.Get,
+                new Dictionary<string, IHttpArgumentHandler>(),
                 responseHandler,
                 Enumerable.Empty<HttpHeader>());
             var response = await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object>());
 
-            Assert.AreEqual("foo", response);            
+            Assert.AreEqual("foo", response);
         }
     }
 }
