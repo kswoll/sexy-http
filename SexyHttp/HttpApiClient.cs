@@ -2,15 +2,16 @@
 using System.Linq;
 using System.Threading.Tasks;
 using SexyHttp.HttpHandlers;
+using SexyHttp.TypeConverters;
 using SexyProxy;
 
 namespace SexyHttp
 {
     public static class HttpApiClient<T>
     {
-        public static T Create(string baseUrl, IHttpHandler httpHandler = null, HttpApiInstrumenter apiInstrumenter = null, Func<Invocation, Task<object>> interfaceHandler = null)
+        public static T Create(string baseUrl, ITypeConverter typeConverter = null, IHttpHandler httpHandler = null, HttpApiInstrumenter apiInstrumenter = null, Func<Invocation, Task<object>> interfaceHandler = null)
         {
-            return Create(new HttpApi<T>(), baseUrl, httpHandler, apiInstrumenter, interfaceHandler);
+            return Create(new HttpApi<T>(typeConverter), baseUrl, httpHandler, apiInstrumenter, interfaceHandler);
         }
 
         public static T Create(HttpApi<T> api, string baseUrl, IHttpHandler httpHandler = null, HttpApiInstrumenter apiInstrumenter = null, Func<Invocation, Task<object>> interfaceHandler = null)

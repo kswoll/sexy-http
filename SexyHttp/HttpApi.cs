@@ -19,9 +19,9 @@ namespace SexyHttp
         public ITypeConverter TypeConverter { get; }
         public IReadOnlyList<HttpHeader> Headers { get; }
 
-        public HttpApi()
+        public HttpApi(ITypeConverter typeConverter = null)
         {
-            TypeConverter = TypeConverterAttribute.Combine(typeof(T), DefaultTypeConverter.Create());
+            TypeConverter = TypeConverterAttribute.Combine(typeof(T), typeConverter ?? DefaultTypeConverter.Create());
             Headers = HeaderAttribute.GetHeaders(typeof(T));
 
             // Create endpoints

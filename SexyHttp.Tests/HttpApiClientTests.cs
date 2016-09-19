@@ -11,7 +11,7 @@ namespace SexyHttp.Tests
         public async void GetString()
         {
             var httpHandler = new MockHttpHandler(x => new HttpApiResponse(body: x.Body));
-            var client = HttpApiClient<IApi>.Create("http://localhost", httpHandler);
+            var client = HttpApiClient<IApi>.Create("http://localhost", httpHandler: httpHandler);
             var result = await client.GetString("foo");
             Assert.AreEqual("foo", result);
         }
@@ -28,7 +28,7 @@ namespace SexyHttp.Tests
         {
             var httpHandler = new MockHttpHandler(x => new HttpApiResponse(body: x.Body));
             var accessToken = "foo";
-            var client = HttpApiClient<IInterfaceHandlerApi>.Create("http://localhost", httpHandler, interfaceHandler: invocation =>
+            var client = HttpApiClient<IInterfaceHandlerApi>.Create("http://localhost", httpHandler: httpHandler, interfaceHandler: invocation =>
             {
                 switch (invocation.Method.Name)
                 {

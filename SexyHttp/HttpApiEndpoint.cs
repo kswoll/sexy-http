@@ -52,7 +52,6 @@ namespace SexyHttp
 
             Func<HttpApiRequest, Task<HttpApiResponse>> call = async apiRequest => await httpHandler.Call(apiRequest);
 
-
             HttpApiResponse response;
             if (apiInstrumenter != null)
                 response = await apiInstrumenter(request, call);
