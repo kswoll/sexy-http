@@ -27,9 +27,17 @@ namespace SexyHttp.HttpHandlers
         {
             using (var client = new HttpClient(handler()))
             {
-                var response = await client.SendAsync(CreateRequestMessage(request));
-                var result = await CreateResponse(request, response);
-                return result;
+                try
+                {
+                    var response = await client.SendAsync(CreateRequestMessage(request));
+                    var result = await CreateResponse(request, response);
+                    return result;
+
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Error making {request.Method} request to {request.Url}", e);
+                }
             }
         }
 

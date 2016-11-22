@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SexyHttp.HttpBodies
@@ -20,6 +21,11 @@ namespace SexyHttp.HttpBodies
         public override Task<T> AcceptAsync<T>(IAsyncHttpBodyVisitor<T> visitor)
         {
             return visitor.VisitMultipartBodyAsync(this);
+        }
+
+        public override string ToString()
+        {
+            return string.Join("\r\n", Data.Select(x => $"{x.Key}={x.Value}"));
         }
     }
 }

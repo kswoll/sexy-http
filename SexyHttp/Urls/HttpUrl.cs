@@ -44,11 +44,14 @@ namespace SexyHttp.Urls
                 var separator = '?';
                 Action<string, string> appendQuery = (key, value) =>
                 {
-                    builder.Append(separator);
-                    builder.Append(Uri.EscapeDataString(key));
-                    builder.Append('=');
-                    builder.Append(Uri.EscapeDataString(value).Replace("%2C", ","));        // Hack to preserve commas
-                    separator = '&';
+                    if (value != null)
+                    {
+                        builder.Append(separator);
+                        builder.Append(Uri.EscapeDataString(key));
+                        builder.Append('=');
+                        builder.Append(Uri.EscapeDataString(value).Replace("%2C", ","));        // Hack to preserve commas
+                        separator = '&';                        
+                    }
                 };
                 foreach (var item in descriptor.QueryParts)
                 {

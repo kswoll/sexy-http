@@ -20,5 +20,10 @@ namespace SexyHttp.HttpBodies
         {
             return visitor.VisitByteArrayBodyAsync(this);
         }
+
+        public override string ToString()
+        {
+            return $"byte[{Data.Length}]";
+        }
     }
 }

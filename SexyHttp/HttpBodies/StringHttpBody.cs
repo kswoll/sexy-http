@@ -20,5 +20,10 @@ namespace SexyHttp.HttpBodies
         {
             return visitor.VisitStringBodyAsync(this);
         }
+
+        public override string ToString()
+        {
+            return Text;
+        }
     }
 }
