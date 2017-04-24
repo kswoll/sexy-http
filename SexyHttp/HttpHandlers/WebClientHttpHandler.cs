@@ -37,7 +37,7 @@ namespace SexyHttp.HttpHandlers
             responseHeaders.AddRange(response.Headers.AllKeys.Select(x => new HttpHeader(x, response.Headers[x].Split(','))));
             var responseStream = response.GetResponseStream();
 
-            switch (request.ResponseContentTypeOverride ?? response.ContentType)
+            switch (request.ResponseContentTypeOverride ?? response.ContentType.Split(';')[0])
             {
                 case "application/json":
                     var json = JToken.Parse(Encoding.UTF8.GetString(responseStream.ReadToEnd()));
