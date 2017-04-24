@@ -45,6 +45,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)HttpBodies\StringHttpBody.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpBody.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpHandlers\HttpClientHttpHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpHandlers\WebClientHttpHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpHeader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpApiInstrumenter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpMethodAttributes.cs" />

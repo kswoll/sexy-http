@@ -36,7 +36,7 @@ namespace SexyHttp.Urls
                         builder.Append(literal.Value);
                     else
                         builder.Append(Path[((VariableHttpPathPart)part).Key]);
-                }                
+                }
             }
 
             if (descriptor.QueryParts.Any())
@@ -50,7 +50,7 @@ namespace SexyHttp.Urls
                         builder.Append(Uri.EscapeDataString(key));
                         builder.Append('=');
                         builder.Append(Uri.EscapeDataString(value).Replace("%2C", ","));        // Hack to preserve commas
-                        separator = '&';                        
+                        separator = '&';
                     }
                 };
                 foreach (var item in descriptor.QueryParts)

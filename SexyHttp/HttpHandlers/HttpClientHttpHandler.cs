@@ -32,7 +32,6 @@ namespace SexyHttp.HttpHandlers
                     var response = await client.SendAsync(CreateRequestMessage(request));
                     var result = await CreateResponse(request, response);
                     return result;
-
                 }
                 catch (Exception e)
                 {
