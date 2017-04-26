@@ -29,7 +29,15 @@ namespace SexyHttp.HttpHandlers
                 stream.CopyTo(requestStream);
                 requestStream.Close();
             }
-            var response = (HttpWebResponse)client.GetResponse();
+            HttpWebResponse response;
+            try
+            {
+                response = (HttpWebResponse)client.GetResponse();
+            }
+            catch (WebException e)
+            {
+                response = (HttpWebResponse)e.Response;
+            }
 
             var responseHeaders = new List<HttpHeader>();
             HttpBody responseBody = null;
