@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -27,6 +28,11 @@ namespace SexyHttp.HttpHandlers
                 var requestStream = client.GetRequestStream();
                 var stream = request.Body.Accept(new ContentCreator(client));
                 stream.CopyTo(requestStream);
+                requestStream.Close();
+            }
+            else if (request.Method != HttpMethod.Get && request.Method != HttpMethod.Head)
+            {
+                var requestStream = client.GetRequestStream();
                 requestStream.Close();
             }
             HttpWebResponse response;
