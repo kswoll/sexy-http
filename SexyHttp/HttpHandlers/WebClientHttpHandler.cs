@@ -40,7 +40,7 @@ namespace SexyHttp.HttpHandlers
             {
                 response = (HttpWebResponse)client.GetResponse();
             }
-            catch (WebException e)
+            catch (WebException e) when (e.Response != null)
             {
                 response = (HttpWebResponse)e.Response;
             }
