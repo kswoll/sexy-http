@@ -188,9 +188,12 @@ namespace SexyHttp
             }
 
             var returnType = method.ReturnType;
-            if (!typeof(Task).IsAssignableFrom(returnType))
-                throw new Exception("Methods must be async and return either Task or Task<T>");
-            returnType = returnType.GetTaskType() ?? typeof(void);
+            bool isAsync = false;
+            if (typeof(Task).IsAssignableFrom(returnType))
+            {
+                isAsync = true;
+                returnType = returnType.GetTaskType() ?? typeof(void);
+            }
 
             var responseTypeConverter = TypeConverterAttribute.Combine(method.ReturnTypeCustomAttributes, endpointTypeConverter);
 
@@ -208,7 +211,7 @@ namespace SexyHttp
             responseHandler.TypeConverter = responseTypeConverter;
             responseHandler.ResponseType = returnType;
 
-            var endpoint = new HttpApiEndpoint(url, httpMethod.Method, argumentHandlers, responseHandler, headers);
+            var endpoint = new HttpApiEndpoint(url, httpMethod.Method, argumentHandlers, responseHandler, headers, isAsync);
             return endpoint;
         }
     }

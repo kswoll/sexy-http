@@ -63,8 +63,7 @@ namespace SexyHttp
 
             public Task<object> Call(Invocation invocation)
             {
-                HttpApiEndpoint endpoint;
-                if (!api.Endpoints.TryGetValue(invocation.Method, out endpoint))
+                if (!api.Endpoints.TryGetValue(invocation.Method, out var endpoint))
                     throw new Exception($"Endpoint not found for: \"{invocation.Method.DeclaringType.FullName}.{invocation.Method.Name}\".  Perhaps you forgot to decorate your method with [Get], [Post], etc.");
 
                 var arguments = invocation.Method
