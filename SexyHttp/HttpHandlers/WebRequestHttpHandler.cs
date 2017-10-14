@@ -13,7 +13,7 @@ using SexyHttp.Tests.Utils;
 
 namespace SexyHttp.HttpHandlers
 {
-    public class WebClientHttpHandler : IHttpHandler
+    public class WebRequestHttpHandler : IHttpHandler
     {
         public Task<HttpApiResponse> Call(HttpApiRequest request)
         {

@@ -7,14 +7,14 @@ using SexyProxy;
 namespace SexyHttp.Tests
 {
     [TestFixture]
-    public class HttpWebClientHttpHandlerTests
+    public class WebRequestHttpHandlerTests
     {
         [Test]
         public void GetString()
         {
             using (MockHttpServer.ReturnJson(request => Task.FromResult<JToken>(new JValue("foo"))))
             {
-                var client = HttpApiClient<EmitBasedClientTests.IGetString>.Create("http://localhost:8844/path", httpHandler: new WebClientHttpHandler());
+                var client = HttpApiClient<EmitBasedClientTests.IGetString>.Create("http://localhost:8844/path", httpHandler: new WebRequestHttpHandler());
                 client.GetString().Wait();
             }
         }
@@ -24,7 +24,7 @@ namespace SexyHttp.Tests
         {
             using (MockHttpServer.Json(x => x))
             {
-                var client = HttpApiClient<IReflectValue>.Create("http://localhost:8844/path", httpHandler: new WebClientHttpHandler());
+                var client = HttpApiClient<IReflectValue>.Create("http://localhost:8844/path", httpHandler: new WebRequestHttpHandler());
                 var result = client.ReflectValue("foo").Result;
                 Assert.AreEqual("foo", result);
             }
@@ -35,7 +35,7 @@ namespace SexyHttp.Tests
         {
             using (MockHttpServer.Json(x => x))
             {
-                var client = HttpApiClient<IReflectValue>.Create("http://localhost:8844/pathnotasync", httpHandler: new WebClientHttpHandler());
+                var client = HttpApiClient<IReflectValue>.Create("http://localhost:8844/pathnotasync", httpHandler: new WebRequestHttpHandler());
                 var result = client.ReflectValueNotAsync("foo");
                 Assert.AreEqual("foo", result);
             }

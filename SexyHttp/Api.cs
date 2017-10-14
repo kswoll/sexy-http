@@ -12,7 +12,7 @@ namespace SexyHttp
 
         InvocationHandler ISetInvocationHandler.InvocationHandler
         {
-            set { invocationHandler = value; }
+            set => invocationHandler = value;
         }
 
         public virtual Task<object> Call(HttpApiEndpoint endpoint, IHttpHandler httpHandler, string baseUrl, Dictionary<string, object> arguments, HttpApiInstrumenter apiInstrumenter)
