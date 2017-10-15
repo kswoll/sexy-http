@@ -13,7 +13,7 @@ namespace SexyHttp.Instrumenters
             this.instrumenters = instrumenters;
         }
 
-        public async Task<HttpApiResponse> InstrumentCall(HttpApiRequest request, Func<HttpApiRequest, Task<HttpApiResponse>> inner)
+        public async Task<HttpApiResponse> InstrumentCall(HttpApiEndpoint endpoint, HttpApiRequest request, Func<HttpApiRequest, Task<HttpApiResponse>> inner)
         {
             if (instrumenters.Length == 0)
                 return await inner(request);
@@ -21,10 +21,10 @@ namespace SexyHttp.Instrumenters
             var current = inner;
             foreach (var instrumenter in instrumenters.Skip(1).Reverse())
             {
-                current = apiRequest => instrumenter(apiRequest, current);
+                current = apiRequest => instrumenter(endpoint, apiRequest, current);
             }
 
-            return await instrumenters.First()(request, current);
+            return await instrumenters.First()(endpoint, request, current);
         }
     }
 }

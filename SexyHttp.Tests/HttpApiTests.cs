@@ -17,7 +17,7 @@ namespace SexyHttp.Tests
         public void Get()
         {
             var api = new HttpApi<IGet>();
-            Assert.AreEqual(HttpMethod.Get, api.Endpoints.Single().Value.Method);
+            Assert.AreEqual(HttpMethod.Get, api.Endpoints.Single().Value.HttpMethod);
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace SexyHttp.Tests
         public void Post()
         {
             var api = new HttpApi<IPost>();
-            Assert.AreEqual(HttpMethod.Post, api.Endpoints.Single().Value.Method);
+            Assert.AreEqual(HttpMethod.Post, api.Endpoints.Single().Value.HttpMethod);
         }
 
         interface IPost

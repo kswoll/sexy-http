@@ -99,9 +99,9 @@ namespace SexyHttp
 
                 if (typeof(IHttpApiInstrumenter).IsAssignableFrom(typeof(T)))
                 {
-                    Task<HttpApiResponse> ClassInstrumenter(HttpApiRequest request, Func<HttpApiRequest, Task<HttpApiResponse>> inner)
+                    Task<HttpApiResponse> ClassInstrumenter(HttpApiEndpoint endpoint, HttpApiRequest request, Func<HttpApiRequest, Task<HttpApiResponse>> inner)
                     {
-                        return ((IHttpApiInstrumenter)proxy).InstrumentCall(request, inner);
+                        return ((IHttpApiInstrumenter)proxy).InstrumentCall(endpoint, request, inner);
                     }
 
                     if (apiInstrumenter == null)

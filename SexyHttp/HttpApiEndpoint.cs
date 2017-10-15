@@ -2,24 +2,38 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using SexyHttp.Urls;
 
 namespace SexyHttp
 {
+    /// <summary>
+    /// An instance of this class is generated for each of the method definitions in your API interface.
+    /// It is what is responsible for translating the incoming C# types into values in the HTTP request,
+    /// and translating the values in the HTTP response into the outgoing C# types.
+    /// </summary>
     public class HttpApiEndpoint
     {
+        public MethodInfo Method { get; }
         public HttpUrlDescriptor Url { get; }
-        public HttpMethod Method { get; }
+        public HttpMethod HttpMethod { get; }
 
         public IReadOnlyDictionary<string, IHttpArgumentHandler> ArgumentHandlers { get; }
         public IHttpResponseHandler ResponseHandler { get; }
         public IReadOnlyList<HttpHeader> Headers { get; }
 
-        public HttpApiEndpoint(HttpUrlDescriptor url, HttpMethod method, Dictionary<string, IHttpArgumentHandler> argumentHandlers, IHttpResponseHandler responseHandler, IEnumerable<HttpHeader> headers, bool isAsync = true)
+        public HttpApiEndpoint(
+            MethodInfo method,
+            HttpUrlDescriptor url,
+            HttpMethod httpMethod,
+            Dictionary<string, IHttpArgumentHandler> argumentHandlers,
+            IHttpResponseHandler responseHandler,
+            IEnumerable<HttpHeader> headers, bool isAsync = true)
         {
-            Url = url;
             Method = method;
+            Url = url;
+            HttpMethod = httpMethod;
             ArgumentHandlers = argumentHandlers;
             ResponseHandler = responseHandler;
             Headers = headers.ToList();
@@ -27,7 +41,7 @@ namespace SexyHttp
 
         public async Task<object> Call(IHttpHandler httpHandler, string baseUrl, Dictionary<string, object> arguments, HttpApiInstrumenter apiInstrumenter = null)
         {
-            var request = new HttpApiRequest { Url = Url.CreateUrl(baseUrl), Method = Method, Headers = Headers.ToList() };
+            var request = new HttpApiRequest { Url = Url.CreateUrl(baseUrl), Method = HttpMethod, Headers = Headers.ToList() };
 
             async void ApplyArguments(Func<IHttpArgumentHandler, string, object, Task> applier)
             {
@@ -44,13 +58,13 @@ namespace SexyHttp
 
             ApplyArguments(async (handler, name, argument) => await handler.ApplyArgument(request, name, argument));
 
-            Func<HttpApiRequest, Task<HttpApiResponse>> call = async apiRequest => await httpHandler.Call(apiRequest);
+            async Task<HttpApiResponse> Func(HttpApiRequest apiRequest) => await httpHandler.Call(apiRequest);
 
             HttpApiResponse response;
             if (apiInstrumenter != null)
-                response = await apiInstrumenter(request, call);
+                response = await apiInstrumenter(this, request, Func);
             else
-                response = await call(request);
+                response = await Func(request);
 
             ApplyArguments(async (handler, name, argument) => await handler.ApplyArgument(response, name, argument));
             return await ResponseHandler.HandleResponse(request, response);

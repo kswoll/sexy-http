@@ -13,6 +13,11 @@ using SexyHttp.Utils;
 
 namespace SexyHttp
 {
+    /// <summary>
+    /// Class responsible for generating the API endpoints for each of the methods in your API interface.
+    /// </summary>
+    /// <typeparam name="T">Your type that defines the methods representing the various calls to your
+    /// backend.  An instance of HttpApiEndpoint will be generated for each method in this type.</typeparam>
     public class HttpApi<T>
     {
         public IReadOnlyDictionary<MethodInfo, HttpApiEndpoint> Endpoints { get; }
@@ -115,13 +120,13 @@ namespace SexyHttp
             // You can override the name associated with the parameter by using either JsonPropertyAttribute or
             // NameAttribute.  We provide a NameAttribute to avoid forcing you to use JsonPropertyAttribute when
             // not dealing with JSON.
-            Func<ParameterInfo, string> getName = parameter =>
+            string GetName(ParameterInfo parameter)
             {
                 var jsonPropertyAttribute = parameter.GetCustomAttribute<JsonPropertyAttribute>(true);
                 var nameAttribute = parameter.GetCustomAttribute<NameAttribute>(true);
 
                 return nameAttribute?.Value ?? jsonPropertyAttribute?.PropertyName ?? parameter.Name;
-            };
+            }
 
             // If there is data for a body, then create a handler to provide a body
             if (bodyParameters.Any())
@@ -160,7 +165,7 @@ namespace SexyHttp
                 }
                 else if (isForm)
                 {
-                    setBodyArgumentHandlers((parameter, typeConverter) => new FormArgumentHandler(typeConverter, getName(parameter)));
+                    setBodyArgumentHandlers((parameter, typeConverter) => new FormArgumentHandler(typeConverter, GetName(parameter)));
                 }
                 else if (isText)
                 {
@@ -182,7 +187,7 @@ namespace SexyHttp
                     else
                     {
                         // Foreach body parameter, create a json argument handler
-                        setBodyArgumentHandlers((parameter, typeConverter) => new ComposedJsonArgumentHandler(typeConverter, getName(parameter)));
+                        setBodyArgumentHandlers((parameter, typeConverter) => new ComposedJsonArgumentHandler(typeConverter, GetName(parameter)));
                     }
                 }
             }
@@ -211,7 +216,7 @@ namespace SexyHttp
             responseHandler.TypeConverter = responseTypeConverter;
             responseHandler.ResponseType = returnType;
 
-            var endpoint = new HttpApiEndpoint(url, httpMethod.Method, argumentHandlers, responseHandler, headers, isAsync);
+            var endpoint = new HttpApiEndpoint(method, url, httpMethod.Method, argumentHandlers, responseHandler, headers, isAsync);
             return endpoint;
         }
     }
