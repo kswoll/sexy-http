@@ -43,6 +43,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)HttpBodies\MultipartHttpBody.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpBodies\StreamHttpBody.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpBodies\StringHttpBody.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpBodies\StringHttpBodyVisitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpBody.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpHandlers\HttpClientHttpHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpHandlers\WebRequestHttpHandler.cs" />

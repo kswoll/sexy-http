@@ -17,28 +17,28 @@ namespace SexyHttp.HttpHandlers
     {
         public Task<HttpApiResponse> Call(HttpApiRequest request)
         {
-            var client = WebRequest.CreateHttp(request.Url.ToString());
-            client.Method = request.Method.ToString();
+            var webRequest = WebRequest.CreateHttp(request.Url.ToString());
+            webRequest.Method = request.Method.ToString();
             foreach (var header in request.Headers)
             {
-                client.Headers.Add(header.Name, string.Join(",", header.Values));
+                webRequest.Headers.Add(header.Name, string.Join(",", header.Values));
             }
             if (request.Body != null)
             {
-                var requestStream = client.GetRequestStream();
-                var stream = request.Body.Accept(new ContentCreator(client));
+                var requestStream = webRequest.GetRequestStream();
+                var stream = request.Body.Accept(new ContentCreator(webRequest));
                 stream.CopyTo(requestStream);
                 requestStream.Close();
             }
             else if (request.Method != HttpMethod.Get && request.Method != HttpMethod.Head)
             {
-                var requestStream = client.GetRequestStream();
+                var requestStream = webRequest.GetRequestStream();
                 requestStream.Close();
             }
             HttpWebResponse response;
             try
             {
-                response = (HttpWebResponse)client.GetResponse();
+                response = (HttpWebResponse)webRequest.GetResponse();
             }
             catch (WebException e) when (e.Response != null)
             {
