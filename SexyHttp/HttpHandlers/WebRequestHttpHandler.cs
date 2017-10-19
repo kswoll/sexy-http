@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -15,7 +16,7 @@ namespace SexyHttp.HttpHandlers
 {
     public class WebRequestHttpHandler : IHttpHandler
     {
-        public Task<HttpApiResponse> Call(HttpApiRequest request)
+        public Task<HttpHandlerResponse> Call(HttpApiRequest request)
         {
             var webRequest = WebRequest.CreateHttp(request.Url.ToString());
             webRequest.Method = request.Method.ToString();
@@ -23,6 +24,9 @@ namespace SexyHttp.HttpHandlers
             {
                 webRequest.Headers.Add(header.Name, string.Join(",", header.Values));
             }
+
+            var requestWriteTime = new Stopwatch();
+            requestWriteTime.Start();
             if (request.Body != null)
             {
                 var requestStream = webRequest.GetRequestStream();
@@ -35,6 +39,7 @@ namespace SexyHttp.HttpHandlers
                 var requestStream = webRequest.GetRequestStream();
                 requestStream.Close();
             }
+
             HttpWebResponse response;
             try
             {
@@ -45,10 +50,16 @@ namespace SexyHttp.HttpHandlers
                 response = (HttpWebResponse)e.Response;
             }
 
+            requestWriteTime.Stop();
+
             var responseHeaders = new List<HttpHeader>();
             HttpBody responseBody = null;
 
             responseHeaders.AddRange(response.Headers.AllKeys.Select(x => new HttpHeader(x, response.Headers[x].Split(','))));
+
+            var responseReadTime = new Stopwatch();
+            responseReadTime.Start();
+
             var responseStream = response.GetResponseStream();
 
             switch (request.ResponseContentTypeOverride ?? response.ContentType.Split(';')[0])
@@ -77,9 +88,10 @@ namespace SexyHttp.HttpHandlers
             }
 
             responseStream.Close();
+            responseReadTime.Stop();
 
             var result = new HttpApiResponse(response.StatusCode, responseBody, responseHeaders);
-            return Task.FromResult(result);
+            return Task.FromResult(new HttpHandlerResponse(result, requestWriteTime.Elapsed, responseReadTime.Elapsed));
         }
 
         private class ContentCreator : IHttpBodyVisitor<Stream>

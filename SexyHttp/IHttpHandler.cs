@@ -4,6 +4,6 @@ namespace SexyHttp
 {
     public interface IHttpHandler
     {
-        Task<HttpApiResponse> Call(HttpApiRequest request);
+        Task<HttpHandlerResponse> Call(HttpApiRequest request);
     }
 }

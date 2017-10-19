@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SexyHttp.HttpBodies;
+using System.Diagnostics;
 
 namespace SexyHttp.HttpHandlers
 {
@@ -23,14 +24,23 @@ namespace SexyHttp.HttpHandlers
             });
         }
 
-        public async Task<HttpApiResponse> Call(HttpApiRequest request)
+        public async Task<HttpHandlerResponse> Call(HttpApiRequest request)
         {
             using (var client = new HttpClient(handler()))
             {
                 try
                 {
+                    var requestWriteTime = new Stopwatch();
+                    requestWriteTime.Start();
+
                     var response = await client.SendAsync(CreateRequestMessage(request));
+                    requestWriteTime.Stop();
+
+                    var responseReadTime = new Stopwatch();
+                    responseReadTime.Start();
                     var result = await CreateResponse(request, response);
+                    responseReadTime.Stop()
+
                     return result;
                 }
                 catch (Exception e)
