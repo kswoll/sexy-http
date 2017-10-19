@@ -8,7 +8,7 @@ namespace SexyHttp.Tests
     {
         public List<HttpHeader> Headers { get; } = new List<HttpHeader>();
 
-        public async Task<HttpApiResponse> InstrumentCall(HttpApiEndpoint endpoint, HttpApiRequest request, Func<HttpApiRequest, Task<HttpApiResponse>> inner)
+        public async Task<HttpHandlerResponse> InstrumentCall(HttpApiEndpoint endpoint, HttpApiRequest request, Func<HttpApiRequest, Task<HttpHandlerResponse>> inner)
         {
             request.Headers.AddRange(Headers);
             return await inner(request);

@@ -75,7 +75,7 @@ namespace SexyHttp.Tests
             [Get]
             public abstract Task<string> InstrumentedRequest();
 
-            public async Task<HttpApiResponse> InstrumentCall(HttpApiEndpoint endpoint, HttpApiRequest request, Func<HttpApiRequest, Task<HttpApiResponse>> inner)
+            public async Task<HttpHandlerResponse> InstrumentCall(HttpApiEndpoint endpoint, HttpApiRequest request, Func<HttpApiRequest, Task<HttpHandlerResponse>> inner)
             {
                 request.Headers.Add(new HttpHeader("Test", "Value"));
                 return await inner(request);
@@ -87,10 +87,10 @@ namespace SexyHttp.Tests
             [Get]
             public abstract Task<string> InstrumentedResponse();
 
-            public async Task<HttpApiResponse> InstrumentCall(HttpApiEndpoint endpoint, HttpApiRequest request, Func<HttpApiRequest, Task<HttpApiResponse>> inner)
+            public async Task<HttpHandlerResponse> InstrumentCall(HttpApiEndpoint endpoint, HttpApiRequest request, Func<HttpApiRequest, Task<HttpHandlerResponse>> inner)
             {
                 var response = await inner(request);
-                response.Body = new JsonHttpBody("foo");
+                response.ApiResponse.Body = new JsonHttpBody("foo");
                 return response;
             }
         }

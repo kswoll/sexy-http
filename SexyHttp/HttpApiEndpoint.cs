@@ -58,16 +58,16 @@ namespace SexyHttp
 
             ApplyArguments(async (handler, name, argument) => await handler.ApplyArgument(request, name, argument));
 
-            async Task<HttpApiResponse> MakeCall(HttpApiRequest apiRequest) => await httpHandler.Call(apiRequest);
+            async Task<HttpHandlerResponse> MakeCall(HttpApiRequest apiRequest) => await httpHandler.Call(apiRequest);
 
-            HttpApiResponse response;
+            HttpHandlerResponse response;
             if (apiInstrumenter != null)
                 response = await apiInstrumenter(this, request, MakeCall);
             else
                 response = await MakeCall(request);
 
-            ApplyArguments(async (handler, name, argument) => await handler.ApplyArgument(response, name, argument));
-            return await ResponseHandler.HandleResponse(request, response);
+            ApplyArguments(async (handler, name, argument) => await handler.ApplyArgument(response.ApiResponse, name, argument));
+            return await ResponseHandler.HandleResponse(request, response.ApiResponse);
         }
     }
 }

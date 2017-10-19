@@ -39,9 +39,9 @@ namespace SexyHttp.HttpHandlers
                     var responseReadTime = new Stopwatch();
                     responseReadTime.Start();
                     var result = await CreateResponse(request, response);
-                    responseReadTime.Stop()
+                    responseReadTime.Stop();
 
-                    return result;
+                    return new HttpHandlerResponse(result, requestWriteTime.Elapsed, responseReadTime.Elapsed);
                 }
                 catch (Exception e)
                 {

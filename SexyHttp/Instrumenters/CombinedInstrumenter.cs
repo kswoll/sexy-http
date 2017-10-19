@@ -13,7 +13,7 @@ namespace SexyHttp.Instrumenters
             this.instrumenters = instrumenters;
         }
 
-        public async Task<HttpApiResponse> InstrumentCall(HttpApiEndpoint endpoint, HttpApiRequest request, Func<HttpApiRequest, Task<HttpApiResponse>> inner)
+        public async Task<HttpHandlerResponse> InstrumentCall(HttpApiEndpoint endpoint, HttpApiRequest request, Func<HttpApiRequest, Task<HttpHandlerResponse>> inner)
         {
             if (instrumenters.Length == 0)
                 return await inner(request);

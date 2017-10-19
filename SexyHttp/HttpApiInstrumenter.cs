@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace SexyHttp
@@ -15,5 +14,5 @@ namespace SexyHttp
     /// response which you should return from this callback, possibly after manipulating it in
     /// some way.</param>
     /// <returns>The response to return to the caller.</returns>
-    public delegate Task<HttpApiResponse> HttpApiInstrumenter(HttpApiEndpoint endpoint, HttpApiRequest request, Func<HttpApiRequest, Task<HttpApiResponse>> inner);
+    public delegate Task<HttpHandlerResponse> HttpApiInstrumenter(HttpApiEndpoint endpoint, HttpApiRequest request, Func<HttpApiRequest, Task<HttpHandlerResponse>> inner);
 }
