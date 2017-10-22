@@ -9,12 +9,11 @@ namespace SexyHttp.Urls
         public string BaseUrl { get; set; }
         public HttpUrlPath Path { get; set; }
         public HttpUrlQuery Query { get; set; }
-
-        private readonly HttpUrlDescriptor descriptor;
+        public HttpUrlDescriptor Descriptor { get; set; }
 
         public HttpUrl(HttpUrlDescriptor descriptor, string baseUrl)
         {
-            this.descriptor = descriptor;
+            Descriptor = descriptor;
             BaseUrl = baseUrl;
             Path = new HttpUrlPath();
             Query = new HttpUrlQuery();
@@ -25,11 +24,11 @@ namespace SexyHttp.Urls
             var builder = new StringBuilder();
             builder.Append(BaseUrl);
 
-            if (descriptor.PathParts.Any())
+            if (Descriptor.PathParts.Any())
             {
                 builder.Append('/');
 
-                foreach (var part in descriptor.PathParts)
+                foreach (var part in Descriptor.PathParts)
                 {
                     var literal = part as LiteralHttpUrlPart;
                     if (literal != null)
@@ -39,7 +38,7 @@ namespace SexyHttp.Urls
                 }
             }
 
-            if (descriptor.QueryParts.Any())
+            if (Descriptor.QueryParts.Any())
             {
                 var separator = '?';
                 Action<string, string> appendQuery = (key, value) =>
@@ -53,7 +52,7 @@ namespace SexyHttp.Urls
                         separator = '&';
                     }
                 };
-                foreach (var item in descriptor.QueryParts)
+                foreach (var item in Descriptor.QueryParts)
                 {
                     var part = item.Value;
                     var literal = part as LiteralHttpUrlPart;
