@@ -10,11 +10,18 @@ namespace SexyHttp.Urls
         {
             get
             {
-                string[] result;
-                variables.TryGetValue(key, out result);
+                variables.TryGetValue(key, out var result);
                 return result;
             }
-            set { variables[key] = value; }
+            set => variables[key] = value;
+        }
+
+        public void CopyFrom(HttpUrlQuery source)
+        {
+            foreach (var item in source.variables)
+            {
+                variables[item.Key] = item.Value;
+            }
         }
     }
 }

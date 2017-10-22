@@ -19,6 +19,14 @@ namespace SexyHttp.Urls
             Query = new HttpUrlQuery();
         }
 
+        public HttpUrl Clone()
+        {
+            var result = new HttpUrl(Descriptor, BaseUrl);
+            result.Query.CopyFrom(Query);
+            result.Path.CopyFrom(Path);
+            return result;
+        }
+
         public override string ToString()
         {
             var builder = new StringBuilder();
