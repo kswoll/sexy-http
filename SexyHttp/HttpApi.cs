@@ -213,6 +213,7 @@ namespace SexyHttp
                 responseHandler = new HttpBodyResponseHandler();
             else
                 responseHandler = new ContentTypeBasedResponseHandler();
+
             responseHandler.TypeConverter = responseTypeConverter;
             responseHandler.ResponseType = returnType;
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace SexyHttp
+﻿namespace SexyHttp
 {
     /// <summary>
     /// A callback you can provide when creating your API client.  It allows you to modify the request
@@ -9,10 +6,13 @@ namespace SexyHttp
     /// </summary>
     /// <param name="endpoint">The endpoint representing the method on your interface. Contains the MethodInfo
     /// used to generate the endpoint definition. Useful if you want to interrogate its attributes, etc.</param>
-    /// <param name="request">The request taht will be sent to the server</param>
-    /// <param name="inner">Call this to actually make the call to the server.  It will return the
-    /// response which you should return from this callback, possibly after manipulating it in
-    /// some way.</param>
-    /// <returns>The response to return to the caller.</returns>
-    public delegate Task<HttpHandlerResponse> HttpApiInstrumenter(HttpApiEndpoint endpoint, HttpApiRequest request, Func<HttpApiRequest, Task<HttpHandlerResponse>> inner);
+    /// <param name="arguments">The arguments passed into the method. You can use this to both obtain the values
+    /// passed in by the user in addition to mutating them before generating the HttpApiRequest.</param>
+    /// <param name="inner">The inner instrumentation.  You should delegate calls to this object to get the
+    /// request, response, and result, respectively, upon which you can add your modifications.</param>
+    /// <returns>The new instrumentation that (selectively) overrides the default instrumentation.</returns>
+    public delegate IHttpApiInstrumentation HttpApiInstrumenter(
+        HttpApiEndpoint endpoint,
+        HttpApiArguments arguments,
+        IHttpApiInstrumentation inner);
 }

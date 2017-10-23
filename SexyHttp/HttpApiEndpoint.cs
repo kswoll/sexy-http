@@ -39,10 +39,13 @@ namespace SexyHttp
             Headers = headers.ToList();
         }
 
-        public async Task<object> Call(IHttpHandler httpHandler, string baseUrl, Dictionary<string, object> arguments, HttpApiInstrumenter apiInstrumenter = null)
+        public Task<object> Call(IHttpHandler httpHandler, string baseUrl, Dictionary<string, object> arguments, HttpApiInstrumenter apiInstrumenter = null)
         {
-            var request = new HttpApiRequest { Url = Url.CreateUrl(baseUrl), Method = HttpMethod, Headers = Headers.ToList() };
+            return Call(httpHandler, baseUrl, new HttpApiArguments(arguments), apiInstrumenter);
+        }
 
+        public async Task<object> Call(IHttpHandler httpHandler, string baseUrl, HttpApiArguments arguments, HttpApiInstrumenter apiInstrumenter = null)
+        {
             async void ApplyArguments(Func<IHttpArgumentHandler, string, object, Task> applier)
             {
                 foreach (var item in ArgumentHandlers)
@@ -56,18 +59,68 @@ namespace SexyHttp
                 }
             }
 
-            ApplyArguments(async (handler, name, argument) => await handler.ApplyArgument(request, name, argument));
+            HttpApiRequest GetRequest()
+            {
+                var request = new HttpApiRequest { Url = Url.CreateUrl(baseUrl), Method = HttpMethod, Headers = Headers.ToList() };
 
-            async Task<HttpHandlerResponse> MakeCall(HttpApiRequest apiRequest) => await httpHandler.Call(apiRequest);
+                ApplyArguments(async (handler, name, argument) => await handler.ApplyArgument(request, name, argument));
 
-            HttpHandlerResponse response;
+                return request;
+            }
+
+            async Task<HttpHandlerResponse> GetResponse(HttpApiRequest request)
+            {
+                return await httpHandler.Call(request);
+            }
+
+            async Task<object> GetResult(HttpApiRequest request, HttpHandlerResponse response)
+            {
+                ApplyArguments(async (handler, name, argument) => await handler.ApplyArgument(response.ApiResponse, name, argument));
+                return await ResponseHandler.HandleResponse(request, response.ApiResponse);
+            }
+
+            IHttpApiInstrumentation instrumentation = new DefaultHttpApiInstrumentation(GetRequest, GetResponse, GetResult);
             if (apiInstrumenter != null)
-                response = await apiInstrumenter(this, request, MakeCall);
-            else
-                response = await MakeCall(request);
+                instrumentation = apiInstrumenter(this, arguments, instrumentation);
 
-            ApplyArguments(async (handler, name, argument) => await handler.ApplyArgument(response.ApiResponse, name, argument));
-            return await ResponseHandler.HandleResponse(request, response.ApiResponse);
+            return await MakeCall(instrumentation);
+        }
+
+        private async Task<object> MakeCall(IHttpApiInstrumentation instrumentation)
+        {
+            var request = instrumentation.GetRequest();
+            var response = await instrumentation.GetResponse(request);
+            var result = await instrumentation.GetResult(request, response);
+            return result;
+        }
+
+        private class DefaultHttpApiInstrumentation : IHttpApiInstrumentation
+        {
+            private readonly Func<HttpApiRequest> getRequest;
+            private readonly Func<HttpApiRequest, Task<HttpHandlerResponse>> getResponse;
+            private readonly Func<HttpApiRequest, HttpHandlerResponse, Task<object>> getResult;
+
+            public DefaultHttpApiInstrumentation(Func<HttpApiRequest> getRequest, Func<HttpApiRequest, Task<HttpHandlerResponse>> getResponse, Func<HttpApiRequest, HttpHandlerResponse, Task<object>> getResult)
+            {
+                this.getRequest = getRequest;
+                this.getResponse = getResponse;
+                this.getResult = getResult;
+            }
+
+            public HttpApiRequest GetRequest()
+            {
+                return getRequest();
+            }
+
+            public Task<HttpHandlerResponse> GetResponse(HttpApiRequest request)
+            {
+                return getResponse(request);
+            }
+
+            public Task<object> GetResult(HttpApiRequest request, HttpHandlerResponse response)
+            {
+                return getResult(request, response);
+            }
         }
     }
 }

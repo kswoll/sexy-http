@@ -28,8 +28,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)GetAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HeaderAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpApi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpApiArguments.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpApiClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpApiEndpoint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpApiInstrumentation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpApiRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpApiResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpArgumentHandler.cs" />
@@ -54,9 +56,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)HttpMethodException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpPath.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpResponseHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IHttpApiInstrumentation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IHttpApiInstrumenter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpHandler.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IHttpApiInstrumenter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpMethodAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpResponseHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MultipartAttribute.cs" />

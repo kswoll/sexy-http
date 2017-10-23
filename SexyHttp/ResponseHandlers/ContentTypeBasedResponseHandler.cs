@@ -22,6 +22,7 @@ namespace SexyHttp.ResponseHandlers
         {
             var contentType = response.Headers.SingleOrDefault(x => x.Name == "Content-Type")?.Values?.Single();
             contentType = contentType ?? "application/json";
+
             switch (contentType)
             {
                 case "application/x-www-form-urlencoded":
@@ -35,7 +36,7 @@ namespace SexyHttp.ResponseHandlers
 
         public override ITypeConverter TypeConverter
         {
-            get { return base.TypeConverter; }
+            get => base.TypeConverter;
             set
             {
                 base.TypeConverter = value;
@@ -47,7 +48,7 @@ namespace SexyHttp.ResponseHandlers
 
         public override Type ResponseType
         {
-            get { return base.ResponseType; }
+            get => base.ResponseType;
             set
             {
                 base.ResponseType = value;

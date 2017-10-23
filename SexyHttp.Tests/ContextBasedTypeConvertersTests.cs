@@ -34,7 +34,7 @@ namespace SexyHttp.Tests
                 if (convertTo == typeof(string))
                 {
                     result = "bar";
-                    return true;                    
+                    return true;
                 }
                 result = null;
                 return false;

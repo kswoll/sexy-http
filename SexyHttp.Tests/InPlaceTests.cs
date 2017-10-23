@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using SexyHttp.HttpBodies;
@@ -75,10 +74,14 @@ namespace SexyHttp.Tests
             [Get]
             public abstract Task<string> InstrumentedRequest();
 
-            public async Task<HttpHandlerResponse> InstrumentCall(HttpApiEndpoint endpoint, HttpApiRequest request, Func<HttpApiRequest, Task<HttpHandlerResponse>> inner)
+            public IHttpApiInstrumentation InstrumentCall(HttpApiEndpoint endpoint, HttpApiArguments arguments, IHttpApiInstrumentation inner)
             {
-                request.Headers.Add(new HttpHeader("Test", "Value"));
-                return await inner(request);
+                return new HttpApiInstrumentation(inner, () =>
+                {
+                    var request = inner.GetRequest();
+                    request.Headers.Add(new HttpHeader("Test", "Value"));
+                    return request;
+                });
             }
         }
 
@@ -87,11 +90,14 @@ namespace SexyHttp.Tests
             [Get]
             public abstract Task<string> InstrumentedResponse();
 
-            public async Task<HttpHandlerResponse> InstrumentCall(HttpApiEndpoint endpoint, HttpApiRequest request, Func<HttpApiRequest, Task<HttpHandlerResponse>> inner)
+            public IHttpApiInstrumentation InstrumentCall(HttpApiEndpoint endpoint, HttpApiArguments arguments, IHttpApiInstrumentation inner)
             {
-                var response = await inner(request);
-                response.ApiResponse.Body = new JsonHttpBody("foo");
-                return response;
+                return new HttpApiInstrumentation(inner, getResponse: async request =>
+                {
+                    var response = await inner.GetResponse(request);
+                    response.ApiResponse.Body = new JsonHttpBody("foo");
+                    return response;
+                });
             }
         }
     }

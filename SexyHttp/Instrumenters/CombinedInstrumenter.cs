@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
 namespace SexyHttp.Instrumenters
 {
@@ -13,18 +11,12 @@ namespace SexyHttp.Instrumenters
             this.instrumenters = instrumenters;
         }
 
-        public async Task<HttpHandlerResponse> InstrumentCall(HttpApiEndpoint endpoint, HttpApiRequest request, Func<HttpApiRequest, Task<HttpHandlerResponse>> inner)
+        public IHttpApiInstrumentation InstrumentCall(HttpApiEndpoint endpoint, HttpApiArguments arguments, IHttpApiInstrumentation inner)
         {
-            if (instrumenters.Length == 0)
-                return await inner(request);
-
-            var current = inner;
-            foreach (var instrumenter in instrumenters.Skip(1).Reverse())
-            {
-                current = apiRequest => instrumenter(endpoint, apiRequest, current);
-            }
-
-            return await instrumenters.First()(endpoint, request, current);
+            var instrumentation = inner;
+            foreach (var instrumenter in instrumenters.Reverse())
+                instrumentation = instrumenter(endpoint, arguments, instrumentation);
+            return instrumentation;
         }
     }
 }

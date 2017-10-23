@@ -99,15 +99,12 @@ namespace SexyHttp
 
                 if (typeof(IHttpApiInstrumenter).IsAssignableFrom(typeof(T)))
                 {
-                    Task<HttpHandlerResponse> ClassInstrumenter(HttpApiEndpoint endpoint, HttpApiRequest request, Func<HttpApiRequest, Task<HttpHandlerResponse>> inner)
-                    {
-                        return ((IHttpApiInstrumenter)proxy).InstrumentCall(endpoint, request, inner);
-                    }
+                    HttpApiInstrumenter classInstrumenter = ((IHttpApiInstrumenter)proxy).InstrumentCall;
 
                     if (apiInstrumenter == null)
-                        apiInstrumenter = ClassInstrumenter;
+                        apiInstrumenter = classInstrumenter;
                     else
-                        apiInstrumenter = new CombinedInstrumenter(apiInstrumenter, ClassInstrumenter).InstrumentCall;
+                        apiInstrumenter = new CombinedInstrumenter(apiInstrumenter, classInstrumenter).InstrumentCall;
                 }
             }
 
@@ -116,10 +113,11 @@ namespace SexyHttp
                 if (!api.Endpoints.TryGetValue(invocation.Method, out var endpoint))
                     throw new Exception($"Endpoint not found for: \"{invocation.Method.DeclaringType.FullName}.{invocation.Method.Name}\".  Perhaps you forgot to decorate your method with [Get], [Post], etc.");
 
-                var arguments = invocation.Method
+                var arguments = new HttpApiArguments(invocation.Method
                     .GetParameters()
                     .Select((x, i) => new { x.Name, Value = invocation.Arguments[i] })
-                    .ToDictionary(x => x.Name, x => x.Value);
+                    .ToDictionary(x => x.Name, x => x.Value));
+
                 if (proxy is Api)
                 {
                     return ((Api)(object)proxy).Call(endpoint, httpHandler, baseUrl, arguments, apiInstrumenter);
