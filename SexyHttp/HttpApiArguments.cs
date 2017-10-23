@@ -26,5 +26,12 @@ namespace SexyHttp
         {
             return storage.TryGetValue(name, out value);
         }
+
+        public object Take(string name)
+        {
+            var result = storage[name];
+            storage.Remove(name);
+            return result;
+        }
     }
 }
