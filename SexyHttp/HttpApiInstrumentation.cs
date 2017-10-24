@@ -21,22 +21,22 @@ namespace SexyHttp
             this.getResult = getResult ?? inner.GetResult;
         }
 
-        public IEnumerable<HttpApiRequest> GetRequests()
+        public virtual IEnumerable<HttpApiRequest> GetRequests()
         {
             return getRequests();
         }
 
-        public Task<HttpHandlerResponse> GetResponse(HttpApiRequest request)
+        public virtual Task<HttpHandlerResponse> GetResponse(HttpApiRequest request)
         {
             return getResponse(request);
         }
 
-        public Task<object> GetResult(HttpApiRequest request, HttpHandlerResponse response)
+        public virtual Task<object> GetResult(HttpApiRequest request, HttpHandlerResponse response)
         {
             return getResult(request, response);
         }
 
-        public object InterleaveResult(HttpApiRequest request, HttpHandlerResponse response, object lastResult, object result)
+        public virtual object AggregateResult(HttpApiRequest request, HttpHandlerResponse response, object lastResult, object result)
         {
             return result;
         }

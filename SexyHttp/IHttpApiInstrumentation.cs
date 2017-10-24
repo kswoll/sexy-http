@@ -6,7 +6,10 @@ namespace SexyHttp
     public interface IHttpApiInstrumentation
     {
         /// <summary>
-        /// Produces an instance of HttpApiRequest based on the values of the arguments array of the original instrumentation.
+        /// Produces an instance of HttpApiRequest based on the values of the arguments array of the
+        /// original call. Usually this will return one request, but you can choose to return multiple
+        /// requests for a single call.  In that case, multiple separate calls will be made, and you
+        /// can put them back together into a single result via the AggregateResult method.
         /// </summary>
         IEnumerable<HttpApiRequest> GetRequests();
 
@@ -20,6 +23,10 @@ namespace SexyHttp
         /// </summary>
         Task<object> GetResult(HttpApiRequest request, HttpHandlerResponse response);
 
-        object InterleaveResult(HttpApiRequest request, HttpHandlerResponse response, object lastResult, object result);
+        /// <summary>
+        /// Useful when GetRequests() returns more than one request, so that you can aggregate
+        /// multiple calls to an API and combine them back into a single result.
+        /// </summary>
+        object AggregateResult(HttpApiRequest request, HttpHandlerResponse response, object lastResult, object result);
     }
 }

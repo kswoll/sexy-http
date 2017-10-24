@@ -128,7 +128,7 @@ namespace SexyHttp
                 return getResult(request, response);
             }
 
-            public object InterleaveResult(HttpApiRequest request, HttpHandlerResponse response, object lastResult, object result)
+            public object AggregateResult(HttpApiRequest request, HttpHandlerResponse response, object lastResult, object result)
             {
                 return result;
             }
