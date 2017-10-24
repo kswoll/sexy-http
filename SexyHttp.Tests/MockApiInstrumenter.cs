@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace SexyHttp.Tests
 {
@@ -10,9 +11,9 @@ namespace SexyHttp.Tests
         {
             return new HttpApiInstrumentation(inner, () =>
             {
-                var request = inner.GetRequest();
+                var request = inner.GetRequests().Single();
                 request.Headers.AddRange(Headers);
-                return request;
+                return new[] { request };
             });
         }
     }

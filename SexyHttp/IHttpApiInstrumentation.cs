@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SexyHttp
 {
@@ -7,7 +8,7 @@ namespace SexyHttp
         /// <summary>
         /// Produces an instance of HttpApiRequest based on the values of the arguments array of the original instrumentation.
         /// </summary>
-        HttpApiRequest GetRequest();
+        IEnumerable<HttpApiRequest> GetRequests();
 
         /// <summary>
         /// Produces a response based on the (possibly instrumented) request.
@@ -18,5 +19,7 @@ namespace SexyHttp
         /// Produces the final return value for the original method of the API.
         /// </summary>
         Task<object> GetResult(HttpApiRequest request, HttpHandlerResponse response);
+
+        object InterleaveResult(HttpApiRequest request, HttpHandlerResponse response, object lastResult, object result);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using SexyHttp.HttpBodies;
@@ -78,9 +79,9 @@ namespace SexyHttp.Tests
             {
                 return new HttpApiInstrumentation(inner, () =>
                 {
-                    var request = inner.GetRequest();
+                    var request = inner.GetRequests().Single();
                     request.Headers.Add(new HttpHeader("Test", "Value"));
-                    return request;
+                    return new[] { request };
                 });
             }
         }

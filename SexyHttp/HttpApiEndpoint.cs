@@ -88,9 +88,15 @@ namespace SexyHttp
 
         private async Task<object> MakeCall(IHttpApiInstrumentation instrumentation)
         {
-            var request = instrumentation.GetRequest();
-            var response = await instrumentation.GetResponse(request);
-            var result = await instrumentation.GetResult(request, response);
+            var requests = instrumentation.GetRequests();
+            object result = null;
+            foreach (var request in requests)
+            {
+                var response = await instrumentation.GetResponse(request);
+                var lastResult = result;
+                result = await instrumentation.GetResult(request, response);
+                result = instrumentation.InterleaveResult(request, response, lastResult, result);
+            }
             return result;
         }
 
@@ -107,9 +113,9 @@ namespace SexyHttp
                 this.getResult = getResult;
             }
 
-            public HttpApiRequest GetRequest()
+            public IEnumerable<HttpApiRequest> GetRequests()
             {
-                return getRequest();
+                yield return getRequest();
             }
 
             public Task<HttpHandlerResponse> GetResponse(HttpApiRequest request)
@@ -120,6 +126,11 @@ namespace SexyHttp
             public Task<object> GetResult(HttpApiRequest request, HttpHandlerResponse response)
             {
                 return getResult(request, response);
+            }
+
+            public object InterleaveResult(HttpApiRequest request, HttpHandlerResponse response, object lastResult, object result)
+            {
+                return result;
             }
         }
     }
