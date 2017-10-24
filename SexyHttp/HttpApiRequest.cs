@@ -13,6 +13,12 @@ namespace SexyHttp
         public HttpBody Body { get; set; }
         public string ResponseContentTypeOverride { get; set; }
 
+        /// <summary>
+        /// You may use this dictionary to store custom values useful when instrumenting an
+        /// API call and you need to track state around a particular request.
+        /// </summary>
+        public Dictionary<object, object> Items { get; set; } = new Dictionary<object, object>();
+
         public HttpApiRequest Clone()
         {
             var result = new HttpApiRequest
@@ -20,6 +26,7 @@ namespace SexyHttp
                 Method = Method,
                 Url = Url.Clone(),
                 Headers = Headers.ToList(),
+                Items = Items.ToDictionary(x => x.Key, x => x.Value),
                 Body = Body,
                 ResponseContentTypeOverride = ResponseContentTypeOverride
             };
