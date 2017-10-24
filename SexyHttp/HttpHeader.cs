@@ -6,7 +6,7 @@ namespace SexyHttp
     public class HttpHeader
     {
         public string Name { get; }
-        public List<string> Values { get; set; }
+        public IReadOnlyList<string> Values { get; }
 
         public HttpHeader(string name, params string[] values)
         {
