@@ -95,7 +95,7 @@ namespace SexyHttp
                 var response = await instrumentation.GetResponse(request);
                 var lastResult = result;
                 result = await instrumentation.GetResult(request, response);
-                result = instrumentation.InterleaveResult(request, response, lastResult, result);
+                result = instrumentation.AggregateResult(request, response, lastResult, result);
             }
             return result;
         }
