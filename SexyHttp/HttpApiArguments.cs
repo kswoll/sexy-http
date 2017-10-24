@@ -14,17 +14,24 @@ namespace SexyHttp
         public object this[string name]
         {
             get => storage[name];
-            set
-            {
-                if (!storage.ContainsKey(name))
-                    throw new KeyNotFoundException($"Key '{name}' is not a valid argument name for this API endpoint.");
-                storage[name] = value;
-            }
+            set => storage[name] = value;
+        }
+
+        public void Remove(string name)
+        {
+            storage.Remove(name);
         }
 
         public bool TryGetValue(string name, out object value)
         {
             return storage.TryGetValue(name, out value);
+        }
+
+        public object Take(string name)
+        {
+            var result = storage[name];
+            storage.Remove(name);
+            return result;
         }
     }
 }
