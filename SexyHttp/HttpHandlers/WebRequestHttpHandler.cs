@@ -22,7 +22,15 @@ namespace SexyHttp.HttpHandlers
             webRequest.Method = request.Method.ToString();
             foreach (var header in request.Headers)
             {
-                webRequest.Headers.Add(header.Name, string.Join(",", header.Values));
+                switch (header.Name)
+                {
+                    case "User-Agent":
+                        webRequest.UserAgent = header.Values.Single();
+                        break;
+                    default:
+                        webRequest.Headers.Add(header.Name, string.Join(",", header.Values));
+                        break;
+                }
             }
 
             var requestWriteTime = new Stopwatch();
