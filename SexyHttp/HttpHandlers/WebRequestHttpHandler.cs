@@ -27,6 +27,9 @@ namespace SexyHttp.HttpHandlers
                     case "User-Agent":
                         webRequest.UserAgent = header.Values.Single();
                         break;
+                    case "Accept":
+                        webRequest.Accept = header.Values.Single();
+                        break;
                     default:
                         webRequest.Headers.Add(header.Name, string.Join(",", header.Values));
                         break;

@@ -13,5 +13,10 @@ namespace SexyHttp
             Name = name;
             Values = values.ToList();
         }
+
+        public override string ToString()
+        {
+            return $"{Name}: {string.Join(", ", Values)}";
+        }
     }
 }
