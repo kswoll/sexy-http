@@ -37,9 +37,8 @@
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SexyProxy, Version=1.0.59.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SexyProxy.1.0.59\lib\net45\SexyProxy.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SexyProxy, Version=2.0.73.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SexyProxy.2.0.73\lib\net45\SexyProxy.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
