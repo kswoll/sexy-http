@@ -85,6 +85,7 @@ namespace SexyHttp.HttpHandlers
 //                    body = FormParser.ParseForm(stream);
 //                    break;
                 case "text/plain":
+                case "":
                     var text = Encoding.UTF8.GetString(responseStream.ReadToEnd());
                     responseBody = new StringHttpBody(text);
                     break;
@@ -93,8 +94,6 @@ namespace SexyHttp.HttpHandlers
                     responseStream.CopyTo(stream);
                     stream.Position = 0;
                     responseBody = new StreamHttpBody(stream);
-                    break;
-                case null:
                     break;
             }
 
