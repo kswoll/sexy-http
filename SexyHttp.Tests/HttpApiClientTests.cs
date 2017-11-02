@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using SexyProxy;
 
@@ -14,6 +16,63 @@ namespace SexyHttp.Tests
             var client = HttpApiClient<IApi>.Create("http://localhost", httpHandler: httpHandler);
             var result = await client.GetString("foo");
             Assert.AreEqual("foo", result);
+        }
+
+        [Test]
+        public async void ExceptionPropagated()
+        {
+            var httpHandler = new MockHttpHandler(x => new HttpApiResponse(body: x.Body));
+            var client = HttpApiClient<IApi>.Create("http://localhost", httpHandler: httpHandler, apiInstrumenter: (endpoint, arguments, inner) => new ExceptionOnGetResponseInstrumentation(inner));
+            try
+            {
+                await client.GetString("foo");
+                Assert.Fail();
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual("Fail", ex.Message);
+            }
+        }
+
+        [Test]
+        public async void ExceptionPropagatedAsync()
+        {
+            var httpHandler = new MockHttpHandler(x => new HttpApiResponse(body: x.Body));
+            var client = HttpApiClient<IApi>.Create("http://localhost", httpHandler: httpHandler, apiInstrumenter: (endpoint, arguments, inner) => new ExceptionOnGetResponseInstrumentationAsync(inner));
+            try
+            {
+                await client.GetString("foo");
+                Assert.Fail();
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual("Fail", ex.Message);
+            }
+        }
+
+        class ExceptionOnGetResponseInstrumentation : HttpApiInstrumentation
+        {
+            public ExceptionOnGetResponseInstrumentation(IHttpApiInstrumentation inner, Func<IEnumerable<HttpApiRequest>> getRequests = null, Func<HttpApiRequest, Task<HttpHandlerResponse>> getResponse = null, Func<HttpApiRequest, HttpHandlerResponse, Task<object>> getResult = null) : base(inner, getRequests, getResponse, getResult)
+            {
+            }
+
+            public override Task<HttpHandlerResponse> GetResponse(HttpApiRequest request)
+            {
+                throw new Exception("Fail");
+            }
+        }
+
+        class ExceptionOnGetResponseInstrumentationAsync : HttpApiInstrumentation
+        {
+            public ExceptionOnGetResponseInstrumentationAsync(IHttpApiInstrumentation inner, Func<IEnumerable<HttpApiRequest>> getRequests = null, Func<HttpApiRequest, Task<HttpHandlerResponse>> getResponse = null, Func<HttpApiRequest, HttpHandlerResponse, Task<object>> getResult = null) : base(inner, getRequests, getResponse, getResult)
+            {
+            }
+
+            public override async Task<HttpHandlerResponse> GetResponse(HttpApiRequest request)
+            {
+                await Task.Delay(1);
+                throw new Exception("Fail");
+            }
         }
 
         [Proxy]
