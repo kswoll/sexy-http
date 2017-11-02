@@ -212,7 +212,7 @@ namespace SexyHttp
             else if (returnType == typeof(HttpBody))
                 responseHandler = new HttpBodyResponseHandler();
             else
-                responseHandler = new ContentTypeBasedResponseHandler();
+                responseHandler = new BodyBasedResponseHandler();
 
             responseHandler.TypeConverter = responseTypeConverter;
             responseHandler.ResponseType = returnType;

@@ -5,13 +5,13 @@ using SexyHttp.TypeConverters;
 
 namespace SexyHttp.ResponseHandlers
 {
-    public class ContentTypeBasedResponseHandler : HttpResponseHandler
+    public class BodyBasedResponseHandler : HttpResponseHandler
     {
         private readonly JsonResponseHandler jsonHandler;
         private readonly FormResponseHandler formHandler;
         private readonly StringResponseHandler stringHandler;
 
-        public ContentTypeBasedResponseHandler()
+        public BodyBasedResponseHandler()
         {
             jsonHandler = new JsonResponseHandler();
             formHandler = new FormResponseHandler();
