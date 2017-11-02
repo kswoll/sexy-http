@@ -56,7 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiCallOverrideTests.cs" />
-    <Compile Include="ContextBasedTypeConvertersTests.cs" />
+    <Compile Include="BodyBasedTypeConvertersTests.cs" />
     <Compile Include="CrudApiTests.cs" />
     <Compile Include="EmitBasedClientTests.cs" />
     <Compile Include="EmitCrudApiTests.cs" />

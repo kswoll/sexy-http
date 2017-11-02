@@ -28,6 +28,8 @@ namespace SexyHttp.TypeConverters
             registry.Register<Array, Array>(new ArrayTypeConverter());
             registry.Register<Enum, string>(LambdaTypeConverter.Create(x => EnumMemberCache.GetEnumMemberName((Enum)x)));
             registry.Register<string, Enum>(LambdaTypeConverter.Create((x, type) => EnumMemberCache.GetEnumMemberByName(type, (string)x)));
+            registry.Register<bool, string>(LambdaTypeConverter.Create(x => (bool)x ? "true" : "false"));
+            registry.Register<string, bool>(LambdaTypeConverter.Create(x => bool.Parse((string)x)));
 
             return result;
         }

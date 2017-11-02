@@ -8,7 +8,7 @@ using SexyHttp.TypeConverters;
 namespace SexyHttp.Tests
 {
     [TestFixture]
-    public class ContextBasedTypeConvertersTests
+    public class BodyBasedTypeConvertersTests
     {
         [Test]
         public async void Query()
