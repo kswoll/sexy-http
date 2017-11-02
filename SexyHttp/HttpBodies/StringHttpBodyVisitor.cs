@@ -7,7 +7,7 @@ namespace SexyHttp.HttpBodies
     {
         public static string GetString(HttpBody body)
         {
-            return body.Accept(new StringHttpBodyVisitor());
+            return body?.Accept(new StringHttpBodyVisitor());
         }
 
         public string VisitJsonBody(JsonHttpBody body)

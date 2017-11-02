@@ -30,7 +30,14 @@ namespace SexyHttp.ResponseHandlers
                 case "text/plain":
                     return stringHandler.HandleResponse(request, response);
                 default:
-                    return jsonHandler.HandleResponse(request, response);
+                    if (response.Body != null)
+                    {
+                        return jsonHandler.HandleResponse(request, response);
+                    }
+                    else
+                    {
+                        return Task.FromResult((object)null);
+                    }
             }
         }
 

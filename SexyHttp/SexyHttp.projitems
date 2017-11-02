@@ -95,6 +95,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\TypeConverterAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\TypeConverterExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverters\TypeConverterResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Urls\EnumMemberCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Urls\HttpUrlParseException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Urls\HttpUrlPath.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Urls\HttpUrlParser.cs" />

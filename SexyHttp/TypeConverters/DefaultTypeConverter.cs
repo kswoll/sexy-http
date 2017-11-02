@@ -5,6 +5,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SexyHttp.HttpBodies;
+using SexyHttp.Urls;
 
 namespace SexyHttp.TypeConverters
 {
@@ -25,6 +26,8 @@ namespace SexyHttp.TypeConverters
             registry.Register<byte[], HttpBody>(LambdaTypeConverter.Create(x => new ByteArrayHttpBody((byte[])x)));
             registry.Register<Stream, HttpBody>(LambdaTypeConverter.Create(x => new StreamHttpBody((Stream)x)));
             registry.Register<Array, Array>(new ArrayTypeConverter());
+            registry.Register<Enum, string>(LambdaTypeConverter.Create(x => EnumMemberCache.GetEnumMemberName((Enum)x)));
+            registry.Register<string, Enum>(LambdaTypeConverter.Create((x, type) => EnumMemberCache.GetEnumMemberByName(type, (string)x)));
 
             return result;
         }
