@@ -10,7 +10,7 @@ using SexyHttp.HttpBodies;
 using SexyHttp.Tests.Utils;
 using SexyHttp.Utils;
 
-namespace SexyHttp.Tests
+namespace SexyHttp.Mocks
 {
     public class MockHttpServer : IDisposable
     {
@@ -65,26 +65,26 @@ namespace SexyHttp.Tests
             });
         }
 
-        private async static Task<JToken> ReadJson(HttpListenerRequest request)
+        private static async Task<JToken> ReadJson(HttpListenerRequest request)
         {
             using (var reader = new StreamReader(request.InputStream))
             {
                 var inputString = await reader.ReadToEndAsync();
                 var jsonInput = JToken.Parse(inputString);
                 return jsonInput;
-            }            
+            }
         }
 
-        private async static Task<string> ReadString(HttpListenerRequest request)
+        private static async Task<string> ReadString(HttpListenerRequest request)
         {
             using (var reader = new StreamReader(request.InputStream))
             {
                 var inputString = await reader.ReadToEndAsync();
                 return inputString;
-            }            
+            }
         }
 
-        private async static Task WriteString(HttpListenerResponse response, string s)
+        private static async Task WriteString(HttpListenerResponse response, string s)
         {
             response.Headers.Add("Content-Type", "text/plain");
             var buffer = Encoding.UTF8.GetBytes(s);
@@ -92,7 +92,7 @@ namespace SexyHttp.Tests
             response.OutputStream.Close();
         }
 
-        private async static Task WriteJson(HttpListenerResponse response, JToken json)
+        private static async Task WriteJson(HttpListenerResponse response, JToken json)
         {
             response.Headers.Add("Content-Type", "application/json");
             var s = json.ToString(Formatting.Indented);
@@ -101,14 +101,14 @@ namespace SexyHttp.Tests
             response.OutputStream.Close();
         }
 
-        private async static Task WriteByteArray(HttpListenerResponse response, byte[] data)
+        private static async Task WriteByteArray(HttpListenerResponse response, byte[] data)
         {
             response.Headers.Add("Content-Type", "application/octet-stream");
             await response.OutputStream.WriteAsync(data, 0, data.Length);
             response.OutputStream.Close();
         }
 
-        private async static Task WriteForm(HttpListenerResponse response, FormHttpBody form)
+        private static async Task WriteForm(HttpListenerResponse response, FormHttpBody form)
         {
             response.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
             var content = new FormUrlEncodedContent(form.Values);
@@ -285,7 +285,7 @@ namespace SexyHttp.Tests
         {
             lock (locker)
             {
-                isRunning = false;                
+                isRunning = false;
             }
             if (listener.IsListening)
                 listener.Stop();

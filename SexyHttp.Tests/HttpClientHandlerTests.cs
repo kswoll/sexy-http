@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using SexyHttp.HttpBodies;
-using SexyHttp.HttpHandlers;
+using SexyHttp.Mocks;
 using SexyHttp.Tests.Utils;
 using SexyProxy;
 

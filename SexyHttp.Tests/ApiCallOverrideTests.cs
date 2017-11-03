@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using NUnit.Framework;
+using SexyHttp.Mocks;
 
 namespace SexyHttp.Tests
 {

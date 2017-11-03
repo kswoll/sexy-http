@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using SexyHttp.HttpHandlers;
+using SexyHttp.Mocks;
 
 namespace SexyHttp.Tests
 {

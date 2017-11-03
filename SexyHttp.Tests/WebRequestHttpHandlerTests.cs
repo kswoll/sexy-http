@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using SexyHttp.HttpHandlers;
+using SexyHttp.Mocks;
 using SexyProxy;
 
 namespace SexyHttp.Tests

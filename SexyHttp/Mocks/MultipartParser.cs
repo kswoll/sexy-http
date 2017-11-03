@@ -8,7 +8,7 @@ using System.Text;
 using Newtonsoft.Json.Linq;
 using SexyHttp.HttpBodies;
 
-namespace SexyHttp.Tests
+namespace SexyHttp.Mocks
 {
     public class MultipartParser
     {

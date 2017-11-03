@@ -71,9 +71,7 @@
     <Compile Include="InPlaceTests.cs" />
     <Compile Include="MockApiInstrumenter.cs" />
     <Compile Include="MockHttpHandler.cs" />
-    <Compile Include="MockHttpServer.cs" />
     <Compile Include="MockResponseHandler.cs" />
-    <Compile Include="MultipartParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ISampleInterfaceApi.cs" />
     <Compile Include="TypeConverters\ArrayTypeConverterTests.cs" />
