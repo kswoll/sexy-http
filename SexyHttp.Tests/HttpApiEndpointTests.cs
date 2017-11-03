@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using NUnit.Framework;
 using SexyHttp.ArgumentHandlers;
+using SexyHttp.Mocks;
 using SexyHttp.TypeConverters;
 
 namespace SexyHttp.Tests

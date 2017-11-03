@@ -62,6 +62,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)IHttpHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpMethodAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHttpResponseHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mocks\MockHttpHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mocks\MockHttpServer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mocks\MultipartParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MultipartAttribute.cs" />

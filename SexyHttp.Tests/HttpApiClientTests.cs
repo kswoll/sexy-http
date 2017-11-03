@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using SexyHttp.Mocks;
 using SexyProxy;
 
 namespace SexyHttp.Tests

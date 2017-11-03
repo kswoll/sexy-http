@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using SexyHttp.HttpBodies;
+using SexyHttp.Mocks;
 using SexyHttp.TypeConverters;
 
 namespace SexyHttp.Tests
@@ -131,9 +132,9 @@ namespace SexyHttp.Tests
             var endpoint = api.Endpoints.Single().Value;
             var httpHandler = new MockHttpHandler();
             await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object> { ["ids"] = new[] { 1, 3 } });
-            Assert.AreEqual("http://localhost?ids=1&ids=3", httpHandler.Request.Url.ToString());            
+            Assert.AreEqual("http://localhost?ids=1&ids=3", httpHandler.Request.Url.ToString());
             await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object> { ["firstName"] = "John" });
-            Assert.AreEqual("http://localhost?firstName=John", httpHandler.Request.Url.ToString());            
+            Assert.AreEqual("http://localhost?firstName=John", httpHandler.Request.Url.ToString());
         }
 
         interface IMultipeQueryArguments
@@ -149,7 +150,7 @@ namespace SexyHttp.Tests
             var endpoint = api.Endpoints.Single().Value;
             var httpHandler = new MockHttpHandler();
             await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object> { ["ids"] = new[] { 1, 3 } });
-            Assert.AreEqual("http://localhost?ids=1,3", httpHandler.Request.Url.ToString());            
+            Assert.AreEqual("http://localhost?ids=1,3", httpHandler.Request.Url.ToString());
         }
 
         [TypeConverter(typeof(ArrayAsCommaSeparatedStringConverter))]
@@ -187,7 +188,7 @@ namespace SexyHttp.Tests
             var endpoint = api.Endpoints.Single().Value;
             var httpHandler = new MockHttpHandler();
             await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object> { ["number"] = 5 });
-            Assert.AreEqual("http://localhost/foo", httpHandler.Request.Url.ToString());            
+            Assert.AreEqual("http://localhost/foo", httpHandler.Request.Url.ToString());
         }
 
         interface IEndpointLevelTypeConverter
@@ -203,13 +204,13 @@ namespace SexyHttp.Tests
             var endpoint = api.Endpoints.Single().Value;
             var httpHandler = new MockHttpHandler();
             await endpoint.Call(httpHandler, "http://localhost", new Dictionary<string, object> { ["number"] = 5 });
-            Assert.AreEqual("http://localhost/foo", httpHandler.Request.Url.ToString());                        
+            Assert.AreEqual("http://localhost/foo", httpHandler.Request.Url.ToString());
         }
 
         interface IParameterLevelTypeConverter
         {
             [Post("{number}")]
-            Task PostInt([TypeConverter(typeof(TestTypeConverter))]int number);            
+            Task PostInt([TypeConverter(typeof(TestTypeConverter))]int number);
         }
 
         [Test]
@@ -235,7 +236,7 @@ namespace SexyHttp.Tests
                 if (convertTo == typeof(string))
                 {
                     result = "foo";
-                    return true;                    
+                    return true;
                 }
                 result = null;
                 return false;
@@ -271,7 +272,7 @@ namespace SexyHttp.Tests
 
             var body = (JsonHttpBody)httpHandler.Request.Body;
             var jsonObject = (JObject)body.Json;
-            Assert.AreEqual(5, (int)jsonObject["value1"]);            
+            Assert.AreEqual(5, (int)jsonObject["value1"]);
             Assert.AreEqual("foo", (string)jsonObject["value2"]);
         }
 
