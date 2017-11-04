@@ -11,7 +11,18 @@ namespace SexyHttp.Mocks
         public HttpApiRequest Request { get; set; }
         public Func<HttpApiRequest, HttpApiResponse> Response { get; set; }
 
-        public MockHttpHandler() : this(x => new HttpApiResponse(HttpStatusCode.OK, new JsonHttpBody(JValue.CreateNull()), x.Headers))
+        public MockHttpHandler(HttpStatusCode statusCode = HttpStatusCode.OK)
+            : this(x => new HttpApiResponse(statusCode, new JsonHttpBody(JValue.CreateNull()), x.Headers))
+        {
+        }
+
+        public MockHttpHandler(object response, HttpStatusCode statusCode = HttpStatusCode.OK)
+            : this(JToken.FromObject(response))
+        {
+        }
+
+        public MockHttpHandler(JToken response, HttpStatusCode statusCode = HttpStatusCode.OK)
+            : this(x => new HttpApiResponse(statusCode, new JsonHttpBody(response), x.Headers))
         {
         }
 
