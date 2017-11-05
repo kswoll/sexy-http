@@ -83,7 +83,7 @@ namespace SexyHttp
                 // Store headerAttribute for later
                 var headerAttribute = parameter.GetCustomAttribute<HeaderAttribute>();
 
-                // If this is a path paraeter, then create a respective argument handler
+                // If this is a path parameter, then create a respective argument handler
                 if (pathParameters.Contains(parameter.Name))
                 {
                     argumentHandlers[parameter.Name] = new PathArgumentHandler(typeConverter);
@@ -103,14 +103,17 @@ namespace SexyHttp
                 {
                     argumentHandlers[parameter.Name] = new StreamResponseArgumentHandler(typeConverter);
                 }
+                // If the parameter type is HttpApiRequest, we assume you want to interact with the request directly
                 else if (parameter.ParameterType == typeof(Action<HttpApiRequest>))
                 {
                     argumentHandlers[parameter.Name] = new HttpApiRequestArgumentHandler(typeConverter);
                 }
+                // If the parameter type is HttpBody, then we assume you want to interact with the HttpBody directly
                 else if (parameter.ParameterType == typeof(HttpBody))
                 {
                     argumentHandlers[parameter.Name] = new HttpBodyArgumentHandler(typeConverter);
                 }
+                // If we get to this point, we assume the method parameter is provided in the body of the request
                 else
                 {
                     bodyParameters.Add(parameter);
@@ -203,14 +206,21 @@ namespace SexyHttp
             var responseTypeConverter = TypeConverterAttribute.Combine(method.ReturnTypeCustomAttributes, endpointTypeConverter);
 
             IHttpResponseHandler responseHandler;
+
+            // If the return type of the method is void, then we will simply return null from the response
             if (returnType == typeof(void))
                 responseHandler = new NullResponseHandler();
+            // If the return type is byte[], we provide the raw contents of the response body as a byte array
             else if (returnType == typeof(byte[]))
                 responseHandler = new ByteArrayResponseHandler();
+            // If the return type is HttpApiResponse, we return the raw response from the method
             else if (returnType == typeof(HttpApiResponse))
                 responseHandler = new HttpApiResponseResponseHandler();
+            // If the return type is HttpBody, we return the articulated HttpBody (one of its subclasses) from the method
             else if (returnType == typeof(HttpBody))
                 responseHandler = new HttpBodyResponseHandler();
+            // Otherwise, we return a response that is based the returned Content-Type and converted into the desired C#
+            // type accordingly.
             else
                 responseHandler = new BodyBasedResponseHandler();
 
