@@ -14,6 +14,11 @@ using SexyHttp.Tests.Utils;
 
 namespace SexyHttp.HttpHandlers
 {
+    /// <summary>
+    /// Use this implementation whenever you find yourself in a situation where you cannot use
+    /// async semantics.  (For example, a constructor)  If you use HttpClientHttpHandler, you
+    /// will likely find yourself in a situation where you have to deal with deadlocks.
+    /// </summary>
     public class WebRequestHttpHandler : IHttpHandler
     {
         public Task<HttpHandlerResponse> Call(HttpApiRequest request)

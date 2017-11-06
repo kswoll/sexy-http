@@ -3,6 +3,10 @@ using System.Net.Http;
 
 namespace SexyHttp
 {
+    /// <summary>
+    /// Decorate your API method with this attribute to indicate that the HTTP Method should be
+    /// POST.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     public class PostAttribute : Attribute, IHttpMethodAttribute
     {

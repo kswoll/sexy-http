@@ -12,6 +12,12 @@ using System.Diagnostics;
 
 namespace SexyHttp.HttpHandlers
 {
+    /// <summary>
+    /// Uses an instance of HttpClient to perform all the HTTP interactions.  Use this if you are
+    /// confident you are able to use "async all the way".  If you are in a situation where you
+    /// will ultimately have to interact with the API in a non-async context, you are much better
+    /// off using WebRequestHttpHandler, as this will avoid deadlocks.
+    /// </summary>
     public class HttpClientHttpHandler : IHttpHandler
     {
         private readonly Func<HttpClientHandler> handler;
