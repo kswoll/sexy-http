@@ -49,10 +49,31 @@ namespace SexyHttp.HttpHandlers
 
                     return new HttpHandlerResponse(result, requestWriteTime.Elapsed, responseReadTime.Elapsed);
                 }
+                catch (HttpRequestException e) when (IsProxyRequiredException(e, out var response))
+                {
+                    return new HttpHandlerResponse(response, TimeSpan.Zero, TimeSpan.Zero);
+                }
                 catch (Exception e)
                 {
                     throw new Exception($"Error making {request.Method} request to {request.Url}", e);
                 }
+            }
+        }
+
+        private static bool IsProxyRequiredException(HttpRequestException e, out HttpApiResponse apiResponse)
+        {
+            if (e.InnerException is WebException webException && webException.Response is HttpWebResponse response &&
+                response.StatusCode == HttpStatusCode.ProxyAuthenticationRequired)
+            {
+                var responseHeaders = new List<HttpHeader>();
+                responseHeaders.AddRange(response.Headers.AllKeys.Select(x => new HttpHeader(x, response.Headers[x].Split(','))));
+                apiResponse = new HttpApiResponse(HttpStatusCode.ProxyAuthenticationRequired, headers: responseHeaders, responseUri: response.ResponseUri.ToString());
+                return true;
+            }
+            else
+            {
+                apiResponse = null;
+                return false;
             }
         }
 

@@ -105,7 +105,7 @@ namespace SexyHttp.HttpHandlers
             responseStream.Close();
             responseReadTime.Stop();
 
-            var result = new HttpApiResponse(response.StatusCode, responseBody, responseHeaders);
+            var result = new HttpApiResponse(response.StatusCode, responseBody, responseHeaders, response.ResponseUri.ToString());
             return Task.FromResult(new HttpHandlerResponse(result, requestWriteTime.Elapsed, responseReadTime.Elapsed));
         }
 
