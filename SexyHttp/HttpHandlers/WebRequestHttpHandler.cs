@@ -25,7 +25,10 @@ namespace SexyHttp.HttpHandlers
         {
             var webRequest = WebRequest.CreateHttp(request.Url.ToString());
             webRequest.Method = request.Method.ToString();
-            webRequest.Proxy = WebRequest.GetSystemWebProxy();
+            if (request.Proxy != null)
+            {
+                webRequest.Proxy = request.Proxy;
+            }
             foreach (var header in request.Headers)
             {
                 switch (header.Name)

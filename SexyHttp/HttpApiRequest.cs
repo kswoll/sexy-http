@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using SexyHttp.Urls;
 
@@ -12,6 +13,7 @@ namespace SexyHttp
         public List<HttpHeader> Headers { get; set; }
         public HttpBody Body { get; set; }
         public string ResponseContentTypeOverride { get; set; }
+        public IWebProxy Proxy { get; set; }
 
         /// <summary>
         /// You may use this dictionary to store custom values useful when instrumenting an
