@@ -14,14 +14,14 @@ namespace SexyHttp.Mocks
         private readonly object locker = new object();
         private bool isRunning;
 
-        public MockHttpServer(Func<MockHttpServerHandlerContext, Task> handler, int port = 8844)
-            : this((request, response) => new MockHttpServerHandler(handler).Handle(request, response))
+        public MockHttpServer(Func<MockHttpServerHandlerContext, Task> handler, int port = 8844, string prefix = "")
+            : this((request, response) => new MockHttpServerHandler(handler).Handle(request, response), port, prefix)
         {
         }
 
-        public MockHttpServer(Func<HttpListenerRequest, HttpListenerResponse, Task> handler, int port = 8844)
+        public MockHttpServer(Func<HttpListenerRequest, HttpListenerResponse, Task> handler, int port = 8844, string prefix = "")
         {
-            listener.Prefixes.Add($"http://+:{port}/");
+            listener.Prefixes.Add($"http://+:{port}{prefix}/");
 
             try
             {

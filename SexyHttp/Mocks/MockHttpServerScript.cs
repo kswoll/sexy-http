@@ -22,6 +22,12 @@ namespace SexyHttp.Mocks
             script = new Queue<MockHttpServerHandler>(handlers);
         }
 
+        public MockHttpServerScript(int port, string prefix, params MockHttpServerHandler[] handlers)
+        {
+            server = new MockHttpServer(Handler, port, prefix);
+            script = new Queue<MockHttpServerHandler>(handlers);
+        }
+
         private Task Handler(HttpListenerRequest request, HttpListenerResponse response)
         {
             var handler = script.Dequeue();
