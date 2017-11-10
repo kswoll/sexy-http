@@ -1,13 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SexyHttp.HttpBodies;
-using SexyHttp.Tests.Utils;
 using SexyHttp.Utils;
 
 namespace SexyHttp.Mocks
@@ -18,9 +14,14 @@ namespace SexyHttp.Mocks
         private readonly object locker = new object();
         private bool isRunning;
 
-        public MockHttpServer(Func<HttpListenerRequest, HttpListenerResponse, Task> handler)
+        public MockHttpServer(Func<MockHttpServerHandlerContext, Task> handler, int port = 8844)
+            : this((request, response) => new MockHttpServerHandler(handler).Handle(request, response))
         {
-            listener.Prefixes.Add("http://+:8844/");
+        }
+
+        public MockHttpServer(Func<HttpListenerRequest, HttpListenerResponse, Task> handler, int port = 8844)
+        {
+            listener.Prefixes.Add($"http://+:{port}/");
 
             try
             {
@@ -33,8 +34,7 @@ namespace SexyHttp.Mocks
                     // Make sure to run:
                     // netsh http add urlacl url=http://+:80/PlanGrid sddl=D:(A;;GX;;;WD)
                     // In an elevated Window to grant rights to non-admin users to listen on this url
-
-                    throw new Exception("Please run: netsh http add urlacl url=http://+:8844/ sddl=D:(A;;GX;;;WD)");
+                    throw new Exception($"Please run: netsh http add urlacl url=http://+:{port}/ sddl=D:(A;;GX;;;WD)");
                 }
                 throw;
             }
@@ -65,58 +65,6 @@ namespace SexyHttp.Mocks
             });
         }
 
-        private static async Task<JToken> ReadJson(HttpListenerRequest request)
-        {
-            using (var reader = new StreamReader(request.InputStream))
-            {
-                var inputString = await reader.ReadToEndAsync();
-                var jsonInput = JToken.Parse(inputString);
-                return jsonInput;
-            }
-        }
-
-        private static async Task<string> ReadString(HttpListenerRequest request)
-        {
-            using (var reader = new StreamReader(request.InputStream))
-            {
-                var inputString = await reader.ReadToEndAsync();
-                return inputString;
-            }
-        }
-
-        private static async Task WriteString(HttpListenerResponse response, string s)
-        {
-            response.Headers.Add("Content-Type", "text/plain");
-            var buffer = Encoding.UTF8.GetBytes(s);
-            await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
-            response.OutputStream.Close();
-        }
-
-        private static async Task WriteJson(HttpListenerResponse response, JToken json)
-        {
-            response.Headers.Add("Content-Type", "application/json");
-            var s = json.ToString(Formatting.Indented);
-            var buffer = Encoding.UTF8.GetBytes(s);
-            await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
-            response.OutputStream.Close();
-        }
-
-        private static async Task WriteByteArray(HttpListenerResponse response, byte[] data)
-        {
-            response.Headers.Add("Content-Type", "application/octet-stream");
-            await response.OutputStream.WriteAsync(data, 0, data.Length);
-            response.OutputStream.Close();
-        }
-
-        private static async Task WriteForm(HttpListenerResponse response, FormHttpBody form)
-        {
-            response.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-            var content = new FormUrlEncodedContent(form.Values);
-            var data = await content.ReadAsStreamAsync();
-            await data.CopyToAsync(response.OutputStream);
-            response.OutputStream.Close();
-        }
-
         public static MockHttpServer Null(Action<HttpListenerRequest> handler)
         {
             return new MockHttpServer((request, response) =>
@@ -139,115 +87,114 @@ namespace SexyHttp.Mocks
 
         public static MockHttpServer ReturnJson(Func<HttpListenerRequest, Task<JToken>> jsonHandler)
         {
-            return new MockHttpServer(async (request, response) =>
+            return new MockHttpServer(async context =>
             {
-                var token = await jsonHandler(request);
-                await WriteJson(response, token);
+                var token = await jsonHandler(context.Request);
+                await context.WriteJson(token);
             });
         }
 
         public static MockHttpServer ReturnJson(JToken json)
         {
-            return new MockHttpServer(async (request, response) =>
+            return new MockHttpServer(async context =>
             {
-                await WriteJson(response, json);
+                await context.WriteJson(json);
             });
         }
 
         public static MockHttpServer ReturnJson(Func<HttpListenerRequest, JToken> jsonHandler)
         {
-            return new MockHttpServer(async (request, response) =>
+            return new MockHttpServer(async context =>
             {
-                var json = jsonHandler(request);
-                await WriteJson(response, json);
+                var json = jsonHandler(context.Request);
+                await context.WriteJson(json);
             });
         }
 
         public static MockHttpServer ReturnByteArray(Func<HttpListenerRequest, byte[]> handler)
         {
-            return new MockHttpServer(async (request, response) =>
+            return new MockHttpServer(async context =>
             {
-                var token = handler(request);
-                await WriteByteArray(response, token);
+                var token = handler(context.Request);
+                await context.WriteByteArray(token);
             });
         }
 
         public static MockHttpServer String(Func<string, string> handler)
         {
-            return new MockHttpServer(async (request, response) =>
+            return new MockHttpServer(async context =>
             {
-                var s = await ReadString(request);
+                var s = await context.ReadString();
                 var output = handler(s);
-                await WriteString(response, output);
+                await context.WriteString(output);
             });
         }
 
         public static MockHttpServer Json(Func<JToken, JToken> jsonHandler)
         {
-            return new MockHttpServer(async (request, response) =>
+            return new MockHttpServer(async context =>
             {
-                var jsonInput = await ReadJson(request);
+                var jsonInput = await context.ReadJson();
                 var jsonOutput = jsonHandler(jsonInput);
-                await WriteJson(response, jsonOutput);
+                await context.WriteJson(jsonOutput);
             });
         }
 
         public static MockHttpServer Json(Action<JToken> handler)
         {
-            return new MockHttpServer(async (request, response) =>
+            return new MockHttpServer(async context =>
             {
-                var jsonInput = await ReadJson(request);
+                var jsonInput = await context.ReadJson();
                 handler(jsonInput);
-                response.StatusCode = (int)HttpStatusCode.NoContent;
-                response.OutputStream.Close();
+                context.Response.StatusCode = (int)HttpStatusCode.NoContent;
             });
         }
 
         public static MockHttpServer PostMultipartReturnJson(Func<MultipartHttpBody, Task<JToken>> handler)
         {
-            return new MockHttpServer(async (request, response) =>
+            return new MockHttpServer(async context =>
             {
-                var content = MultipartParser.ParseMultipart(request);
+                var content = context.ReadMultipart();
                 var json = await handler(content);
-                await WriteJson(response, json);
+                await context.WriteJson(json);
             });
         }
 
         public static MockHttpServer PostMultipartReturnByteArray(Func<MultipartHttpBody, Task<byte[]>> handler)
         {
-            return new MockHttpServer(async (request, response) =>
+            return new MockHttpServer(async context =>
             {
-                var content = MultipartParser.ParseMultipart(request);
+                var content = context.ReadMultipart();
                 var data = await handler(content);
-                await WriteByteArray(response, data);
+                await context.WriteByteArray(data);
             });
         }
 
         public static MockHttpServer PostStreamReturnByteArray(Func<Stream, Task<byte[]>> handler)
         {
-            return new MockHttpServer(async (request, response) =>
+            return new MockHttpServer(async context =>
             {
-                var data = await handler(request.InputStream);
-                await WriteByteArray(response, data);
+                var data = await handler(context.Request.InputStream);
+                await context.WriteByteArray(data);
             });
         }
 
         public static MockHttpServer PostByteArrayReturnByteArray(Func<byte[], Task<byte[]>> handler)
         {
-            return new MockHttpServer(async (request, response) =>
+            return new MockHttpServer(async context =>
             {
-                var data = await handler(await request.InputStream.ReadToEndAsync());
-                await WriteByteArray(response, data);
+                var data = await handler(await context.ReadByteArray());
+                await context.WriteByteArray(data);
             });
         }
 
         public static MockHttpServer PostMultipartStreamReturnJson(Func<MultipartHttpBody, Task<JToken>> handler)
         {
-            return new MockHttpServer(async (request, response) =>
+            return new MockHttpServer(async context =>
             {
-                var content = MultipartParser.ParseMultipart(request);
+                var content = context.ReadMultipart();
                 var data = await handler(content);
-                await WriteJson(response, data);
+                await context.WriteJson(data);
             });
         }
 
@@ -258,21 +205,21 @@ namespace SexyHttp.Mocks
 
         public static MockHttpServer PostFormReturnJson(Func<FormHttpBody, Task<JToken>> handler)
         {
-            return new MockHttpServer(async (request, response) =>
+            return new MockHttpServer(async context =>
             {
-                var content = FormParser.ParseForm(request.InputStream);
+                var content = context.ReadForm();
                 var result = await handler(content);
-                await WriteJson(response, result);
+                await context.WriteJson(result);
             });
         }
 
         public static MockHttpServer PostFormReturnForm(Func<FormHttpBody, Task<FormHttpBody>> handler)
         {
-            return new MockHttpServer(async (request, response) =>
+            return new MockHttpServer(async context =>
             {
-                var content = FormParser.ParseForm(request.InputStream);
+                var content = context.ReadForm();
                 var result = await handler(content);
-                await WriteForm(response, result);
+                await context.WriteForm(result);
             });
         }
 

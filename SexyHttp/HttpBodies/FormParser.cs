@@ -18,6 +18,6 @@ namespace SexyHttp.HttpBodies
 
                 return new FormHttpBody(values);
             }
-        } 
+        }
     }
 }
