@@ -37,7 +37,7 @@ namespace SexyHttp.Mocks
 
         public Task<HttpHandlerResponse> Call(HttpApiRequest request)
         {
-            Request = request;
+            Request = request.Clone();
             return Task.FromResult(new HttpHandlerResponse(Response(request), TimeSpan.Zero, TimeSpan.Zero));
         }
     }
