@@ -10,6 +10,9 @@ namespace SexyHttp.Mocks
 {
     public class MockHttpServer : IDisposable
     {
+        public int Port { get; }
+        public string Prefix { get; }
+
         private readonly HttpListener listener = new HttpListener();
         private readonly object locker = new object();
         private bool isRunning;
@@ -21,6 +24,9 @@ namespace SexyHttp.Mocks
 
         public MockHttpServer(Func<HttpListenerRequest, HttpListenerResponse, Task> handler, int port = 8844, string prefix = "")
         {
+            Port = port;
+            Prefix = prefix;
+
             listener.Prefixes.Add($"http://+:{port}{prefix}/");
 
             try

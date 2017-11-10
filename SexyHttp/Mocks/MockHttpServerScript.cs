@@ -7,24 +7,24 @@ namespace SexyHttp.Mocks
 {
     public class MockHttpServerScript : IDisposable
     {
-        private readonly MockHttpServer server;
+        public MockHttpServer Server { get; }
         private readonly Queue<MockHttpServerHandler> script;
 
         public MockHttpServerScript(params MockHttpServerHandler[] handlers)
         {
-            server = new MockHttpServer(Handler);
+            Server = new MockHttpServer(Handler);
             script = new Queue<MockHttpServerHandler>(handlers);
         }
 
         public MockHttpServerScript(int port, params MockHttpServerHandler[] handlers)
         {
-            server = new MockHttpServer(Handler, port);
+            Server = new MockHttpServer(Handler, port);
             script = new Queue<MockHttpServerHandler>(handlers);
         }
 
         public MockHttpServerScript(int port, string prefix, params MockHttpServerHandler[] handlers)
         {
-            server = new MockHttpServer(Handler, port, prefix);
+            Server = new MockHttpServer(Handler, port, prefix);
             script = new Queue<MockHttpServerHandler>(handlers);
         }
 
@@ -36,7 +36,7 @@ namespace SexyHttp.Mocks
 
         public void Dispose()
         {
-            server.Dispose();
+            Server.Dispose();
         }
     }
 }
