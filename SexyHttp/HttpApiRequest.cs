@@ -29,6 +29,7 @@ namespace SexyHttp
                 Url = Url.Clone(),
                 Headers = Headers.ToList(),
                 Items = Items.ToDictionary(x => x.Key, x => x.Value),
+                Proxy = Proxy,
                 Body = Body,
                 ResponseContentTypeOverride = ResponseContentTypeOverride
             };
