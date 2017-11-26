@@ -94,6 +94,7 @@ namespace SexyHttp.HttpHandlers
 //                    body = FormParser.ParseForm(stream);
 //                    break;
                 case "text/plain":
+                case "text/html":
                 case "":
                     var text = Encoding.UTF8.GetString(responseStream.ReadToEnd());
                     responseBody = new StringHttpBody(text);
