@@ -80,13 +80,23 @@ namespace SexyHttp.HttpHandlers
         private HttpRequestMessage CreateRequestMessage(HttpApiRequest request)
         {
             var message = new HttpRequestMessage(request.Method, request.Url.ToString());
+            string contentType = null;
             foreach (var header in request.Headers)
             {
+                if (header.Name == "Content-Type")
+                {
+                    contentType = header.Values.Single();
+                    continue;
+                }
                 message.Headers.Add(header.Name, header.Values);
             }
             if (request.Body != null)
             {
                 message.Content = request.Body.Accept(new ContentCreator());
+                if (contentType != null)
+                {
+                    message.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
+                }
             }
             return message;
         }
@@ -97,14 +107,12 @@ namespace SexyHttp.HttpHandlers
             {
                 var text = body.Json.ToString(Formatting.Indented);
                 var content = new StringContent(text);
-                content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 return content;
             }
 
             public HttpContent VisitStringBody(StringHttpBody body)
             {
                 var content = new StringContent(body.Text);
-                content.Headers.ContentType = MediaTypeHeaderValue.Parse("text/plain");
                 return content;
             }
 
@@ -115,6 +123,10 @@ namespace SexyHttp.HttpHandlers
                 {
                     var itemContent = item.Value.Body.Accept(this);
                     content.Add(itemContent, item.Key);
+                    if (item.Value.ContentType != null)
+                    {
+                        itemContent.Headers.ContentType = MediaTypeHeaderValue.Parse(item.Value.ContentType);
+                    }
                 }
                 return content;
             }
@@ -122,14 +134,12 @@ namespace SexyHttp.HttpHandlers
             public HttpContent VisitByteArrayBody(ByteArrayHttpBody body)
             {
                 var result = new ByteArrayContent(body.Data);
-                result.Headers.ContentType = MediaTypeHeaderValue.Parse("application/octet-stream");
                 return result;
             }
 
             public HttpContent VisitStreamBody(StreamHttpBody body)
             {
                 var result = new StreamContent(body.Stream);
-                result.Headers.ContentType = MediaTypeHeaderValue.Parse("application/octet-stream");
                 return result;
             }
 
