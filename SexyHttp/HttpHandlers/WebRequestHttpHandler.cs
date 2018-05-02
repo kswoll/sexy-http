@@ -24,6 +24,7 @@ namespace SexyHttp.HttpHandlers
         public Task<HttpHandlerResponse> Call(HttpApiRequest request)
         {
             var webRequest = WebRequest.CreateHttp(request.Url.ToString());
+            webRequest.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
             webRequest.Method = request.Method.ToString();
             if (request.Proxy != null)
             {
