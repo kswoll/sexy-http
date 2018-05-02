@@ -40,6 +40,9 @@ namespace SexyHttp.HttpHandlers
                     case "Accept":
                         webRequest.Accept = header.Values.Single();
                         break;
+                    case "Content-Type":
+                        webRequest.ContentType = header.Values.Single();
+                        break;
                     default:
                         webRequest.Headers.Add(header.Name, string.Join(",", header.Values));
                         break;
@@ -51,7 +54,7 @@ namespace SexyHttp.HttpHandlers
             if (request.Body != null)
             {
                 var requestStream = webRequest.GetRequestStream();
-                var stream = request.Body.Accept(new ContentCreator(webRequest));
+                var stream = request.Body.Accept(new ContentCreator());
                 stream.CopyTo(requestStream);
                 requestStream.Close();
             }
@@ -117,17 +120,8 @@ namespace SexyHttp.HttpHandlers
 
         private class ContentCreator : IHttpBodyVisitor<Stream>
         {
-            private readonly HttpWebRequest request;
-
-            public ContentCreator(HttpWebRequest request)
-            {
-                this.request = request;
-            }
-
             public Stream VisitJsonBody(JsonHttpBody body)
             {
-                request.ContentType = "application/json";
-
                 var text = body.Json.ToString(Formatting.Indented);
                 var result = new MemoryStream(Encoding.UTF8.GetBytes(text));
                 result.Position = 0;
@@ -136,8 +130,6 @@ namespace SexyHttp.HttpHandlers
 
             public Stream VisitStringBody(StringHttpBody body)
             {
-                request.ContentType = "text/plain";
-
                 var result = new MemoryStream(Encoding.UTF8.GetBytes(body.Text));
                 result.Position = 0;
                 return result;
@@ -159,7 +151,6 @@ namespace SexyHttp.HttpHandlers
 
             public Stream VisitByteArrayBody(ByteArrayHttpBody body)
             {
-                request.ContentType = "application/octet-stream";
                 var result = new MemoryStream(body.Data);
                 result.Position = 0;
                 return result;
@@ -167,7 +158,6 @@ namespace SexyHttp.HttpHandlers
 
             public Stream VisitStreamBody(StreamHttpBody body)
             {
-                request.ContentType = "application/octet-stream";
                 var result = body.Stream;
                 return result;
             }

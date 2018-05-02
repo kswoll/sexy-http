@@ -23,6 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\StringArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\StreamArgumentHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentHandlers\StreamResponseArgumentHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ContentTypeCalculator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DeleteAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FormAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GetAttribute.cs" />

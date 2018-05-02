@@ -22,7 +22,14 @@ namespace SexyHttp.ArgumentHandlers
             var body = TypeConverter.ConvertTo<HttpBody>(TypeConversionContext.Body, argument);
             if (body == null)
                 throw new Exception($"Could not create body for {name}");
-            multipart.Data[name] = new MultipartData { Body = body };
+
+            var contentType = body.Accept(new ContentTypeCalculator());
+
+            multipart.Data[name] = new MultipartData
+            {
+                Body = body,
+                ContentType = contentType
+            };
 
             return base.ApplyArgument(request, name, argument);
         }

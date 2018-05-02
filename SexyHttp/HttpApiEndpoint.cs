@@ -65,6 +65,12 @@ namespace SexyHttp
 
                 ApplyArguments(async (handler, name, argument) => await handler.ApplyArgument(request, name, argument));
 
+                if (!request.Headers.Exists(x => x.Name == "Content-Type") && request.Body != null)
+                {
+                    var contentType = request.Body.Accept(new ContentTypeCalculator());
+                    request.Headers.Add(new HttpHeader("Content-Type", contentType));
+                }
+
                 return request;
             }
 
