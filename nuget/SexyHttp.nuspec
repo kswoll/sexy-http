@@ -12,11 +12,9 @@
     <copyright>Copyright 2015</copyright>
     <tags>sexy-http http client proxy</tags>
     <dependencies>
+      <group targetFramework=".NETFramework4.5" />
       <dependency id="SexyProxy" version="1.0.21" />
       <dependency id="Newtonsoft.Json" version="6.0.1" />
-    </dependencies>
-    <dependencies>
-      <group targetFramework=".NETFramework4.5" />
     </dependencies>
   </metadata>
 </package>
