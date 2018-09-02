@@ -12,7 +12,7 @@ namespace SexyHttp.Tests
     public class BodyBasedTypeConvertersTests
     {
         [Test]
-        public async void Query()
+        public async Task Query()
         {
             var api = new HttpApi<IQueryApi>();
             var endpoint = api.Endpoints.Single().Value;

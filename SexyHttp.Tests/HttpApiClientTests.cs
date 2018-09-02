@@ -11,7 +11,7 @@ namespace SexyHttp.Tests
     public class HttpApiClientTests
     {
         [Test]
-        public async void GetString()
+        public async Task GetString()
         {
             var httpHandler = new MockHttpHandler(x => new HttpApiResponse(body: x.Body));
             var client = HttpApiClient<IApi>.Create("http://localhost", httpHandler: httpHandler);
@@ -20,7 +20,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void ExceptionPropagated()
+        public async Task ExceptionPropagated()
         {
             var httpHandler = new MockHttpHandler(x => new HttpApiResponse(body: x.Body));
             var client = HttpApiClient<IApi>.Create("http://localhost", httpHandler: httpHandler, apiInstrumenter: (endpoint, arguments, inner) => new ExceptionOnGetResponseInstrumentation(inner));
@@ -36,7 +36,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void ExceptionPropagatedAsync()
+        public async Task ExceptionPropagatedAsync()
         {
             var httpHandler = new MockHttpHandler(x => new HttpApiResponse(body: x.Body));
             var client = HttpApiClient<IApi>.Create("http://localhost", httpHandler: httpHandler, apiInstrumenter: (endpoint, arguments, inner) => new ExceptionOnGetResponseInstrumentationAsync(inner));

@@ -61,7 +61,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void PathWithSubstitution()
+        public async Task PathWithSubstitution()
         {
             var api = new HttpApi<IPathWithSubstitution>();
             var endpoint = api.Endpoints.Single().Value;
@@ -77,7 +77,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void PathForApiType()
+        public async Task PathForApiType()
         {
             var api = new HttpApi<IPathForApi>();
             var endpoint = api.Endpoints.Single().Value;
@@ -94,7 +94,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void QueryWithSubstitution()
+        public async Task QueryWithSubstitution()
         {
             var api = new HttpApi<IQueryWithSubstitution>();
             var endpoint = api.Endpoints.Single().Value;
@@ -110,7 +110,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void QueryWithInt()
+        public async Task QueryWithInt()
         {
             var api = new HttpApi<IQueryWithInt>();
             var endpoint = api.Endpoints.Single().Value;
@@ -126,7 +126,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void MultipleQueryArguments()
+        public async Task MultipleQueryArguments()
         {
             var api = new HttpApi<IMultipeQueryArguments>();
             var endpoint = api.Endpoints.Single().Value;
@@ -144,7 +144,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void MultipelIdsCommaSeparated()
+        public async Task MultipelIdsCommaSeparated()
         {
             var api = new HttpApi<IMultipleIdsCommaSeparated>();
             var endpoint = api.Endpoints.Single().Value;
@@ -165,7 +165,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void ApiLevelTypeConverter()
+        public async Task ApiLevelTypeConverter()
         {
             var api = new HttpApi<IApiLevelTypeConverter>();
             var endpoint = api.Endpoints.Single().Value;
@@ -182,7 +182,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void EndpointLevelTypeConverter()
+        public async Task EndpointLevelTypeConverter()
         {
             var api = new HttpApi<IEndpointLevelTypeConverter>();
             var endpoint = api.Endpoints.Single().Value;
@@ -198,7 +198,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void ParameterLevelTypeConverter()
+        public async Task ParameterLevelTypeConverter()
         {
             var api = new HttpApi<IParameterLevelTypeConverter>();
             var endpoint = api.Endpoints.Single().Value;
@@ -214,7 +214,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void ReturnTypeConverter()
+        public async Task ReturnTypeConverter()
         {
             var api = new HttpApi<IReturnTypeConverter>();
             var endpoint = api.Endpoints.Single().Value;
@@ -283,7 +283,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void JsonResponse()
+        public async Task JsonResponse()
         {
             var api = new HttpApi<IJsonResponse>();
             var endpoint = api.Endpoints.Single().Value;
@@ -299,7 +299,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void Header()
+        public async Task Header()
         {
             var api = new HttpApi<IHeaderApi>();
             var endpoint = api.Endpoints.Single().Value;

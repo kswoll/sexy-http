@@ -9,7 +9,7 @@ namespace SexyHttp.Tests
     public class EmitBasedClientTests
     {
         [Test]
-        public async void GetString()
+        public async Task GetString()
         {
             using (MockHttpServer.ReturnJson(request => Task.FromResult<JToken>(new JValue("foo"))))
             {

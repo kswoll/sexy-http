@@ -3,7 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SexyHttp.HttpBodies;
-using SexyHttp.Tests.Utils;
+using SexyHttp.Utils;
 
 namespace SexyHttp.ResponseHandlers
 {

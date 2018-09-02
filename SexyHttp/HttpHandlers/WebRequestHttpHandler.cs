@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SexyHttp.HttpBodies;
-using SexyHttp.Tests.Utils;
+using SexyHttp.Utils;
 
 namespace SexyHttp.HttpHandlers
 {

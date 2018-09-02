@@ -12,7 +12,7 @@ namespace SexyHttp.Tests
     public class InPlaceTests
     {
         [Test]
-        public async void GetStringAbstract()
+        public async Task GetStringAbstract()
         {
             using (MockHttpServer.ReturnJson(request => Task.FromResult<JToken>(new JValue("foo"))))
             {
@@ -29,7 +29,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void CustomizeInvocation()
+        public async Task CustomizeInvocation()
         {
             using (MockHttpServer.ReturnJson(request => Task.FromResult<JToken>(new JValue("foo"))))
             {
@@ -50,7 +50,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void InstrumentedRequest()
+        public async Task InstrumentedRequest()
         {
             using (MockHttpServer.ReturnJson(request => request.Headers.Get("Test")))
             {
@@ -61,7 +61,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void InstrumentedResponse()
+        public async Task InstrumentedResponse()
         {
             using (MockHttpServer.ReturnJson(request => request.Headers.Get("Test")))
             {

@@ -11,7 +11,7 @@ namespace SexyHttp.Tests
     public class CrudApiTests
     {
         [Test]
-        public async void Get()
+        public async Task Get()
         {
             using (MockHttpServer.ReturnJson(request => Task.FromResult(JToken.FromObject(new { Id = 1, FirstName = "John", LastName = "Doe" }))))
             {
@@ -24,7 +24,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void GetAll()
+        public async Task GetAll()
         {
             using (MockHttpServer.ReturnJson(request => Task.FromResult(JToken.FromObject(new[] { new { Id = 1, FirstName = "John", LastName = "Doe" }}))))
             {
@@ -37,7 +37,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void Post()
+        public async Task Post()
         {
             User user = null;
             using (MockHttpServer.Json(request =>
@@ -54,7 +54,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void Put()
+        public async Task Put()
         {
             User user = null;
             using (MockHttpServer.Json(request =>
@@ -71,7 +71,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void Delete()
+        public async Task Delete()
         {
             int deletedEntityId = 0;
             using (MockHttpServer.Null(request =>

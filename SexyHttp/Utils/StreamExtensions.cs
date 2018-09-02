@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace SexyHttp.Tests.Utils
+namespace SexyHttp.Utils
 {
-    internal static class StreamExtensions
+    public static class StreamExtensions
     {
         public static async Task<byte[]> ReadToEndAsync(this Stream stream, long bufferSize = 1024 * 10)
         {

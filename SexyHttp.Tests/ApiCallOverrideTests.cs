@@ -8,7 +8,7 @@ namespace SexyHttp.Tests
     public class ApiCallOverrideTests
     {
         [Test]
-        public async void Override()
+        public async Task Override()
         {
             using (MockHttpServer.Json(x => x))
             {

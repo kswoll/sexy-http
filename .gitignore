@@ -6,3 +6,5 @@ SexyHttp.Net45/obj/
 .vs/
 *.nupkg
 _ReSharper.Caches/
+SexyHttp/obj/
+SexyHttp/bin/

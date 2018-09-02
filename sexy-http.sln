@@ -1,39 +1,31 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2047
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SexyHttp", "SexyHttp\SexyHttp.shproj", "{474C5E95-E5E0-4648-839F-52593D20515C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SexyHttp", "SexyHttp\SexyHttp.csproj", "{E07E7128-2275-44E9-AE08-14F37102F2F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SexyHttp.Tests", "SexyHttp.Tests\SexyHttp.Tests.csproj", "{396E4B5D-C4ED-407A-969C-495DEAAE2075}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SexyHttp.Net45", "SexyHttp.Net45\SexyHttp.Net45.csproj", "{3877F34E-7FAD-4413-AE47-19E2D99E7400}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{90FD60AE-F56E-4A7E-93FD-D85CABC8D974}"
-	ProjectSection(SolutionItems) = preProject
-		README.md = README.md
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SexyHttp.Tests", "SexyHttp.Tests\SexyHttp.Tests.csproj", "{D85B6C3D-FF82-4285-94FF-AEF7D95E79B2}"
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		SexyHttp\SexyHttp.projitems*{474c5e95-e5e0-4648-839f-52593d20515c}*SharedItemsImports = 13
-		SexyHttp\SexyHttp.projitems*{3877f34e-7fad-4413-ae47-19e2d99e7400}*SharedItemsImports = 4
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{396E4B5D-C4ED-407A-969C-495DEAAE2075}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{396E4B5D-C4ED-407A-969C-495DEAAE2075}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{396E4B5D-C4ED-407A-969C-495DEAAE2075}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{396E4B5D-C4ED-407A-969C-495DEAAE2075}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3877F34E-7FAD-4413-AE47-19E2D99E7400}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3877F34E-7FAD-4413-AE47-19E2D99E7400}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3877F34E-7FAD-4413-AE47-19E2D99E7400}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3877F34E-7FAD-4413-AE47-19E2D99E7400}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E07E7128-2275-44E9-AE08-14F37102F2F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E07E7128-2275-44E9-AE08-14F37102F2F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E07E7128-2275-44E9-AE08-14F37102F2F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E07E7128-2275-44E9-AE08-14F37102F2F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D85B6C3D-FF82-4285-94FF-AEF7D95E79B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D85B6C3D-FF82-4285-94FF-AEF7D95E79B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D85B6C3D-FF82-4285-94FF-AEF7D95E79B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D85B6C3D-FF82-4285-94FF-AEF7D95E79B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D536EFD0-9FB7-431A-8A02-F76A4509C2B5}
 	EndGlobalSection
 EndGlobal

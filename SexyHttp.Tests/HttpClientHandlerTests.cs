@@ -6,7 +6,7 @@ using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using SexyHttp.HttpBodies;
 using SexyHttp.Mocks;
-using SexyHttp.Tests.Utils;
+using SexyHttp.Utils;
 using SexyProxy;
 
 namespace SexyHttp.Tests
@@ -15,7 +15,7 @@ namespace SexyHttp.Tests
     public class HttpClientHandlerTests
     {
         [Test]
-        public async void GetString()
+        public async Task GetString()
         {
             using (MockHttpServer.ReturnJson(request => Task.FromResult<JToken>(new JValue("foo"))))
             {
@@ -25,7 +25,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void GetStringTwice()
+        public async Task GetStringTwice()
         {
             using (MockHttpServer.ReturnJson(request => Task.FromResult<JToken>(new JValue("foo"))))
             {
@@ -43,7 +43,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void ReflectValue()
+        public async Task ReflectValue()
         {
             using (MockHttpServer.Json(x => x))
             {
@@ -61,7 +61,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void PostStringMultipart()
+        public async Task PostStringMultipart()
         {
             using (MockHttpServer.PostMultipartReturnJson(x => Task.FromResult<JToken>(((StringHttpBody)x.Data["value"].Body).Text)))
             {
@@ -79,7 +79,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void PostByteArrayMultipart()
+        public async Task PostByteArrayMultipart()
         {
             using (MockHttpServer.PostMultipartReturnByteArray(x => Task.FromResult(((ByteArrayHttpBody)x.Data["data"].Body).Data)))
             {
@@ -98,7 +98,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void PostByteArray()
+        public async Task PostByteArray()
         {
             using (MockHttpServer.PostByteArrayReturnByteArray(x => Task.FromResult(x)))
             {
@@ -117,7 +117,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void PostStream()
+        public async Task PostStream()
         {
             using (MockHttpServer.PostStreamReturnByteArray(async x => await x.ReadToEndAsync()))
             {
@@ -136,7 +136,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void PostTwoStreams()
+        public async Task PostTwoStreams()
         {
             using (MockHttpServer.PostMultipartStreamReturnJson(x => Task.FromResult<JToken>(
                 ((ByteArrayHttpBody)x.Data["stream1"].Body).Data.Length +
@@ -158,7 +158,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void DownloadStream()
+        public async Task DownloadStream()
         {
             var data = new byte[] { 3, 1, 4, 5 };
             using (MockHttpServer.ReturnByteArray(x => data))
@@ -178,7 +178,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void PostForm()
+        public async Task PostForm()
         {
             using (MockHttpServer.PostFormReturnJson(x => Task.FromResult<JToken>(x.Values["value1"] + "|" + x.Values["value2"])))
             {
@@ -196,7 +196,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void ReceiveForm()
+        public async Task ReceiveForm()
         {
             using (MockHttpServer.PostFormReturnForm(x => Task.FromResult(x)))
             {
@@ -221,7 +221,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void JsonNameOverride()
+        public async Task JsonNameOverride()
         {
             using (MockHttpServer.Json(x => (string)x["val1"] + x["val2"]))
             {
@@ -239,7 +239,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void FormNameOverride()
+        public async Task FormNameOverride()
         {
             using (MockHttpServer.PostFormReturnJson(x => x.Values["val1"] + x.Values["val2"]))
             {
@@ -257,7 +257,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void SingleArgumentAsObject()
+        public async Task SingleArgumentAsObject()
         {
             using (MockHttpServer.Json(x => x["value"]))
             {
@@ -275,7 +275,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void RawRequestApi()
+        public async Task RawRequestApi()
         {
             using (MockHttpServer.Json(x => x))
             {
@@ -293,7 +293,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void RawResponseApi()
+        public async Task RawResponseApi()
         {
             using (MockHttpServer.Json(x => x))
             {
@@ -311,7 +311,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void RawRequestBody()
+        public async Task RawRequestBody()
         {
             using (MockHttpServer.Json(x => x))
             {
@@ -329,7 +329,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void RawResponseBody()
+        public async Task RawResponseBody()
         {
             using (MockHttpServer.Json(x => x))
             {
@@ -347,7 +347,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void ReflectString()
+        public async Task ReflectString()
         {
             using (MockHttpServer.String(x => x))
             {
@@ -365,7 +365,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void NonSuccessThrowsException()
+        public async Task NonSuccessThrowsException()
         {
             using (MockHttpServer.Raw((request, response) => response.StatusCode = 500))
             {
@@ -389,7 +389,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void OtherPropertiesAndMethodsDoNotCauseProblems()
+        public async Task OtherPropertiesAndMethodsDoNotCauseProblems()
         {
             using (MockHttpServer.ReturnJson("foo"))
             {

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using SexyHttp.ArgumentHandlers;
 using SexyHttp.Mocks;
@@ -12,7 +13,7 @@ namespace SexyHttp.Tests
     public class HttpApiEndpointTests
     {
         [Test]
-        public async void Url()
+        public async Task Url()
         {
             var httpHandler = new MockHttpHandler();
             var responseHandler = new MockResponseHandler<object>();
@@ -24,7 +25,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void Method()
+        public async Task Method()
         {
             var httpHandler = new MockHttpHandler();
             var responseHandler = new MockResponseHandler<object>();
@@ -36,7 +37,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void HeadersProvider()
+        public async Task HeadersProvider()
         {
             var httpHandler = new MockHttpHandler();
             var responseHandler = new MockResponseHandler<object>();
@@ -53,7 +54,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void ArgumentProvider()
+        public async Task ArgumentProvider()
         {
             var httpHandler = new MockHttpHandler();
             var responseHandler = new MockResponseHandler<string>(x => x.Headers.Single(y => y.Name == "name").Values.Single());
@@ -74,7 +75,7 @@ namespace SexyHttp.Tests
         }
 
         [Test]
-        public async void ResponseHandler()
+        public async Task ResponseHandler()
         {
             var httpHandler = new MockHttpHandler();
             var responseHandler = new MockResponseHandler<string>("foo");
