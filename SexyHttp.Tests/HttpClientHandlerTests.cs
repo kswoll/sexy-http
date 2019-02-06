@@ -15,6 +15,20 @@ namespace SexyHttp.Tests
     public class HttpClientHandlerTests
     {
         [Test]
+        public async Task NoContentWithContentTypeHandledCleanly()
+        {
+            using (MockHttpServer.Raw((request, response) =>
+            {
+                response.StatusCode = 204;
+                response.ContentType = "application/json";
+            }))
+            {
+                var client = HttpApiClient<IPostReturnsNothing>.Create("http://localhost:8844/path");
+                await client.Post("foo");
+            }
+        }
+
+        [Test]
         public async Task GetString()
         {
             using (MockHttpServer.ReturnJson(request => Task.FromResult<JToken>(new JValue("foo"))))
@@ -193,6 +207,13 @@ namespace SexyHttp.Tests
         {
             [Post("path"), Form]
             Task<string> PostForm(string value1, int value2);
+        }
+
+        [Proxy]
+        private interface IPostReturnsNothing
+        {
+            [Post("path")]
+            Task Post(string value);
         }
 
         [Test]

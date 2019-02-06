@@ -160,7 +160,8 @@ namespace SexyHttp.HttpHandlers
                 switch (request.ResponseContentTypeOverride ?? message.Content.Headers.ContentType?.MediaType)
                 {
                     case "application/json":
-                        var json = JToken.Parse(await message.Content.ReadAsStringAsync());
+                        var jsonString = await message.Content.ReadAsStringAsync();
+                        var json = !string.IsNullOrEmpty(jsonString) ? JToken.Parse(jsonString) : null;        // Hack to workaround silly servers that send a content type and a 204
                         body = new JsonHttpBody(json);
                         break;
                     case "application/x-www-form-urlencoded":
