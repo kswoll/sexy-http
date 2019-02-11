@@ -91,7 +91,10 @@ namespace SexyHttp.HttpHandlers
                 case "application/json":
                     var jsonString = Encoding.UTF8.GetString(responseStream.ReadToEnd());
                     var json = !string.IsNullOrEmpty(jsonString) ? JToken.Parse(jsonString) : null;        // Hack to workaround silly servers that send a content type and a 204
-                    responseBody = new JsonHttpBody(json);
+                    if (json != null)
+                    {
+                        responseBody = new JsonHttpBody(json);
+                    }
                     break;
                 case "application/x-www-form-urlencoded":
                     throw new NotSupportedException();
